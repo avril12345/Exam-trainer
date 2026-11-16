@@ -475,8 +475,17 @@ export default function({ parentElement, data, setTriggerValue }) {
   const endHold = () => { clearTimeout(holdTimer); if (holding) { holding = false; last = performance.now(); } };
 
   // Fit the play area plus answers into the screen, so the page never has to scroll.
+  // Streamlit scrolls an inner container, not the window.
+  function scroller() {
+    for (let e = root.parentElement; e && e !== document.body; e = e.parentElement) {
+      const o = getComputedStyle(e).overflowY;
+      if ((o === 'auto' || o === 'scroll') && e.scrollHeight > e.clientHeight) return e;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
   function fit() {
-    const docTop = root.getBoundingClientRect().top + window.scrollY;
+    const sc = scroller();
+    const docTop = root.getBoundingClientRect().top + sc.scrollTop;
     const h = window.innerHeight - docTop - top.offsetHeight - ans.offsetHeight - 22;
     play.style.height = Math.max(180, Math.round(h)) + 'px';
     travel = RM ? 0 : Math.max(0, play.clientHeight - blk.offsetHeight - 14);
@@ -488,13 +497,15 @@ export default function({ parentElement, data, setTriggerValue }) {
     else blk.style.transform = 'translateY(' + (p * travel).toFixed(1) + 'px)';
   }
   function fallTime(b) {
-    const base = b.k === 's' ? 8 : 14 + 0.25 * (b.words || 0);
+    // Questions: 15 s plus 0.25 s per word, kept between 15 and 25 s (speeding up never goes below 15 s).
+    // Symbols: 8 s, speeding up to no less than 4 s.
     const f = data.steady ? 1 : Math.pow(0.95, Math.floor(correct / 5));
-    return Math.max(b.k === 's' ? 4 : 7, base * f);
+    if (b.k === 's') return Math.max(4, 8 * f);
+    return Math.max(15, Math.min(25, 15 + 0.25 * (b.words || 0)) * f);
   }
   function next() {
     if (lives <= 0 || idx + 1 >= N) return finish(false);
-    cur = B[++idx]; elapsed = 0; T = fallTime(cur);
+    cur = B[++idx]; elapsed = 0; T = fallTime(cur) * 1000;  // the clock counts milliseconds
     blk.className = 'bd-block';
     blk.innerHTML = '<div class="bd-tag"><span>' + cur.label + '</span><span>' + (idx + 1) + ' / ' + N + '</span></div>' +
       '<div class="bd-body">' + cur.html + '</div><div class="bd-term"></div>';
@@ -586,6 +597,7 @@ export default function({ parentElement, data, setTriggerValue }) {
   document.addEventListener('keydown', onKey);
   document.addEventListener('visibilitychange', onVis);
   window.addEventListener('resize', fit);
+  try { scroller().scrollTop = 0; } catch (e) {}  // he may have scrolled down to tap Start
   paint(); next();
   raf = requestAnimationFrame(frame);
   root._cleanup = () => { stop(); root._cleanup = null; root._game = null; };

@@ -28,6 +28,7 @@ Progress is saved in the browser (localStorage), so it stays on the device he us
 - **Maths**: worked examples (one step at a time), test questions (multiple choice or type the number) and key terms (flip cards and a match game).
 - **Diagrams**: 19 exam drawings with tap-to-reveal labels.
 - **Symbol Snap**: a 60-second game for naming circuit symbols. Shows the score, right/wrong and accuracy when time runs out or when Stop is pressed.
+- **Block Drop**: one block at a time falls down the screen showing a circuit symbol or a short exam question. Tap one of 4 answers (or press 1–4 / A–D) before it lands. Questions take 15–25 seconds to fall, symbols 8 seconds. 3 lives, a speed bonus and a gentle speed-up (or "Steady pace"). Decks: T2, T1, Mixed or Symbols only. Optional read-aloud holds each block until it has been read. Missed questions go to the review list.
 
 ## Dyslexia-friendly design
 
