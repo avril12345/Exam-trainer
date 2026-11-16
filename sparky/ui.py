@@ -272,6 +272,22 @@ def read_aloud(key: str, html_text: str = "", speak: str | None = None, cls: str
                                "label": label, "icon": _SAY_ICON})
 
 
+_RAW_JS = r"""
+export default function({ parentElement, data }) {
+  if (parentElement._html === data.html) return;
+  parentElement._html = data.html;
+  parentElement.innerHTML = data.html;
+}
+"""
+_raw = st.components.v2.component("sparky_raw_html", js=_RAW_JS, isolate_styles=False)
+
+
+def drawing(key: str, markup: str) -> None:
+    """Show the app's own SVG drawings. ``st.html`` sanitises SVG away, so drawings
+    go through this component instead. Only use with trusted, app-made markup."""
+    _raw(key=key, data={"html": markup})
+
+
 _DIAG_JS = r"""
 function addCovers(svg){
   const ns = 'http://www.w3.org/2000/svg';
@@ -325,13 +341,18 @@ export default function({ parentElement, data, setTriggerValue }) {
   if (root.dataset.round === String(data.round)) return;   // already running this round
   root.dataset.round = String(data.round);
   if (root._timer) clearInterval(root._timer);
-  const S = data.symbols; let left = data.seconds, score = 0, last = -1, busy = false, done = false;
+  const S = data.symbols; let left = data.seconds, score = 0, wrong = 0, last = -1, busy = false, done = false;
   root.innerHTML = '<div class="snap"><div class="top"><span class="timer"></span><span class="chip chk"></span></div>' +
-    '<div class="symbox"></div><div class="opts" style="margin-top:12px"></div></div>';
+    '<div class="symbox"></div><div class="opts" style="margin-top:12px"></div>' +
+    '<button type="button" class="say stop" style="width:100%;justify-content:center;margin-top:6px">Stop and see my score</button></div>';
   const tEl = root.querySelector('.timer'), sEl = root.querySelector('.chip'), box = root.querySelector('.symbox'), opts = root.querySelector('.opts');
   const shuffle = a => { a = a.slice(); for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; };
   const paint = () => { tEl.textContent = Math.max(0,left) + 's'; sEl.textContent = 'Score ' + score; };
-  const finish = () => { if (done) return; done = true; clearInterval(root._timer); setTriggerValue('done', {score, round: data.round}); };
+  const finish = (stopped) => {
+    if (done) return; done = true; clearInterval(root._timer);
+    setTriggerValue('done', {score, wrong, stopped: !!stopped, used: data.seconds - Math.max(0, left), round: data.round});
+  };
+  root.querySelector('.stop').onclick = () => finish(true);
   function next(){
     let i; do { i = Math.floor(Math.random()*S.length); } while (i === last && S.length > 1); last = i;
     const choice = shuffle([i, ...shuffle(S.map((_,k)=>k).filter(k=>k!==i)).slice(0,3)]);
@@ -342,7 +363,7 @@ export default function({ parentElement, data, setTriggerValue }) {
       const b = e.target.closest('.opt'); if (!b || busy || done) return; busy = true;
       const k = +b.dataset.k;
       opts.querySelectorAll('.opt').forEach(x => { if (+x.dataset.k === i) x.classList.add('right'); else if (x === b) x.classList.add('wrong'); else x.classList.add('dim'); });
-      if (k === i) score++; else left = Math.max(0, left - 3);
+      if (k === i) score++; else { wrong++; left = Math.max(0, left - 3); }
       paint(); if (left <= 0) return finish();
       setTimeout(() => { if (!done) next(); }, k === i ? 400 : 1200);
     };

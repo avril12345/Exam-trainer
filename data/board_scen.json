@@ -130,5 +130,182 @@
     "1"
    ]
   ]
+ },
+ {
+  "id": "s1",
+  "name": "Workshop: 3-phase lathe & compressor, 3 lighting, 3 sockets",
+  "papers": "Sample question",
+  "prot": "mcb",
+  "sample": true,
+  "loads": [
+   [
+    "Lathe",
+    "3"
+   ],
+   [
+    "Compr.",
+    "3"
+   ],
+   [
+    "Light 1",
+    "1"
+   ],
+   [
+    "Light 2",
+    "1"
+   ],
+   [
+    "Light 3",
+    "1"
+   ],
+   [
+    "Skt 1",
+    "1s"
+   ],
+   [
+    "Skt 2",
+    "1s"
+   ],
+   [
+    "Skt 3",
+    "1s"
+   ]
+  ]
+ },
+ {
+  "id": "s2",
+  "name": "Farm shed: 3-phase pump, 2 lighting, water heater, cold room (fuses)",
+  "papers": "Sample question",
+  "prot": "fuse",
+  "sample": true,
+  "loads": [
+   [
+    "Pump",
+    "3"
+   ],
+   [
+    "Light 1",
+    "1"
+   ],
+   [
+    "Light 2",
+    "1"
+   ],
+   [
+    "W. heater",
+    "1"
+   ],
+   [
+    "Cold rm",
+    "1"
+   ]
+  ]
+ },
+ {
+  "id": "s3",
+  "name": "Commercial kitchen: 3-phase oven & dishwasher, 2 lighting, 4 sockets",
+  "papers": "Sample question",
+  "prot": "mcb",
+  "sample": true,
+  "loads": [
+   [
+    "Oven",
+    "3"
+   ],
+   [
+    "Dishwshr",
+    "3"
+   ],
+   [
+    "Light 1",
+    "1"
+   ],
+   [
+    "Light 2",
+    "1"
+   ],
+   [
+    "Skt 1",
+    "1s"
+   ],
+   [
+    "Skt 2",
+    "1s"
+   ],
+   [
+    "Skt 3",
+    "1s"
+   ],
+   [
+    "Skt 4",
+    "1s"
+   ]
+  ]
+ },
+ {
+  "id": "s4",
+  "name": "Small office: 3-phase air-con, 3 lighting, 2 sockets, water heater",
+  "papers": "Sample question",
+  "prot": "mcb",
+  "sample": true,
+  "loads": [
+   [
+    "Air-con",
+    "3"
+   ],
+   [
+    "Light 1",
+    "1"
+   ],
+   [
+    "Light 2",
+    "1"
+   ],
+   [
+    "Light 3",
+    "1"
+   ],
+   [
+    "Skt 1",
+    "1s"
+   ],
+   [
+    "Skt 2",
+    "1s"
+   ],
+   [
+    "W. heater",
+    "1"
+   ]
+  ]
+ },
+ {
+  "id": "s5",
+  "name": "Garage: 3-phase car lift & compressor, 2 lighting, pressure washer (fuses)",
+  "papers": "Sample question",
+  "prot": "fuse",
+  "sample": true,
+  "loads": [
+   [
+    "Car lift",
+    "3"
+   ],
+   [
+    "Compr.",
+    "3"
+   ],
+   [
+    "Light 1",
+    "1"
+   ],
+   [
+    "Light 2",
+    "1"
+   ],
+   [
+    "Washer",
+    "1"
+   ]
+  ]
  }
 ]

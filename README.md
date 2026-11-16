@@ -21,13 +21,13 @@ Progress is saved in the browser (localStorage), so it stays on the device he us
 
 - **T2 paper map**: the T2 paper has the same 20 question slots every year (2016–2026). Each slot lists every version that has been asked.
 - **Mock T2 paper**: 20 questions in exam order. Self-mark against the key points; the app totals the marks and gives a grade (Pass 50 %, Merit 65 %, Distinction 80 %).
-- **Board Builder**: interactive practice for T2 Q7 (distribution board drawing), with phase-balance and device checks.
+- **Board Builder**: interactive practice for T2 Q7 (distribution board drawing), with phase-balance and device checks. Shows a front-view picture of the board and the exam wiring drawing. 4 past-paper versions plus 5 sample questions in the same style (labelled "Sample question").
 - **Flashcards**: 99 T2 and 10 T1 cards with key-point answers, using Leitner boxes.
 - **Quick Shift quiz**: 10 multiple-choice questions per round (69 T2 and 37 T1 in the bank). Optional 2-minute clock.
 - **Formula Lab**: 23 randomised calculation types with colour-coded, step-by-step working.
 - **Maths**: worked examples (one step at a time), test questions (multiple choice or type the number) and key terms (flip cards and a match game).
 - **Diagrams**: 19 exam drawings with tap-to-reveal labels.
-- **Symbol Snap**: a 60-second game for naming circuit symbols.
+- **Symbol Snap**: a 60-second game for naming circuit symbols. Shows the score, right/wrong and accuracy when time runs out or when Stop is pressed.
 
 ## Dyslexia-friendly design
 

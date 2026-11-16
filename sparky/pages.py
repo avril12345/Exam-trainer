@@ -12,7 +12,8 @@ from html import escape
 import streamlit as st
 
 from . import store, ui
-from .board import blank_assign, check_board, device_choices, draw_board, model_assign
+from .board import (blank_assign, check_board, device_choices, draw_board, draw_board_front,
+                    model_assign)
 from .content import (BOARD_SCEN, BOX_NAMES, CARDS, DIAG, MCQ, SLOT_LAB, SLOT_TITLE, SLOTS, SYM,
                       SYMBOLS, bold, fx, slot_cards, slot_pct, strip_tags, sym, sym_plain)
 from .formulas import GEN_BY_ID, GENS, is_correct, n3
@@ -189,7 +190,7 @@ def mock():
         st.subheader("Tick the points you got")
         st.caption(f"Full marks needs {ui.plural(need, 'point')}.")
         if c.get("fig") in DIAG:
-            ui.html(DIAG[c["fig"]]["svg"])
+            ui.drawing(f"mfig_{MK['i']}", DIAG[c["fig"]]["svg"])
         ticked = sum(bool(st.checkbox(strip_tags(x), key=f"mtick_{MK['i']}_{k}")) for k, x in enumerate(c["a"]))
         if c.get("r"):
             ui.html(f'<div class="ref">Reference: {c["r"]}{" — check in ET101" if c.get("c") else ""}</div>')
@@ -257,9 +258,15 @@ def board():
     by_id = {s["id"]: s for s in BOARD_SCEN}
     cur = S["prefs"].get("bbsc", "b")
     sid = st.selectbox("Which version of the question?", ids, index=ids.index(cur) if cur in ids else 1,
-                       format_func=lambda i: f"{by_id[i]['name']} ({by_id[i]['papers']})", key="bb_sel")
+                       format_func=lambda i: (f"Sample question — {by_id[i]['name']}" if by_id[i].get("sample")
+                                              else f"{by_id[i]['name']} ({by_id[i]['papers']})"), key="bb_sel")
     S["prefs"]["bbsc"] = sid
     sc = by_id[sid]
+    if sc.get("sample"):
+        ui.html(f'<div class="note">{ui.chip("Sample question", "chk")} <b>{escape(sc["name"])}</b><br>'
+                'Made up in the style of past T2 Q7 papers for extra practice. It has not appeared on a real paper.</div>')
+    else:
+        ui.html(f'<div class="row">{ui.chip("Past paper")}{ui.chip(sc["papers"])}</div><p><b>{escape(sc["name"])}</b></p>')
     blank = blank_assign(sc)
 
     def wkey(i, f):
@@ -273,8 +280,17 @@ def board():
                 a[f] = ss[wkey(i, f)]
         asg.append(a)
 
+    view = st.segmented_control("View", ["front", "wiring"], default="front", key="bb_view",
+                                format_func={"front": "Board picture", "wiring": "Wiring drawing (exam)"}.get,
+                                label_visibility="collapsed") or "front"
     with st.container(border=True):
-        ui.html(f'<div style="overflow-x:auto">{draw_board(sc, asg)}</div>')
+        if view == "front":
+            st.caption("What the board looks like. Colours show the phase: **brown L1**, **black L2**, **grey L3**. "
+                       "On a phone, swipe the picture sideways to see it all.")
+            ui.drawing("bb_front", f'<div style="overflow-x:auto">{draw_board_front(sc, asg)}</div>')
+        else:
+            st.caption("The single-line drawing you draw in the exam. On a phone, swipe sideways to see it all.")
+            ui.drawing("bb_wiring", f'<div style="overflow-x:auto">{draw_board(sc, asg)}</div>')
 
     for i, (name, t) in enumerate(sc["loads"]):
         with st.container(border=True):
@@ -379,7 +395,7 @@ def cards():
         ui.read_aloud(f"fq_{ci}_{FC['i']}", f'<div class="qtext">{c["q"]}</div>')
         if FC["flipped"]:
             if c.get("fig") in DIAG:
-                ui.html(DIAG[c["fig"]]["svg"])
+                ui.drawing(f"ffig_{ci}_{FC['i']}", DIAG[c["fig"]]["svg"])
             extra = ""
             if c.get("n") and c["n"] < len(c["a"]):
                 extra += f'<div class="ref">Any {c["n"]} of these for full marks.</div>'
@@ -647,7 +663,7 @@ def pictures():
     for n, (key, d) in enumerate(ents):
         with cols[n % 2]:
             with st.container(border=True):
-                ui.html(d["svg"])
+                ui.drawing(f"dgt_{key}", d["svg"])
                 st.button(d["n"], key=f"dgo_{key}", width="stretch", help=d["t"],
                           on_click=lambda key=key: ss.update(diag=key))
                 st.caption(d["t"])
@@ -662,31 +678,50 @@ def snap():
     def start():
         SN.update(phase="play", round=SN["round"] + 1, best_before=S["snapBest"])
 
+    def record(val) -> bool:
+        """Store a finished round once (time up or Stop pressed)."""
+        if not val or SN.get("recorded") == SN["round"]:
+            return False
+        SN.update(score=int(val.get("score", 0)), wrong=int(val.get("wrong", 0)),
+                  stopped=bool(val.get("stopped")), used=int(val.get("used", 60)),
+                  recorded=SN["round"], phase="done")
+        store.add_xp(2 * SN["score"])
+        if SN["score"] > S["snapBest"]:
+            S["snapBest"] = SN["score"]
+        return True
+
     if SN["phase"] == "play":
         def done():
-            res = ss.get(f"snap_{SN['round']}") or {}
-            val = res.get("done") if hasattr(res, "get") else None
-            if not val:
-                return
-            SN["score"] = int(val.get("score", 0))
-            store.add_xp(2 * SN["score"])
-            if SN["score"] > S["snapBest"]:
-                S["snapBest"] = SN["score"]
-            SN["phase"] = "done"
+            res = ss.get(f"snap_{SN['round']}")
+            record(res.get("done") if hasattr(res, "get") else None)
 
         st.caption("Tap the right name. Wrong answers cost 3 seconds.")
-        ui._snap(key=f"snap_{SN['round']}", data={"round": SN["round"], "symbols": SYMBOLS, "seconds": 60},
-                 on_done_change=done)
-        st.button("Stop", on_click=lambda: SN.update(phase="intro"))
+        res = ui._snap(key=f"snap_{SN['round']}", data={"round": SN["round"], "symbols": SYMBOLS, "seconds": 60},
+                       on_done_change=done)
+        if record(res.get("done")):  # in case the callback could not read the value
+            st.rerun()
         return
 
     if SN["phase"] == "done":
-        nb = SN["score"] > SN["best_before"]
-        ui.html(f'<div class="panel" style="text-align:center"><div class="big">{SN["score"]}</div>'
-                f'<h2>{"New best score" if nb else "Time up"}</h2><div class="small muted">Best: {S["snapBest"]}</div></div>')
+        score, wrong = SN["score"], SN.get("wrong", 0)
+        tries = score + wrong
+        acc = round(score / tries * 100) if tries else 0
+        if score > SN["best_before"] and score > 0:
+            head = "New best score"
+        elif SN.get("stopped"):
+            head = "Game stopped"
+        else:
+            head = "Time up"
+        ui.html(f'''<div class="panel" style="text-align:center">
+          <div class="small muted">Your score</div><div class="big">{score}</div><h2>{head}</h2>
+          <div class="stats"><div class="stat"><b>{score}</b><span>right</span></div>
+          <div class="stat"><b>{wrong}</b><span>wrong</span></div><div class="stat"><b>{acc}%</b><span>accuracy</span></div></div>
+          <p class="small muted" style="margin:10px auto 0">Played for {SN.get("used", 60)} seconds · Best score: <b>{S["snapBest"]}</b> · +{2 * score} XP</p></div>''')
+        ui.read_aloud(f"snap_res_{SN['round']}", speak=f"{head}. You scored {score}. {score} right and {wrong} wrong. "
+                                                       f"Your best score is {S['snapBest']}.", label="Read my score")
         c1, c2 = st.columns(2)
         c1.button("Play again", type="primary", width="stretch", on_click=start)
-        c2.page_link(PAGES["pictures"], label="Diagrams", icon=":material/schema:", width="stretch")
+        c2.button("Learn the symbols", width="stretch", on_click=lambda: SN.update(phase="learn"))
         return
 
     if SN["phase"] == "learn":
@@ -694,12 +729,12 @@ def snap():
         cols = st.columns(2)
         for n, s in enumerate(SYMBOLS):
             with cols[n % 2]:
-                ui.html(f'<div class="panel"><div class="symbox">{s["s"]}</div><b>{s["n"]}</b></div>')
+                ui.drawing(f"symlearn_{n}", f'<div class="panel"><div class="symbox">{s["s"]}</div><b>{s["n"]}</b></div>')
         return
 
     st.header("Symbol Snap")
     st.markdown("**60 seconds.** A symbol appears — tap its name. Wrong answers cost 3 seconds.")
-    ui.html(f'<div class="symbox">{SYMBOLS[6]["s"]}</div>')
+    ui.drawing("snap_intro", f'<div class="symbox">{SYMBOLS[6]["s"]}</div>')
     st.caption(f"Best score: **{S['snapBest']}**")
     st.button("Start", type="primary", width="stretch", on_click=start)
     st.button("Learn the symbols first", width="stretch", on_click=lambda: SN.update(phase="learn"))
