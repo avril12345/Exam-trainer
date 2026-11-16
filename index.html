@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 4 Sparky Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Plan: job-site control panel. Slate + safety amber. Lexend body for readability, Barlow Condensed for signage-style headings.
+   One question per screen, big tap targets, bottom nav like a phone app. */
+:root{
+  --bg:#f6f1e4;        /* cream: easier reading for dyslexia */
+  --panel:#fffaf0;
+  --ink:#1d2430;
+  --muted:#5b6473;
+  --line:#d9cfb8;
+  --acc:#c98a00;       /* safety amber */
+  --acc-ink:#1d2430;
+  --acc-soft:#f4e2b4;
+  --good:#2f8a4c; --good-soft:#d7eedc;
+  --bad:#c0392b;  --bad-soft:#f6d9d5;
+  /* quantity colours: always the same in every formula */
+  --qv:#1f6fd1; --qi:#c62f3a; --qr:#b86a00; --qp:#2f8a4c; --qf:#7a4fc4; --qk:#0f8a8a;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Lexend",Verdana,Arial,sans-serif;
+  --fs:18px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11161d; --panel:#1a212b; --ink:#eef1f5; --muted:#a3adbb; --line:#2c3644;
+    --acc:#f5b700; --acc-ink:#11161d; --acc-soft:#3a3218;
+    --good:#4cc275; --good-soft:#173322; --bad:#ff6b5e; --bad-soft:#3a1c1a;
+    --qv:#5aa7ff; --qi:#ff6b75; --qr:#ffaa3b; --qp:#58d68d; --qf:#b493ff; --qk:#3dd6d0;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11161d; --panel:#1a212b; --ink:#eef1f5; --muted:#a3adbb; --line:#2c3644;
+  --acc:#f5b700; --acc-ink:#11161d; --acc-soft:#3a3218;
+  --good:#4cc275; --good-soft:#173322; --bad:#ff6b5e; --bad-soft:#3a1c1a;
+  --qv:#5aa7ff; --qi:#ff6b75; --qr:#ffaa3b; --qp:#58d68d; --qf:#b493ff; --qk:#3dd6d0;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:var(--fs);line-height:1.6;letter-spacing:.01em;word-spacing:.06em}
+button,input{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--display);letter-spacing:.02em;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:2rem} h2{font-size:1.6rem} h3{font-size:1.25rem}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 110px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:10px}
+.bolt{width:34px;height:34px;border-radius:8px;background:var(--acc);display:grid;place-items:center}
+.bolt svg{width:20px;height:20px}
+.tools{display:flex;gap:6px}
+@media (max-width:420px){.sub{display:none}.brand h1{font-size:1.25rem !important}.bolt{width:30px;height:30px}.ibtn{min-width:40px;padding:0 6px}}
+.ibtn{min-width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:grid;place-items:center;padding:0 10px;font-size:.9rem}
+.ibtn:hover{border-color:var(--acc)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)}
+.small{font-size:.85rem}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:.8rem;border:1px solid var(--line);background:var(--bg);white-space:nowrap}
+.chip.t1{border-color:var(--qv);color:var(--qv)}
+.chip.t2{border-color:var(--qp);color:var(--qp)}
+.chip.chk{border-color:var(--acc);background:var(--acc-soft);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:10px 20px;border-radius:12px;border:2px solid var(--acc);background:var(--acc);color:var(--acc-ink);font-weight:600;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--acc)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+/* level */
+.level{display:grid;gap:8px}
+.bar{height:12px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--acc);border-radius:99px;transition:width .4s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{text-align:center;padding:10px 6px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.stat b{display:block;font-family:var(--display);font-size:1.8rem;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:.78rem;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px;border-radius:14px;border:1px solid var(--line);background:var(--panel);cursor:pointer;min-height:130px}
+.tile:hover{border-color:var(--acc)}
+.tile .ic{width:46px;height:46px;border-radius:10px;background:var(--acc-soft);display:grid;place-items:center}
+.tile .ic svg{width:28px;height:28px;stroke:var(--ink);fill:none;stroke-width:2}
+.tile b{font-family:var(--display);font-size:1.3rem;letter-spacing:.02em}
+.tile span{display:block;font-size:.85rem;color:var(--muted);line-height:1.35}
+.tile.wide{grid-column:1/-1;flex-direction:row;align-items:center;min-height:auto;gap:14px}
+@media (max-width:420px){.tiles{grid-template-columns:1fr}.tile{min-height:auto;flex-direction:row;align-items:center;gap:14px}}
+/* nav */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:5;padding-bottom:env(safe-area-inset-bottom)}
+nav.bottom .in{display:grid;grid-template-columns:repeat(6,1fr);max-width:760px;width:100%}
+nav.bottom a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 10px;color:var(--muted);text-decoration:none;font-size:.72rem}
+nav.bottom a svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2}
+nav.bottom a.on{color:var(--ink)}
+nav.bottom a.on svg{stroke:var(--acc)}
+/* question */
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dots{display:flex;gap:5px;flex-wrap:wrap}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.ok{background:var(--good)} .dots i.no{background:var(--bad)} .dots i.now{background:var(--acc)}
+.qtext{font-size:1.15em;font-weight:500;line-height:1.55;max-width:62ch}
+.qtext b, .key{color:var(--acc);font-weight:700}
+:root:not([data-theme="dark"]) .qtext b{color:#9a5f00}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .qtext b{color:var(--acc)}}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;padding:14px 16px;border-radius:12px;border:2px solid var(--line);background:var(--panel);cursor:pointer;min-height:56px;line-height:1.45}
+.opt:hover{border-color:var(--acc)}
+.opt .let{flex:0 0 30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-weight:600;font-size:.9rem}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.dim{opacity:.55}
+.opt:disabled{cursor:default}
+.feedback{border-left:5px solid var(--good);padding:12px 14px;border-radius:8px;background:var(--good-soft)}
+.feedback.no{border-color:var(--bad);background:var(--bad-soft)}
+.feedback b{font-family:var(--display);font-size:1.2rem;letter-spacing:.02em}
+.timer{font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;min-height:48px;border:0;background:var(--panel);cursor:pointer;padding:6px 10px}
+.seg button.on{background:var(--acc);color:var(--acc-ink);font-weight:600}
+/* flashcards */
+.card{min-height:280px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+.card ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.card li::marker{color:var(--acc)}
+.ref{font-size:.85rem;color:var(--muted)}
+.rate{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.rate .btn{min-height:56px;padding:8px}
+.btn.r-again{background:var(--bad-soft);border-color:var(--bad);color:var(--ink)}
+.btn.r-ok{background:var(--acc-soft);border-color:var(--acc);color:var(--ink)}
+.btn.r-good{background:var(--good-soft);border-color:var(--good);color:var(--ink)}
+.boxes{display:flex;gap:6px}
+.boxes span{flex:1;text-align:center;font-size:.75rem;padding:6px 2px;border-radius:8px;background:var(--bg);border:1px solid var(--line)}
+.boxes b{display:block;font-family:var(--display);font-size:1.2rem}
+/* formula lab */
+.q{font-weight:700;font-style:normal}
+.q.v{color:var(--qv)} .q.i{color:var(--qi)} .q.r{color:var(--qr)} .q.p{color:var(--qp)} .q.f{color:var(--qf)} .q.k{color:var(--qk)}
+.given{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.gv{padding:10px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);border-left-width:5px;font-variant-numeric:tabular-nums}
+.gv.v{border-left-color:var(--qv)} .gv.i{border-left-color:var(--qi)} .gv.r{border-left-color:var(--qr)} .gv.p{border-left-color:var(--qp)} .gv.f{border-left-color:var(--qf)} .gv.k{border-left-color:var(--qk)}
+.gv small{display:block;color:var(--muted);font-size:.75rem}
+.ansrow{display:flex;gap:10px;align-items:stretch}
+.ansrow input{flex:1;min-width:0;min-height:56px;padding:8px 14px;border-radius:12px;border:2px solid var(--line);background:var(--panel);font-size:1.2rem;font-variant-numeric:tabular-nums}
+.ansrow input:focus{border-color:var(--acc);outline:none}
+.unit{display:grid;place-items:center;padding:0 14px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-weight:600}
+.steps{margin:0;padding-left:1.4em;display:grid;gap:10px;font-variant-numeric:tabular-nums}
+.steps li{padding-left:4px}
+.steps li.hid{display:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem}
+.lablist{display:grid;gap:8px}
+.labitem{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;min-height:56px}
+.labitem:hover{border-color:var(--acc)}
+.labitem small{color:var(--muted)}
+/* diagrams */
+.dg{width:100%;height:auto;display:block;background:var(--bg);border-radius:12px;border:1px solid var(--line)}
+.dg .s{stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dg .a{stroke:var(--acc);fill:none;stroke-width:2.5}
+.dg .fa{fill:var(--acc)} .dg .fi{fill:var(--ink)} .dg .fs{fill:var(--acc-soft)}
+.dg .d{stroke:var(--muted);stroke-width:1.5;fill:none;stroke-dasharray:4 4}
+.dg text{fill:var(--ink);font-family:var(--body);font-size:12px}
+.dg text.t{font-weight:600}
+.dg .lab{cursor:pointer}
+.dg .cover{display:none;fill:var(--acc);rx:6}
+.dg .qm{display:none;fill:var(--acc-ink);font-weight:700;font-size:13px}
+.hidelabels .dg .lab:not(.shown) text:not(.qm){opacity:0}
+.hidelabels .dg .lab:not(.shown) .cover,.hidelabels .dg .lab:not(.shown) .qm{display:block}
+.dglist{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.dgthumb{display:flex;flex-direction:column;gap:6px;text-align:left;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel);cursor:pointer}
+.dgthumb:hover{border-color:var(--acc)}
+.dgthumb svg{pointer-events:none}
+.dgthumb b{font-size:.9rem;line-height:1.3}
+/* symbols */
+.sym{width:100%;max-width:300px;margin:0 auto;display:block;color:var(--ink)}
+.sym *{vector-effect:non-scaling-stroke}
+.symbox{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;place-items:center;min-height:170px}
+.big{font-family:var(--display);font-size:3rem;line-height:1}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;z-index:9;max-width:92vw;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;gap:12px;align-items:center}
+.toast button{background:var(--acc);color:var(--acc-ink);border:0;border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600}
+.hidden{display:none !important}
+.say{border:1px solid var(--line);background:var(--bg);border-radius:10px;min-height:40px;padding:4px 12px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;font-size:.85rem}
+.say svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.note{border:1px dashed var(--acc);border-radius:10px;padding:10px 12px;font-size:.88rem;background:var(--acc-soft)}
+
+.slotgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.slot{display:flex;flex-direction:column;gap:4px;text-align:left;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);cursor:pointer;min-height:120px}
+.slot:hover{border-color:var(--acc)}
+.slot .num{font-family:var(--display);font-size:1.6rem;line-height:1;color:var(--acc)}
+.slot .st{font-weight:600;font-size:.9rem;line-height:1.3;flex:1}
+.slot .bar{height:8px;display:block}
+.ticks{display:grid;gap:8px}
+.tick{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);cursor:pointer;line-height:1.45}
+.tick input{width:24px;height:24px;flex:none;accent-color:var(--good);margin-top:2px}
+.tick:has(input:checked){border-color:var(--good);background:var(--good-soft)}
+textarea,select{width:100%;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;line-height:1.5}
+textarea:focus,select:focus{border-color:var(--acc);outline:none}
+select{min-height:52px}
+.seg.sm{margin-top:8px}.seg.sm button{min-height:44px}
+.focus{border:2px solid var(--acc)}
+.tile>div{display:flex;flex-direction:column;gap:4px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="bolt" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="#11161d"/></svg></div>
+      <div><h1 style="font-size:1.5rem;white-space:nowrap">Phase 4 Trainer</h1><div class="small muted sub">T1 Science · T2 Installation</div></div>
+    </div>
+    <div class="tools">
+      <button class="ibtn" id="txtDown" aria-label="Smaller text">A−</button>
+      <button class="ibtn" id="txtUp" aria-label="Bigger text">A+</button>
+      <button class="ibtn" id="themeBtn" aria-label="Switch light or dark"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/></svg></button>
+    </div>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="bottom" aria-label="Main">
+  <div class="in">
+    <a href="#home" data-v="home"><svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a>
+    <a href="#t2" data-v="t2"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>T2 Map</a>
+    <a href="#cards" data-v="cards"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 2h14v14"/></svg>Cards</a>
+    <a href="#quiz" data-v="quiz"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>Quiz</a>
+    <a href="#lab" data-v="lab"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2"/></svg>Lab</a>
+    <a href="#pictures" data-v="pictures"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>Pictures</a>
+  </div>
+</nav>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+/* ============ storage (optional) ============ */
+const store={
+  get(k,d){try{const v=localStorage.getItem('p4_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('p4_'+k,JSON.stringify(v))}catch(e){}}
+};
+let S=store.get('state',{xp:0,answered:0,correct:0,bestShift:0,bestLab:0,streak:0,boxes:{},missed:[]});
+function save(){store.set('state',S)}
+function addXP(n){S.xp+=n;save()}
+const LEVELS=[[0,'Apprentice'],[150,'Improver'],[400,'Advanced Improver'],[800,'Qualified Sparky'],[1500,'Master Electrician']];
+function level(){let cur=LEVELS[0],next=null;for(let i=0;i<LEVELS.length;i++){if(S.xp>=LEVELS[i][0]){cur=LEVELS[i];next=LEVELS[i+1]||null}}return{cur,next}}
+
+/* ============ settings ============ */
+let fs=store.get('fs',18);
+function applyFs(){document.documentElement.style.setProperty('--fs',fs+'px');store.set('fs',fs)}
+applyFs();
+document.getElementById('txtUp').onclick=()=>{fs=Math.min(26,fs+2);applyFs()};
+document.getElementById('txtDown').onclick=()=>{fs=Math.max(14,fs-2);applyFs()};
+let theme=store.get('theme',null);
+function applyTheme(){if(theme)document.documentElement.setAttribute('data-theme',theme)}
+applyTheme();
+document.getElementById('themeBtn').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  theme=cur==='dark'?'light':'dark';store.set('theme',theme);applyTheme();
+};
+
+/* ============ read aloud ============ */
+function speak(text){
+  try{
+    const s=window.speechSynthesis;if(!s)return toast('Read-aloud is not supported in this browser.');
+    s.cancel();
+    const clean=text.replace(/<[^>]+>/g,' ').replace(/\*\*/g,'').replace(/Ω/g,' ohms').replace(/µF/g,' microfarads').replace(/√/g,'root ').replace(/π/g,'pi').replace(/→/g,', ').replace(/≥/g,'at least ').replace(/≤/g,'no more than ').replace(/×/g,' times ').replace(/÷/g,' divided by ');
+    const u=new SpeechSynthesisUtterance(clean);u.rate=.95;
+    const vs=s.getVoices();const v=vs.find(v=>/en-IE/i.test(v.lang))||vs.find(v=>/en-GB/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang));
+    if(v)u.voice=v;s.speak(u);
+  }catch(e){toast('Read-aloud is not available here.')}
+}
+const SAY='<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';
+function sayBtn(id){return `<button class="say" data-say="${id}" aria-label="Read aloud">${SAY} Read aloud</button>`}
+let sayTexts={};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){speak(sayTexts[b.dataset.say]||'')}});
+
+/* ============ toast / break reminder ============ */
+let toastT;
+function toast(msg,btn){const t=document.getElementById('toast');t.innerHTML=`<span>${msg}</span>`+(btn?`<button id="tbtn">${btn}</button>`:'');t.classList.remove('hidden');clearTimeout(toastT);if(btn){document.getElementById('tbtn').onclick=()=>t.classList.add('hidden')}else toastT=setTimeout(()=>t.classList.add('hidden'),3200)}
+let activeSince=Date.now(),lastAct=Date.now();
+document.addEventListener('pointerdown',()=>{const n=Date.now();if(n-lastAct>5*60e3)activeSince=n;lastAct=n});
+setInterval(()=>{if(Date.now()-activeSince>15*60e3&&Date.now()-lastAct<60e3){toast('15 minutes done. Stand up, stretch, grab a drink — 2 minute break.','Got it');activeSince=Date.now()}},30e3);
+
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const bold=s=>s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const n3=x=>(Math.round(x*1000)/1000).toFixed(3);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+</script>
+
+<script>
+/* ============ QUESTION BANK (multiple choice) ============
+   Written from the topics that repeat across the Phase 4 T1/T2 papers. */
+const MCQ=[
+// ---- T1: motors
+{p:'T1',t:'Motors',q:'What is the **synchronous speed** of a 4-pole motor on a 50 Hz supply?',o:['3000 rpm','1500 rpm','1000 rpm','750 rpm'],a:1,w:'n<sub>s</sub> = 120 × f ÷ poles = 120 × 50 ÷ 4 = 1500 rpm.'},
+{p:'T1',t:'Motors',q:'What is the synchronous speed of an **8-pole** motor on 50 Hz?',o:['375 rpm','750 rpm','1000 rpm','1500 rpm'],a:1,w:'120 × 50 ÷ 8 = 750 rpm. More poles = slower speed.'},
+{p:'T1',t:'Motors',q:'A 4-pole, 50 Hz motor runs at **1420 rpm**. What is the slip?',o:['4.000 %','5.333 %','5.634 %','8.000 %'],a:1,w:'Slip = (1500 − 1420) ÷ 1500 × 100 = 5.333 %.'},
+{p:'T1',t:'Motors',q:'What does **slip** mean in an induction motor?',o:['The rotor speed in rpm','The gap between rotor and stator','The difference between synchronous speed and rotor speed, as a % of synchronous speed','The loss of one phase while running'],a:2,w:'The rotor always runs a bit slower than the rotating field. That difference is the slip.'},
+{p:'T1',t:'Motors',q:'Why are motor rotors and cores **laminated**?',o:['To make them lighter','To reduce eddy current losses','To increase the speed','To improve the power factor'],a:1,w:'Thin insulated sheets break up the paths for eddy currents, so less heat and less loss.'},
+{p:'T1',t:'Motors',q:'Can a **shaded-pole** motor be reversed by swapping the supply leads?',o:['Yes, swap line and neutral','Yes, swap the main winding leads','No — direction is set by where the shading rings are','Only with a capacitor added'],a:2,w:'The field always sweeps from the unshaded part of the pole to the shaded part. The rings are fixed, so the direction is fixed.'},
+{p:'T1',t:'Motors',q:'In a shaded-pole motor, what is the **shading ring** made of?',o:['Laminated steel','Copper (a short-circuited ring)','Rubber','Aluminium foil tape'],a:1,w:'A thick copper ring around part of each pole. Induced current in it delays the flux in that part, creating a moving field.'},
+{p:'T1',t:'Motors',q:'On a **capacitor-start** motor, what disconnects the start winding?',o:['The thermal overload','A centrifugal switch','The contactor','The MCB'],a:1,w:'At about 75 % of full speed the centrifugal switch opens and the start winding drops out.'},
+{p:'T1',t:'Motors',q:'How do you **reverse** a series universal motor?',o:['Swap the two supply leads','Reverse the connections to the field OR the armature (not both)','Reverse both field and armature','It cannot be reversed'],a:1,w:'Reversing only one of them changes the direction. Reversing both leaves it the same.'},
+{p:'T1',t:'Motors',q:'Maximum torque in a 3-phase induction motor happens when rotor resistance equals…',o:['Stator resistance','Rotor reactance','Supply impedance','Zero'],a:1,w:'Max torque when R₂ = X₂. A rotor-resistance (slip-ring) starter adds resistance at start to get max torque at standstill.'},
+{p:'T1',t:'Motors',q:'With a **star-delta** starter, the starting current is about…',o:['the same as DOL','½ of DOL','⅓ of DOL','3 × DOL'],a:2,w:'In star each winding gets 230 V instead of 400 V, so starting current and torque drop to about one third.'},
+{p:'T1',t:'Motors',q:'What is **single phasing**?',o:['Running a motor on a single-phase supply','Loss of one phase while a 3-phase motor is running','Wiring a motor in star','Using one overload for three phases'],a:1,w:'The motor keeps turning but draws too much current in the other two windings, so it overheats and can burn out.'},
+{p:'T1',t:'Motors',q:'**No-volt protection** on a motor starter is there to…',o:['Stop the motor restarting by itself when power comes back','Protect against earth faults','Limit the starting current','Correct the power factor'],a:0,w:'If the supply drops, the contactor drops out. The hold-in (retaining) contact is lost, so someone has to press Start again.'},
+// ---- T1: AC theory
+{p:'T1',t:'AC circuits',q:'A series R-L-C circuit is at **resonance**. Which is true?',o:['X<sub>L</sub> = X<sub>C</sub>, so Z = R and current is at its maximum','X<sub>L</sub> = R','Current is at its minimum','Power factor is 0'],a:0,w:'The two reactances cancel, leaving only R. Lowest impedance → biggest current, power factor 1.'},
+{p:'T1',t:'AC circuits',q:'Which formula gives the **resonant frequency**?',o:['f = 2πLC','f = 1 ÷ (2π√(LC))','f = R ÷ L','f = 1 ÷ (RC)'],a:1,w:'f₀ = 1 ÷ (2π √(L × C)). Remember to convert µF to F first.'},
+{p:'T1',t:'AC circuits',q:'In a mainly **inductive** circuit the current…',o:['leads the voltage','lags the voltage','is in phase with the voltage','is always zero'],a:1,w:'Inductive = lagging. Capacitive = leading. Memory trick: CIVIL — in a C, I before V; V before I in an L.'},
+{p:'T1',t:'AC circuits',q:'Power factor equals…',o:['Z ÷ R','R ÷ Z (= cos φ)','X ÷ R','V × I'],a:1,w:'pf = cos φ = R ÷ Z = True power ÷ Apparent power (P ÷ S).'},
+{p:'T1',t:'AC circuits',q:'In a parallel R-L-C circuit, I<sub>R</sub> = 9 A, I<sub>L</sub> = 15 A, I<sub>C</sub> = 3 A. The circuit is…',o:['leading','lagging','at resonance','purely resistive'],a:1,w:'I<sub>L</sub> is bigger than I<sub>C</sub>, so the circuit is inductive overall → lagging.'},
+{p:'T1',t:'AC circuits',q:'What does X<sub>C</sub> do when frequency goes **up**?',o:['Goes up','Goes down','Stays the same','Becomes equal to R'],a:1,w:'X<sub>C</sub> = 1 ÷ (2πfC). Higher f → smaller X<sub>C</sub>. X<sub>L</sub> does the opposite.'},
+// ---- T1: three-phase
+{p:'T1',t:'Three-phase',q:'In a **delta** connection, line current equals…',o:['phase current','√3 × phase current','phase current ÷ √3','3 × phase current'],a:1,w:'Delta: V<sub>L</sub> = V<sub>ph</sub>, I<sub>L</sub> = √3 × I<sub>ph</sub>.'},
+{p:'T1',t:'Three-phase',q:'In a **star** connection on a 400 V supply, the phase voltage is…',o:['400 V','692.8 V','230.940 V','133.3 V'],a:2,w:'Star: V<sub>ph</sub> = V<sub>L</sub> ÷ √3 = 400 ÷ 1.732 = 230.940 V. I<sub>L</sub> = I<sub>ph</sub>.'},
+{p:'T1',t:'Three-phase',q:'Total power of a balanced 3-phase load is…',o:['P = V<sub>L</sub> × I<sub>L</sub>','P = √3 × V<sub>L</sub> × I<sub>L</sub> × cos φ','P = 3 × V<sub>L</sub> × I<sub>L</sub>','P = V<sub>L</sub> ÷ I<sub>L</sub>'],a:1,w:'P = √3 V<sub>L</sub> I<sub>L</sub> cos φ. Or 3 × V<sub>ph</sub> × I<sub>ph</sub> × cos φ — same answer.'},
+{p:'T1',t:'Three-phase',q:'How do you find total power with the **two-wattmeter** method?',o:['W1 − W2','W1 + W2','W1 × W2','(W1 + W2) × √3'],a:1,w:'On a 3-phase 3-wire system, total power = the sum of the two readings.'},
+// ---- T1: magnetism & DC
+{p:'T1',t:'Magnetism',q:'Flux density B equals…',o:['Φ × A','Φ ÷ A','A ÷ Φ','Φ ÷ length'],a:1,w:'B = Φ ÷ A, in tesla (T). Convert cm² to m² by dividing by 10,000.'},
+{p:'T1',t:'Magnetism',q:'A **low-loss** magnetic material has a hysteresis loop that is…',o:['wide and fat','narrow and thin','a straight line','a circle'],a:1,w:'Narrow loop = little energy lost each cycle → good for transformer cores. Wide loop = high loss → good for permanent magnets.'},
+{p:'T1',t:'DC & capacitors',q:'The **time constant** of an R-C circuit is…',o:['τ = R ÷ C','τ = R × C','τ = V ÷ R','τ = 5RC'],a:1,w:'τ = R × C (in seconds). Fully charged after about 5 time constants.'},
+{p:'T1',t:'DC & capacitors',q:'68 µF in series with 47 kΩ. Time constant?',o:['0.320 s','3.196 s','31.96 s','1.446 s'],a:1,w:'68 × 10⁻⁶ × 47,000 = 3.196 s.'},
+{p:'T1',t:'DC & capacitors',q:'Initial charging current of a capacitor = …',o:['V ÷ R','V × C','0','R ÷ V'],a:0,w:'At switch-on the capacitor acts like a short, so I₀ = V ÷ R.'},
+// ---- T1: electronics & instruments
+{p:'T1',t:'Electronics',q:'How many diodes in a **three-phase full-wave** bridge rectifier?',o:['2','3','4','6'],a:3,w:'Two diodes per phase × 3 phases = 6.'},
+{p:'T1',t:'Electronics',q:'Compared with single-phase, a 3-phase rectifier has…',o:['more ripple','less ripple','the same ripple','no DC output'],a:1,w:'The peaks overlap, so the DC is much smoother (less ripple).'},
+{p:'T1',t:'Electronics',q:'A **photodiode** normally works in…',o:['forward bias','reverse bias','either, no difference','only on AC'],a:1,w:'Reverse biased: light frees charge carriers and a small reverse current flows in proportion to the light.'},
+{p:'T1',t:'Electronics',q:'In an NPN transistor, which current is the **largest**?',o:['Base','Collector','Emitter','They are equal'],a:2,w:'I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub>, so the emitter current is the biggest.'},
+{p:'T1',t:'Electronics',q:'What causes the **depletion layer** in a P-N junction?',o:['Heat from soldering','Electrons and holes crossing the junction and recombining','The plastic case','Too much current'],a:1,w:'Near the junction, free electrons fill holes. That leaves a thin zone with no free carriers, which acts as a barrier.'},
+{p:'T1',t:'Electronics',q:'An LED runs from 48 V. It needs 2 V at 20 mA. What series resistor?',o:['2.4 kΩ','2.3 kΩ','2.5 kΩ','230 Ω'],a:1,w:'R = (48 − 2) ÷ 0.020 = 2300 Ω = 2.3 kΩ.'},
+{p:'T1',t:'Electronics',q:'One disadvantage of a **linear** power supply is…',o:['high electrical noise','heavy and wastes energy as heat','cannot give DC','too complicated'],a:1,w:'Advantage: simple, clean output, low noise. Disadvantage: big transformer, heavy, inefficient.'},
+{p:'T1',t:'Instruments',q:'On an oscilloscope showing AC, the **X-axis** shows…',o:['voltage','time','current','frequency'],a:1,w:'X (horizontal) = time (time/div). Y (vertical) = voltage (volts/div). The Y-plates move the beam up and down.'},
+{p:'T1',t:'Instruments',q:'A signal is **21.21 V RMS**. What is its peak voltage?',o:['15 V','21.21 V','30 V','42.42 V'],a:2,w:'Peak = RMS × √2 = 21.21 × 1.414 ≈ 30 V.'},
+// ---- T2: cables & regs
+{p:'T2',t:'Cables',q:'Colour code for 3-phase cores: L1, L2, L3 are…',o:['Red, yellow, blue','Brown, black, grey','Brown, blue, green','Black, grey, blue'],a:1,w:'L1 brown, L2 black, L3 grey. Blue = neutral only. Green/yellow = protective conductor only.'},
+{p:'T2',t:'Cables',q:'AC cables entering a **ferromagnetic** (steel) enclosure must be arranged so…',o:['each conductor has its own steel entry hole','all conductors of the circuit, including the CPC, go through together','only the line goes through steel','the neutral is kept separate'],a:1,w:'Conductors must only be surrounded by steel together, never one by one — otherwise eddy currents heat the steel.'},
+{p:'T2',t:'Cables',q:'PVC/PVC cable will touch **expanded polystyrene** in a cavity. What do you do?',o:['Nothing, it is fine','Wrap it in tape','Put it in conduit or another barrier so it does not touch','Use a bigger cable'],a:2,w:'Polystyrene draws the plasticiser out of PVC and the insulation goes brittle. Keep them apart.'},
+{p:'T2',t:'Cables',q:'Unprotected cable buried in a wall is allowed within **150 mm** of…',o:['the floor','the ceiling or a corner','any window','the DB only'],a:1,w:'Safe zones: within 150 mm of the ceiling, within 150 mm of a corner, or straight vertical/horizontal runs to an accessory. Check the exact wording in ET101.'},
+{p:'T2',t:'Cables',q:'In a hollow wall, the cable must be at least ___ from the **reverse side** of the wall.',o:['10 mm','25 mm','50 mm','150 mm'],a:2,w:'Not less than 50 mm from the back face, so a screw from the other side will not hit it. Check in ET101.'},
+{p:'T2',t:'Cables',q:'An aluminium conductor is about ___ as conductive as copper.',o:['30 %','61 %','90 %','120 %'],a:1,w:'About 61 %, so aluminium needs a bigger size (usually one size up) for the same current. It is lighter and cheaper.'},
+{p:'T2',t:'Cables',q:'Joining aluminium to copper, you should use…',o:['a standard brass connector','a bi-metallic lug, clean and dry, with contact grease','solder','insulating tape only'],a:1,w:'Stops electrolytic corrosion. Keep it dry, clean, isolated, and torque it correctly.'},
+{p:'T2',t:'Cables',q:'One advantage of **XLPE** over PVC insulation is…',o:['lower cost','higher operating temperature, so more current for the same size','softer to bend','it does not need a sheath'],a:1,w:'XLPE runs at 90 °C vs 70 °C for PVC, so it carries more current. It also lasts longer and handles overloads better.'},
+{p:'T2',t:'Cables',q:'Low-voltage and **ELV** cables in the same trunking are OK if…',o:['they are different colours','every cable is insulated for the highest voltage present','the ELV is on top','the trunking is plastic'],a:1,w:'Or: separate compartments, a partition on tray, or separate conduit/trunking (ET101 528.1).'},
+{p:'T2',t:'Data',q:'Maximum length of the **permanent link** (patch panel to outlet) for Cat5e/Cat6?',o:['50 m','90 m','100 m','150 m'],a:1,w:'90 m permanent link + up to 10 m of patch/work-area leads = 100 m channel.'},
+{p:'T2',t:'Data',q:'What makes an **STP** cable different from UTP?',o:['It has 2 pairs','It has a foil/metal shield around the pairs','It is not twisted','It is fibre'],a:1,w:'Both have 4 twisted pairs with different twist rates and an outer jacket. STP adds a shield against interference (EMI).'},
+// ---- T2: protection
+{p:'T2',t:'Protection',q:'**Discrimination** between protective devices means…',o:['all devices trip together','the device nearest the fault (supply side) operates first','the main fuse always goes first','using only RCDs'],a:1,w:'Only the fuse/MCB just upstream of the fault should go, so the rest of the installation stays on.'},
+{p:'T2',t:'Protection',q:'HBC stands for…',o:['High Breaking Capacity','Heavy Busbar Circuit','High Bonding Conductor','Heat Balanced Cartridge'],a:0,w:'HBC fuses can safely break very high fault currents, and discriminate well, so they back up MCBs.'},
+{p:'T2',t:'Protection',q:'On an RCD marked **32A / 30mA / AC**, what is 30 mA?',o:['Load current rating','The residual (leakage) current that will trip it','The short-circuit rating','Trip time'],a:1,w:'32 A = how much load it can carry. 30 mA = sensitivity. AC = type (for loads with no significant DC component).'},
+{p:'T2',t:'Protection',q:'An MCB has two trip actions. Overloads are handled by the…',o:['magnetic trip','thermal (bi-metal) trip','RCD','neutral link'],a:1,w:'Thermal = slow, for overloads. Magnetic = instant, for short circuits.'},
+{p:'T2',t:'Protection',q:'In a **fuse-switch**…',o:['the fuse is a separate box next to the switch','the fuse link forms the moving contact','there is no fuse','the switch is inside the fuse'],a:1,w:'Fuse-switch: the fuse carrier moves as the switch blade. Switch-fuse: a switch with fuses in series in one unit.'},
+{p:'T2',t:'Protection',q:'Thermistors for motor protection are fitted…',o:['in the control panel','embedded in the motor windings','on the supply cable','on the fan cover'],a:1,w:'Embedded in the windings and wired to a thermistor relay that opens the control circuit if they heat up.'},
+{p:'T2',t:'Protection',q:'A thermostat\'s **bi-metallic strip** works because…',o:['the metals are magnetic','two metals expand by different amounts, so the strip bends','it melts','it is spring-loaded only'],a:1,w:'The bend opens or closes the contacts.'},
+// ---- T2: boards, motors mech, supplies, lighting
+{p:'T2',t:'Boards',q:'Where is a distribution board **NOT** allowed?',o:['A utility room','Under timber stairs','A hallway','A garage'],a:1,w:'Also not in bathrooms/WCs, storage or airing cupboards, above cookers/heaters, or where clothes could cover it (ET101 530.5).'},
+{p:'T2',t:'Motors (mechanical)',q:'A new bearing is pressed onto a shaft. The press should push on…',o:['the outer race','the inner race only','the balls','the seal'],a:1,w:'Pressing the outer race forces load through the balls and damages them. Remove old bearings with a puller.'},
+{p:'T2',t:'Motors (mechanical)',q:'Alignment of a direct coupling is finally checked with…',o:['a tape measure','a feeler gauge at 4 points 90° apart','a multimeter','your eye'],a:1,w:'Straight edge first, then feeler gauge at four points. All four the same = aligned.'},
+{p:'T2',t:'Motors (mechanical)',q:'A **flexible coupling** is used because it…',o:['makes the motor faster','absorbs shock, vibration and small misalignment','replaces the bearings','improves power factor'],a:1,w:'It also allows for shaft expansion.'},
+{p:'T2',t:'Supplies',q:'Why is there a cheaper **Night Saver** rate?',o:['Electricity is cleaner at night','Demand is lowest overnight, so power stations sit idle','Meters run slower at night','It is a government grant'],a:1,w:'Peak is around 17:00–19:00. The valley is overnight. Cheap rates fill the valley and use plant better.'},
+{p:'T2',t:'Supplies',q:'Difference between **SELV** and **PELV**?',o:['SELV is separated from earth; PELV can be earthed','PELV is higher voltage','SELV is DC only','No difference'],a:0,w:'Both are extra-low voltage. SELV is fully separated from earth; PELV is not.'},
+{p:'T2',t:'Batteries',q:'10 cells of 1.5 V, each 0.2 Ω internal, feed a 4 Ω load. Current?',o:['3.750 A','2.500 A','1.500 A','15.000 A'],a:1,w:'E = 15 V. Total R = 10 × 0.2 + 4 = 6 Ω. I = 15 ÷ 6 = 2.5 A.'},
+{p:'T2',t:'Batteries',q:'When testing lead-acid batteries, why is **ventilation** needed?',o:['To keep them cool','Charging gives off hydrogen, which can explode','To dry the acid','It is not needed'],a:1,w:'No naked flames. Wear goggles, rubber gloves and an apron.'},
+{p:'T2',t:'Emergency lighting',q:'In a **maintained** emergency light the lamp…',o:['only lights when mains fails','is on all the time, mains or battery','flashes','only lights during tests'],a:1,w:'Non-maintained: only on during mains failure. Combined (sustained): has two or more lamps, one fed from the emergency supply.'},
+{p:'T2',t:'Emergency lighting',q:'Quarterly test on a **3-hour** self-contained fitting: simulate mains failure for at least…',o:['5 minutes','30 minutes','1 hour','3 hours'],a:1,w:'At least 30 min (10 min for 1-hour units), but not more than a quarter of rated duration. Annual test = full rated duration.'},
+{p:'T2',t:'Lighting',q:'The unit of **illuminance** is…',o:['lumen','lux (lumens per m²)','candela','watt'],a:1,w:'Luminous flux = lumens. Illuminance = lux = lumens falling on each square metre.'},
+{p:'T2',t:'Lighting',q:'Low-pressure sodium (SOX) lamps are known for…',o:['excellent colour rendering','very high efficiency but poor colour (yellow light)','being instant-start','being used in hospitals'],a:1,w:'Monochromatic yellow light, so colours look wrong. Used where colour does not matter, like roads.'},
+{p:'T2',t:'Heating',q:'Night storage heaters store heat in…',o:['water','high-density bricks (blocks)','oil','air'],a:1,w:'They charge on off-peak electricity. The damper controls how fast heat is released.'},
+{p:'T2',t:'Testing',q:'**Main protective bonding** connects…',o:['sockets to lights','extraneous-conductive parts (water, gas pipes) to the main earthing terminal','line to neutral','the meter to the pole'],a:1,w:'It keeps all metalwork at the same potential, so dangerous touch voltages cannot build up during a fault.'},
+{p:'T2',t:'Busbars',q:'Why fit **expansion joints** on long busbar runs?',o:['To make it longer','To let the bars expand and contract with heat','To earth the bars','To add sockets'],a:1,w:'Without them the bars can warp, clearances shrink, and joints loosen into high-resistance hot spots.'},
+{p:'T2',t:'IP & influences',q:'In an **IP** rating, the second digit is protection against…',o:['dust and solid objects','water','impact','fire'],a:1,w:'First digit = solids/dust. Second digit = water. E.g. IP55.'},
+{p:'T2',t:'IP & influences',q:'External influence codes starting with **A** describe…',o:['environment (temperature, water, dust)','who uses it','building construction','the cable type'],a:0,w:'A = environment, B = utilisation (people), C = construction of the building. AD = water, AE = solid objects/dust.'},
+{p:'T2',t:'Protection',q:'Which MCB type is for **very high** inrush current (transformers, welders)?',o:['Type B','Type C','Type D','Type AC'],a:2,w:'B trips at 3–5 × In, C at 5–10 × In, D at 10–20 × In. Bigger inrush → later letter.'},
+{p:'T2',t:'Protection',q:'A Type **C** MCB trips instantly (magnetic) at about…',o:['1–2 × In','3–5 × In','5–10 × In','10–20 × In'],a:2,w:'Type C suits inductive loads like fluorescent lighting and small motors.'},
+{p:'T2',t:'Protection',q:'Faults at A (near the supply), B and C (far end). Fault current is **lowest** at…',o:['A','B','C','the same everywhere'],a:2,w:'The further from the transformer, the more impedance in the loop, so the less fault current.'},
+{p:'T2',t:'Data',q:'Why must T-568A and T-568B **not** be mixed in one installation?',o:['They use different cable','The green and orange pairs swap pins, so data will not pass','T-568B is only for phones','They are different voltages'],a:1,w:'Pick one standard and stick to it. Mixed ends are only for crossover leads.'},
+{p:'T2',t:'Underground',q:'Minimum clearance between underground **communication** cables and **power** cables?',o:['50 mm','100 mm','250 mm','450 mm'],a:1,w:'100 mm, or use a fire-retardant partition, or mechanical protection at crossings (ET101 528.2).'},
+{p:'T2',t:'Underground',q:'Cable buried between two buildings must be…',o:['painted orange','marked with cable covers or warning tape','run above ground','single-core only'],a:1,w:'Plus protection against damage (or buried deep enough), and buried ducts identified.'},
+{p:'T2',t:'Cables',q:'Recommended minimum bending radius of an **aluminium-sheathed** cable?',o:['4 × D','6 × D','10 × D','15 × D'],a:3,w:'r = 15 × D, where D is the outside diameter of the cable.'},
+{p:'T2',t:'Solar PV',q:'A "Solar PV on roof" sign is **not** required at…',o:['the origin of the installation','the meter position (if remote)','the DB the inverter feeds','every socket outlet'],a:3,w:'Signs go at the origin, the meter (if remote), and the board the inverter connects to.'},
+{p:'T2',t:'Lighting',q:'What does **DCL** stand for when connecting a luminaire?',o:['Direct Current Lamp','Device for Connecting a Luminaire','Double Contact Lampholder','Daylight Control Link'],a:1,w:'Luminaires connect via a box, a DCL outlet, or equipment designed for direct connection.'},
+{p:'T2',t:'Bonding',q:'Supplementary bonding conductor where it is **not** mechanically protected — minimum size?',o:['1.5 mm²','2.5 mm²','4 mm²','10 mm²'],a:2,w:'4 mm² unprotected, 2.5 mm² where mechanically protected (ET101 544.2).'},
+{p:'T2',t:'Boards',q:'A DB with its bottom **below 1.4 m** must be…',o:['painted red','accessible only to responsible persons','fitted with an RCD','in a cupboard'],a:1,w:'So young children cannot get at it (ET101 530.6).'},
+{p:'T2',t:'Conduit',q:'Steel conduit is used as the CPC. How many cables do you count per single-phase circuit?',o:['1','2 (L + N)','3 (L + N + CPC)','4'],a:1,w:'The conduit itself is the protective conductor, so only line and neutral are drawn in.'},
+{p:'T2',t:'Conduit',q:'Cable factor for a stranded **2.5 mm²** PVC single-core in conduit (long runs/bends)?',o:['16','22','30','43'],a:2,w:'From the papers\' model answers: 1.5 mm² = 22, 2.5 mm² = 30 (Table 52J.3). Check against ET101.'},
+{p:'T2',t:'Batteries',q:'A hydrometer measures the…',o:['battery voltage','specific gravity of the electrolyte','internal resistance','charging current'],a:1,w:'Fully charged lead-acid reads about 1.25–1.28.'},
+{p:'T2',t:'Batteries',q:'VRLA (sealed lead-acid) batteries are charged by…',o:['constant current','constant voltage','pulse charging only','they cannot be recharged'],a:1,w:'Constant voltage for lead-acid. Ni-Cad uses constant current.'},
+{p:'T2',t:'Batteries',q:'Compared with lead-acid, Ni-Cad batteries are…',o:['heavier and cheaper','lighter, dearer, and last much longer','the same','only for cars'],a:1,w:'About 50–60 % lighter, higher initial cost, 25+ years life.'},
+{p:'T2',t:'Emergency lighting',q:'**Annual** test of a 3-hour self-contained emergency light: run on battery for…',o:['10 minutes','30 minutes','1 hour','the full 3 hours'],a:3,w:'Quarterly: 30 min. Annual: full rated duration. Record everything in the logbook.'},
+{p:'T2',t:'Emergency lighting',q:'One advantage of a **self-contained** system over a central battery system:',o:['batteries last 25 years','a failure only affects one fitting','tested from one place','no batteries needed'],a:1,w:'Self-contained: cheap to install, independent. Central: long battery life, central testing, but one failure kills all.'},
+{p:'T2',t:'Lamps',q:'Approximate efficacy of **LED** lamps?',o:['10–20 lm/W','30–70 lm/W','100–200 lm/W','500 lm/W'],a:2,w:'Fluorescent about 30–70 lm/W. LED about 100–200 lm/W. Both full output at switch-on.'},
+{p:'T2',t:'Lamps',q:'Which lamp has the **highest efficacy** but the **worst** colour rendering?',o:['MBF','SOX (low-pressure sodium)','LED','Metal halide (MBI)'],a:1,w:'SOX about 180 lm/W, monochrome yellow light. MBF about 50 lm/W, reasonable colour.'},
+{p:'T2',t:'Lighting',q:'An instrument that measures lighting level in a room is a…',o:['megger','lux meter','clamp meter','oscilloscope'],a:1,w:'It reads illuminance (E) in lux.'},
+{p:'T2',t:'Lighting',q:'Room 8 m × 16 m needs 300 lux. Total luminous flux?',o:['2,400 lm','38,400 lm','128 lm','3,840 lm'],a:1,w:'F = E × A = 300 × 128 = 38,400 lumens.'},
+{p:'T2',t:'Lighting',q:'In N = F ÷ (n × lm × UF × MF), what is **MF**?',o:['Mounting factor','Maintenance factor — allows for dirt and lamp ageing','Main fuse','Magnetic flux'],a:1,w:'UF = utilisation factor (how much light reaches the work plane). MF = maintenance factor.'},
+{p:'T2',t:'Lighting controls',q:'Best control for lights next to big office windows?',o:['A key switch','Daylight-linked photo-electric dimming','A 24 h timer only','No control'],a:1,w:'Also PIR presence detection, dimmable fittings, and a central lighting control system.'},
+{p:'T2',t:'Storage heaters',q:'On a fan-assisted storage heater, the **fan** is fed from the…',o:['restricted off-peak supply','unrestricted (24 h) supply','emergency lighting circuit','same terminals as the elements'],a:1,w:'Elements charge on off-peak (restricted). The fan must work during the day, so unrestricted.'},
+{p:'T2',t:'Storage heaters',q:'Why must storage heaters be fixed securely?',o:['They vibrate','The heat-storage blocks make them very heavy','They are Class II','For the fan'],a:1,w:'High-density clay/ceramic blocks: strong wall fixing and a floor that can take the weight.'},
+{p:'T2',t:'Storage heaters',q:'How does the supply authority control off-peak storage heating?',o:['By the customer\'s switch','With a sealed time switch on a separate circuit and an off-peak meter','By the MCB','By the boiler'],a:1,w:'Separate circuit, sealed time switch, separate meter.'},
+{p:'T2',t:'Underfloor heating',q:'Underfloor heating mat under tiles. Which is **wrong**?',o:['Insulate under it','RCD protection','Cut the mat shorter to fit','Floor probe between the cables'],a:2,w:'Never cut or overlap heating cable — the mat is designed for a set wattage.'},
+{p:'T2',t:'Central heating',q:'An **S-Plan** system uses…',o:['one 3-port mid-position valve','a 2-port zone valve for each zone','no valves','a single thermostat only'],a:1,w:'S-Plan: 2-port valve per zone. Y-Plan: one 3-port mid-position valve.'},
+{p:'T2',t:'Central heating',q:'A **Y-Plan** system uses…',o:['a 3-port mid-position valve','three 2-port valves','a storage heater','a hydrometer'],a:0,w:'The mid-position valve can feed heating, hot water, or both at once.'},
+{p:'T2',t:'Testing',q:'Equipment marked with the **double-square** symbol should…',o:['have a 10 mm² earth','NOT be earthed (Class II)','be bonded to the gas pipe','have an RCD only'],a:1,w:'Double-square = double insulated (Class II). No earth connection.'},
+{p:'T2',t:'Testing',q:'Which of these is **not** one of the standard verification tests?',o:['Insulation resistance','Polarity','Earth fault loop impedance','Hydrometer test'],a:3,w:'Visual inspection, continuity of protective conductors, insulation resistance, polarity, earth fault loop impedance, RCD operation.'},
+{p:'T2',t:'Motor couplings',q:'Two types of flange misalignment are…',o:['angular and parallel (offset)','hot and cold','radial and vertical only','left and right'],a:0,w:'Angular: gap wider one side. Parallel: shaft centres offset. Correct both to the maker\'s tolerance.'},
+{p:'T2',t:'Busbars',q:'Which is an **advantage** of rising main busbar over cables?',o:['Needs more space','Less termination space and can be reused','Needs more lugs','Higher volt drop'],a:1,w:'Also: fewer fixings, faster install, type-tested fault rating, better fire resistance, lower volt drop.'},
+];
+
+/* ============ FLASHCARDS (written-answer practice) ============ */
+const CARDS=[
+// ---- T2 cards: s = question slot on the paper (1-20), m = marks, n = points needed for full marks
+// Slot 1: motor couplings & bearings
+{p:'T2',s:1,m:2,t:'Motor couplings',q:'Flexible couplings: state the basic function, and how the motor is aligned to its load.',a:['Joins the motor shaft to the load shaft end to end, so both turn together','Absorbs shock, vibration and small misalignment (and allows for shaft expansion)','Align with a straight edge first, then check with a feeler gauge at 4 points 90° apart — all four gaps equal = aligned'],n:2},
+{p:'T2',s:1,m:2,t:'Motor couplings',q:'State the TWO basic functions of a flexible coupling.',a:['Transmits power (torque) from one shaft to the other so both rotate together at the same speed','Compensates for small misalignment, movement and vibration between the two shafts']},
+{p:'T2',s:1,m:2,t:'Motor couplings',q:'Two flanges directly couple a motor to its machine. Describe (with sketches) two types of misalignment and how to minimise them.',a:['Angular misalignment: the gap is wider on one side than the other (X ≠ Y)','Parallel (offset) misalignment: the shaft centres are offset by a distance P','Minimise both to within the manufacturer\'s tolerances (shim the feet, re-check with feeler gauge / dial gauge)'],n:2,fig:'misalign'},
+{p:'T2',s:1,m:2,t:'Motor bearings',q:'Describe how to remove a worn bearing and fit a new one on a motor shaft.',a:['Remove with a bearing puller — do not bend or damage the shaft','Heating the bearing (not the shaft) helps it come off','Fit the new one with a press and sleeve pushing on the INNER race only','Make sure it is the right way round'],n:2},
+{p:'T2',s:1,m:2,t:'Motor protection',q:'Where are thermistors located in the overcurrent protection of a 3-phase induction motor?',a:['Embedded in the motor windings','Wired to a thermistor control relay that opens the control circuit when the windings get too hot']},
+{p:'T2',s:1,m:2,t:'Motor couplings',q:'Name two methods of coupling a motor to drive a load.',a:['Solid (direct) coupling','Flexible coupling','Vee-belt drive','Flat belt drive'],n:2},
+// Slot 2: cable rules
+{p:'T2',s:2,m:5,t:'Cable rules',q:'(a) How must AC cables entering a ferromagnetic enclosure be arranged? (b) PVC/PVC cable without armour buried in a solid wall: the 3 permitted methods?',a:['(a) All conductors of the circuit, including the CPC, in the same enclosure — only collectively surrounded by steel, never one per hole','(b) Within 150 mm of the room edges, or a straight horizontal/vertical run to the point or accessory','(b) Protected against harmful substances in plaster/concrete (PVC conduit or suitable sheath)','(b) Not less than 50 mm from the reverse side of the wall'],r:'ET101 521.5 · Table 52.1',c:1,fig:'zones'},
+{p:'T2',s:2,m:5,t:'Cable rules',q:'(a) Which types of cable are recognised by CENELEC? (b) Colour code for multicore cables and cords on AC circuits?',a:['(a) Harmonised cables — carry the <HAR> mark plus the approval body (e.g. BASEC, VDE)','(a) Approved national types — marked on the sheath','(b) Line: brown (L1), black (L2), grey (L3)','(b) Blue = neutral (or mid-point) only','(b) Green/yellow = protective conductor only'],r:'ET101 514.3',c:1},
+{p:'T2',s:2,m:2,t:'Cable rules',q:'(a) Flexible cables and cords — requirement regarding mechanical damage? (b) Separated circuits — what about their exposed-conductive-parts?',a:['(a) Must be visible along any part of their length liable to mechanical damage','(b) Must NOT be connected to the protective conductor, to exposed parts of other circuits, or to earth'],r:'ET101 413.3',c:1},
+{p:'T2',s:2,m:2,t:'Lighting wiring',q:'State two methods of connecting luminaires to the fixed wiring.',a:['A box (to I.S. EN 60670)','A DCL outlet — Device for Connecting a Luminaire (I.S. EN 61995)','Equipment designed to be connected directly to the wiring system'],n:2,r:'ET101 559.5',c:1},
+// Slot 3: data cabling & segregation
+{p:'T2',s:3,m:3,t:'Data cabling',q:'Describe the construction of STP cable used in Cat6 structured cabling.',a:['4 pairs of insulated copper conductors','Each pair twisted, each with a different twist rate','Foil/metal shield around the pairs (that is the "S" in STP)','Overall outer jacket'],n:3},
+{p:'T2',s:3,m:3,t:'Data cabling',q:'Describe the construction of UTP cable used in Cat5e structured cabling.',a:['4 pairs of insulated copper conductors','Each pair twisted, with different twist rates','NO shield (unshielded)','Overall outer jacket'],n:3},
+{p:'T2',s:3,m:3,t:'Segregation',q:'Describe three ways low-voltage and extra-low-voltage (Band I & II) circuits can share a wiring system.',a:['Every cable insulated for the highest voltage present','Each core of a multicore insulated for the highest voltage in it','Separate compartment of trunking/ducting','Cable tray with a partition between them','Separate conduit or trunking system'],n:3,r:'ET101 528.1',c:1},
+{p:'T2',s:3,m:3,t:'Underground cables',q:'Underground communication cables cross or run close to power cables: minimum clearance, and the alternatives?',a:['Keep at least 100 mm apart','OR a fire-retardant partition between them (bricks, clay/concrete cable covers, shaped blocks, fire-retardant conduit or troughs)','OR at crossings, mechanical protection between them (conduit, concrete caps or blocks)'],r:'ET101 528.2',c:1},
+{p:'T2',s:3,m:3,t:'Solar PV',q:'Where must "Solar PV on roof" warning signs be placed?',a:['At the origin of the installation','At the metering position, if it is away from the origin','At the consumer unit / distribution board the inverter is connected to'],r:'ET101 712.514',c:1},
+// Slot 4: aluminium & PVC
+{p:'T2',s:4,m:4,t:'Aluminium cables',q:'Compare aluminium to copper: mechanical properties, cost, current-carrying capacity, conductivity.',a:['Weight: aluminium is about 3 × lighter — easier to handle, used for big and overhead cables','Cost: aluminium is cheaper, and its price is more stable','Conductivity: aluminium is only about 61 % of copper','So it needs a bigger size for the same current (about one size up, e.g. 25 mm² Al ≈ 16 mm² Cu)'],r:'Min Al size for power/lighting: check ET101 Table 52',c:1},
+{p:'T2',s:4,m:2,t:'Cable rules',q:'PVC/PVC cable in a wall cavity likely to touch expanded polystyrene: what must be done?',a:['Do not let PVC stay in contact with expanded polystyrene (it draws out the plasticiser — PVC goes brittle)','Run it in conduit or another enclosure that polystyrene will not attack'],r:'ET101 522.5',c:1},
+{p:'T2',s:4,m:2,t:'Aluminium cables',q:'Installing aluminium cable for power circuits: the requirement for the connectors?',a:['Connectors used to terminate aluminium conductors must be tested and approved for that specific use'],r:'ET101 524.1, Table 52.3 note',c:1},
+{p:'T2',s:4,m:2,t:'Aluminium cables',q:'Recommended minimum bending radius for a cable with an aluminium sheath?',a:['r = 15 × D','D = the overall (outer) diameter of the cable (unless the manufacturer says otherwise)'],r:'ET101 Annex 52',c:1},
+// Slot 5: capacity, volt drop, EMI, losses
+{p:'T2',s:5,m:4,t:'Cable sizing',q:'(a) What determines the current-carrying capacity of a cable? (b) List four factors to consider.',a:['(a) Must not exceed the value from the Annex 52 tables, after correction factors are applied','(b) Ambient temperature','(b) Method of installation','(b) Grouping with other circuits','(b) Thermal insulation · load current · volt drop · fault loop impedance'],n:4,r:'ET101 523',c:1},
+{p:'T2',s:5,m:2,t:'Data cabling',q:'How can data cabling be protected from electromagnetic interference (EMI)? Two methods.',a:['Use shielded (STP/screened) cable','Keep it separated from power cables — e.g. multi-compartment trunking','Earthed steel trunking around unshielded cable near sources of interference'],n:2},
+{p:'T2',s:5,m:3,t:'Energy efficiency',q:'Cable I²R losses: state three ways to reduce them.',a:['Reduce the volt drop in the wiring','Increase the conductor cross-sectional area','Fit power factor correction','Reduce harmonic currents'],n:3,r:'ET101 8A',c:1},
+{p:'T2',s:5,m:3,t:'Energy efficiency',q:'State three factors that affect I²R power losses in a cable.',a:['Cable length','Conductor cross-sectional area','The load current']},
+{p:'T2',s:5,m:2,t:'Volt drop',q:'10 mm² cable, 40 m run, 38 A, 4.4 mV/A/m. Volt drop? Is it OK?',a:['Vd = mV/A/m × I × L ÷ 1000 = 4.4 × 38 × 40 ÷ 1000 = 6.688 V','Limit is 4 % of 230 V = 9.2 V → it complies','Practise more of these in the Formula Lab'],r:'mV/A/m from ET101 table',c:1},
+// Slot 6: joints, discrimination, RCDs
+{p:'T2',s:6,m:2,t:'Aluminium cables',q:'Describe the electrolytic effect between copper and aluminium, and how to prevent it.',a:['Moisture at an Al–Cu joint acts as an electrolyte → the aluminium corrodes quickly','Use bi-metallic (Al/Cu) lugs or connectors','Coat the joint with anti-oxidant paste/grease','Tin-plated Al lugs only in rooms that stay dry'],n:2},
+{p:'T2',s:6,m:2,t:'Cable rules',q:'What does ET101 require when connecting dissimilar metals liable to cause electrolytic action?',a:['They must not be placed in contact unless special arrangements are made to avoid the effects of the contact','(Quote the rule — the examiner wants the regulation, not just "use a bi-metal lug")'],r:'ET101 522.5.2',c:1},
+{p:'T2',s:6,m:4,t:'Aluminium cables',q:'State four precautions when connecting aluminium cables into copper busbars.',a:['Isolate — busbar and cable dead','Connection clean and dry (keep moisture off)','Use a bi-metallic lug, with contact grease inside','Tighten to the correct torque']},
+{p:'T2',s:6,m:4,t:'Protection',q:'With a diagram, explain discrimination between protective devices.',a:['Devices are chosen so the one nearest the fault (on the supply side) operates first','Fault on a final circuit: only that circuit\'s fuse/MCB goes','Sub-board and main fuse stay in, so the rest of the building keeps power','Diagram: Supply → main fuse → sub-board fuse → final circuit fuse → fault X'],fig:'discrim'},
+{p:'T2',s:6,m:3,t:'Protection',q:'An RCD is marked 32A / 30mA / AC. Explain each part.',a:['32 A — rated current it can carry continuously','30 mA — residual (earth leakage) current that trips it','AC — type: for loads with no significant DC component']},
+{p:'T2',s:6,m:2,t:'Data cabling',q:'Why must T-568A and T-568B terminations not be mixed in one installation?',a:['The green and orange pairs swap pin positions between the two','Mixed ends → pairs do not line up at plugs and jacks → data signals will not transfer','Pick one (usually T-568B in Europe) and stay consistent — mixed ends only for crossover leads']},
+{p:'T2',s:6,m:2,t:'Boards',q:'A wall-mounted DB has its bottom less than 1.4 m from the floor. What is required, and why?',a:['It must be accessible only to responsible persons (e.g. lockable)','Reason: to stop young children getting at it'],r:'ET101 530.6',c:1},
+// Slot 7: DB drawing
+{p:'T2',s:7,m:6,t:'Distribution board',q:'Draw the internal connections of a 3-phase DB: 3-phase heater, 3-phase motor, 4 lighting circuits, 2 socket circuits.',a:['Main switch / fuse-switch feeding L1, L2, L3 busbars + neutral bar + earth bar','3-phase loads: triple-pole (TP) MCB taking L1, L2 and L3','Single-phase loads spread across L1, L2, L3 to balance the phases','Sockets on RCBOs (RCD protection)','Every circuit clearly labelled, neutrals to N bar, CPCs to E bar'],n:4,fig:'dbsample'},
+{p:'T2',s:7,m:6,t:'Distribution board',q:'Complete the DB drawing: heating (3-phase), lighting 1, lighting 2, printing machine — protected by fuses.',a:['Heating: a fuse in each of L1, L2, L3 (triple-pole)','Lighting 1, lighting 2 and the printing machine on different phases (balance)','Each single-phase fuse fed from its busbar; neutrals to N bar','Label every load'],n:3,fig:'dbsample'},
+// Slot 8: MCBs & HBC
+{p:'T2',s:8,m:1,t:'Protection',q:'On an MCB tripping curve, identify the maximum and minimum tripping curve regions.',a:['Minimum curve = the left/lower edge of the band (to the left it will not trip)','Maximum curve = the right/upper edge (to the right it will always trip)','Upper curved part = thermal (overload), the drop = magnetic (short circuit)'],n:2,fig:'mcb'},
+{p:'T2',s:8,m:2,t:'Protection',q:'Why are MCBs backed up by HBC fuses in industrial installations? What does HBC mean?',a:['MCBs have a limited breaking (rupturing) capacity — may not clear very high fault currents','HBC = High Breaking Capacity']},
+{p:'T2',s:8,m:4,t:'Protection',q:'Explain the purpose of an HBC fuse and draw its construction.',a:['Safely breaks very high fault currents; good discrimination; used as back-up','Ceramic body','Silver element (with notches/necks)','Quartz sand filler to quench the arc','Brass end caps and fixing tags · indicator'],n:4,fig:'hbc'},
+{p:'T2',s:8,m:2,t:'Protection',q:'Which MCB/RCBO type for circuits with very high inrush current? What range of magnetic tripping can it ignore?',a:['Type B: trips at 3–5 × In — general/resistive loads','Type C: 5–10 × In — inductive loads (fluorescent lighting, small motors)','Type D: 10–20 × In — VERY high inrush (transformers, welders, big motors)'],n:1,r:'ET101 533.3',c:1},
+{p:'T2',s:8,m:2,t:'Protection',q:'Short-circuit faults at A (near supply), B and C (far end). Where is the fault current lowest, and why?',a:['Lowest at C — the point furthest from the supply transformer','The further out the circuit, the higher the impedance → less fault current']},
+// Slot 9: conduit factors & heights
+{p:'T2',s:9,m:4,t:'Conduit capacity',q:'Steel conduit, 8 m run, 2 bends: 2 × 2.5 mm² circuits and 3 × 1.5 mm² circuits (stranded single-core). Conduit is the CPC. Cable factors and minimum conduit size?',a:['Conduit is the CPC → only L + N per circuit (2 cables each)','2.5 mm²: 4 cables × 30 = 120','1.5 mm²: 6 cables × 22 = 132','Total 252 → 25 mm conduit (factor 292) is enough'],r:'ET101 Tables 52J.3 & 52J.4 — your model answers are not consistent on this, check with the tutor',c:1},
+{p:'T2',s:9,m:8,t:'Boards',q:'(a) Bell wires (ELV) inside a DB: precaution? (b) Diagram: mounting heights for switches, sockets and DB.',a:['(a) Sleeve ELV cables to the highest voltage in the board, or keep them physically separated','(b) Switches in dwellings: 400–1200 mm (public buildings 900–1200 mm)','(b) Sockets: 400–1200 mm above finished floor','(b) DB: top not more than 2.25 m; bottom not less than 1.4 m'],r:'ET101 530.5, 530.6, 554.1',c:1,fig:'heights'},
+{p:'T2',s:9,m:6,t:'Boards',q:'Domestic DB: mounting height rules (with diagram) + four places it cannot go.',a:['Readily accessible; top ≤ 2.25 m, bottom ≥ 1.4 m','Not in a storage or airing cupboard','Not under timber stairs','Not in a bathroom, washroom or WC','Not above a cooker/heater, or where clothes could cover it'],n:5,r:'ET101 530.5',c:1,fig:'heights'},
+{p:'T2',s:9,m:4,t:'Cable rules',q:'Four exemptions from mechanical protection for cables in hollow walls (partitions)?',a:['Within 150 mm (horizontally) of a room corner','Within 150 mm (vertically) of the ceiling','Straight horizontal or vertical run directly to an accessory, appliance or DB','At least 50 mm from the reverse side of the wall'],r:'ET101 522.6',c:1,fig:'zones'},
+// Slot 10: rising mains & water
+{p:'T2',s:10,m:6,t:'Busbars',q:'Describe three precautions when installing a rising main busbar system.',a:['Seal every floor penetration to the fire resistance of that floor (and fit internal fire barriers in the trunking)','Correct IP rating — no water or dust ingress; seal floors against water leaking between levels','Expansion joints in tall runs; adequate supports at the maker\'s spacing','Mechanical protection where needed'],n:3,r:'ET101 527.2, 522',c:1},
+{p:'T2',s:10,m:6,t:'Busbars',q:'Six advantages of a rising main busbar system over cables in a multi-storey building.',a:['Strong over long runs with few fixings → faster to install','Replaces many cable runs and their supports','Easier to handle than lots of large cables','Less termination space in switchboards; no lugs except at the feeder','Takes up less space; bends and offsets fit tight areas','Type-tested fault ratings · lower volt drop · better fire resistance · can be reused'],n:6},
+{p:'T2',s:10,m:4,t:'Cable rules',q:'Where water or high humidity may occur, what three requirements must the installer consider?',a:['No damage from condensation or water — IP rating suitable for the location','Provide a way for collected water/condensation to escape','Where waves may hit it, protect it against mechanical damage'],r:'ET101 522.3',c:1},
+// Slot 11: underground
+{p:'T2',s:11,m:2,t:'Underground cables',q:'Non-armoured cable in a pipe in the ground (industrial/commercial): type of pipe, and minimum depth?',a:['Pipe: high-density polythene, high-impact PVC, or spigotted concrete','Depth: your model answers differ — 450 mm (2021, 2024 papers) and 250 mm (2023 paper D). Check ET101 522.8 and ask the tutor which he wants'],c:1},
+{p:'T2',s:11,m:2,t:'Underground cables',q:'Cable suitable for burying in a domestic garden, and minimum depth?',a:['SWA (steel wire armoured)','At least 450 mm (600 mm where the ground is likely to be dug, from your Q&A notes)'],c:1},
+{p:'T2',s:11,m:3,t:'Underground cables',q:'Cable between two buildings, in the soil: precautions required?',a:['Protect against mechanical damage OR bury deep enough to minimise the risk','Mark buried cables with cable covers or marking tape','Buried conduits and ducts must be identified'],r:'ET101 522.8.10',c:1},
+{p:'T2',s:11,m:2,t:'Underground cables',q:'Drawing cables into an underground duct: one advantage, one disadvantage.',a:['Advantage: repairs and additions from manholes without digging; cable need not be armoured; well protected','Disadvantage: higher initial cost; poorer heat dissipation → lower current rating'],n:2},
+{p:'T2',s:11,m:3,t:'Underground cables',q:'Pulling large cables into a duct with rollers and jacks: three precautions.',a:['Jacks and rollers rated for the drum weight and width','Jacks on level ground, axle level','Rollers placed so the cable is not strained or damaged','Cable comes off the bottom of the drum so it cannot tip; use pulling lubricant on long runs with bends'],n:3},
+{p:'T2',s:11,m:6,t:'Busbars',q:'Why are expansion joints fitted on long busbar runs? What fault if they are not?',a:['Busbars expand and contract with the heat from load current','Without joints the bars can warp → clearances to other bars/the case reduce','Constant movement loosens joints → high-resistance hot joints']},
+// Slot 12: busbar trunking & bonding
+{p:'T2',s:12,m:4,t:'Busbars',q:'(a) Overhead busbar trunking vs fixed wiring: one advantage, one disadvantage. (b) Minimum size of supplementary bonding conductor with underfloor busbar trunking?',a:['(a) Advantage: machines plugged in/out (tap-off units) without shutting down the rest','(a) Disadvantage: expensive to install at first','(b) 2.5 mm² copper where mechanically protected','(b) 4 mm² copper where NOT mechanically protected'],r:'ET101 544.2',c:1},
+{p:'T2',s:12,m:2,t:'Busbars',q:'Underfloor / raised-floor power-track: one advantage, one disadvantage.',a:['Advantage: flexible when the floor layout is unknown; 13 A / 32 A tap-offs; modular floor boxes; clean-earth versions','Disadvantage: usually only up to 63 A; limited tap-offs; runs about 20 m max; proprietary parts can be hard to get'],n:2},
+{p:'T2',s:12,m:2,t:'Busbars',q:'ET101 requirements for busbar trunking and powertrack systems?',a:['Busbar trunking to I.S. EN 60439-2; powertrack to I.S. EN 61534','Selected and installed to the manufacturer\'s instructions, allowing for external influences'],r:'ET101 521.4',c:1},
+{p:'T2',s:12,m:2,t:'Trunking',q:'Give two reasons multi-compartment trunking is popular in commercial buildings.',a:['Keeps circuits of different voltage bands segregated (power, data, telecoms)','One neat run instead of several unsightly runs','Fast and easy to install'],n:2},
+// Slot 13: batteries
+{p:'T2',s:13,m:2,t:'Batteries',q:'Ten cells, 1.5 V each, 0.2 Ω internal resistance each, series, 4 Ω load. Current? + two recharging methods.',a:['I = (n × E) ÷ (R + n × r) = 15 ÷ (4 + 2) = 2.5 A','Recharging: constant current','Constant voltage'],r:'Practise in the Formula Lab'},
+{p:'T2',s:13,m:4,t:'Batteries',q:'Testing lead-acid batteries for a large diesel generator: equipment, procedure and PPE.',a:['PPE: goggles, rubber gloves, heavy apron · ventilated room · no naked flames','Fully charge, disconnect, inspect; note voltage on a voltmeter','Load tester across terminals for 15 s — should stay above about 9.5 V (12 V battery)','Let it recover ~30 s, repeat; still above 9.5 V = good'],n:4},
+{p:'T2',s:13,m:2,t:'Batteries',q:'VRLA (valve-regulated lead-acid) batteries: three handling precautions, and the charging method.',a:['Sealed, but the gel/paste inside is still corrosive if the case cracks — handle carefully, do not drop','Wear apron, gloves and goggles','Charging: constant voltage'],n:2},
+{p:'T2',s:13,m:4,t:'Batteries',q:'Compare lead-acid and Ni-Cad batteries: weight, applications, charging method, cost.',a:['Weight: lead-acid heavy; Ni-Cad about 50–60 % lighter','Uses: lead-acid in cars, trucks, forklifts, UPS · Ni-Cad in medical devices, power tools, aircraft','Charging: lead-acid constant voltage (heat must be managed) · Ni-Cad constant current, tolerates abuse','Cost: lead-acid cheap, 3–10 yrs · Ni-Cad dearer but lasts 25+ yrs']},
+{p:'T2',s:13,m:2,t:'Batteries',q:'A hydrometer checks a lead-acid battery. What does it test, and the reading when fully charged?',a:['The specific gravity (density) of the electrolyte','Fully charged: about 1.25–1.28']},
+// Slot 14: emergency lighting tests & systems
+{p:'T2',s:14,m:2,t:'Emergency lighting',q:'Self-contained emergency lighting: describe two of the three quarterly test requirements.',a:['Simulate mains failure via the test facility: at least 30 min (3 h units) or 10 min (1 h units), max ¼ of rated duration — check every luminaire lights','Afterwards, check every charging/status LED shows healthy','Issue a report to the owner and put a copy in the logbook'],n:2},
+{p:'T2',s:14,m:4,t:'Emergency lighting',q:'Central battery vs self-contained emergency lighting: four comparisons.',a:['Battery life: central up to ~25 yrs · self-contained batteries replaced periodically','Install cost: central high · self-contained low (needs local unswitched supply)','Testing: central from one place · self-contained each fitting tested','Failure: central battery fault kills the whole system · self-contained fault affects one fitting'],n:4},
+{p:'T2',s:14,m:2,t:'Emergency lighting',q:'Self-contained emergency luminaire: four main components.',a:['Battery','Charger','Control unit','Lamp(s) / LEDs','Diffuser / cover · test facility'],n:4},
+{p:'T2',s:14,m:2,t:'Emergency lighting',q:'Describe the tests and procedures for emergency lights and exit signs.',a:['Quarterly: run each light on battery for 30 minutes','Annual: run on battery for the full 3 hours','Examine fittings for condition and function','Fill in the logbook and issue a test certificate'],n:2},
+{p:'T2',s:14,m:2,t:'Emergency lighting',q:'Briefly describe how a central battery emergency lighting system works.',a:['One central battery, kept charged by its charger and control gear','Feeds many luminaires (AC or DC)','Supplies them when the mains fails, or all the time if maintained']},
+// Slot 15: emergency definitions
+{p:'T2',s:15,m:2,t:'Emergency lighting',q:'Define a "Combined (Sustained) Emergency Luminaire".',a:['Contains at least two lamps','One fed from the normal lighting supply, the other from the emergency supply','Gives light at all material times']},
+{p:'T2',s:15,m:3,t:'Emergency lighting',q:'List three factors escape lighting must provide to comply with the Irish Standard.',a:['Clearly show the escape routes','Light at each change of direction','Light at each change of level','Enough light along routes to move safely to and through the exits'],n:3},
+{p:'T2',s:15,m:2,t:'Emergency lighting',q:'Describe four areas where emergency lighting units should be installed.',a:['At each exit door and outside each final exit','Near each staircase (each flight lit)','Near any change of floor level','Near fire-fighting equipment and fire alarm call points','Lift cars · toilets (incl. disabled) · plant, switch and control rooms'],n:4},
+{p:'T2',s:15,m:2,t:'Emergency lighting',q:'Define an emergency lighting luminaire.',a:['A luminaire used for safety or emergency lighting','It may or may not have its own power source for safety services']},
+{p:'T2',s:15,m:2,t:'Emergency lighting',q:'Maintained, non-maintained and combined luminaires: the difference?',a:['Maintained: lamp on all the time (mains or battery)','Non-maintained: lamp only lights when mains fails','Combined: two or more lamps, at least one on the emergency supply']},
+// Slot 16: lamps compared
+{p:'T2',s:16,m:3,t:'Lamps',q:'Compare SOX (low-pressure sodium) and MBF (high-pressure mercury): colour rendering, efficacy, run-up time.',a:['Colour rendering: SOX poor · MBF reasonable','Efficacy: SOX about 180 lm/W · MBF about 50 lm/W','Run-up: SOX about 10 min · MBF about 4 min']},
+{p:'T2',s:16,m:3,t:'Lamps',q:'Compare CFL and HID lamps: colour rendering, efficacy, run-up time.',a:['Colour rendering: CFL reasonable–good · HID good','Efficacy: CFL about 50–70 lm/W · HID about 40–100 lm/W','Run-up: CFL full output at switch-on · HID about 15 s to 5 min']},
+{p:'T2',s:16,m:3,t:'Lamps',q:'Compare fluorescent and LED lamps: colour rendering, efficacy, run-up time.',a:['Colour rendering: fluorescent reasonable–good · LED reasonable–very good','Efficacy: fluorescent about 30–70 lm/W · LED about 100–200 lm/W','Run-up: both give full output when switched on']},
+{p:'T2',s:16,m:2,t:'Lamps',q:'Describe the high-pressure mercury (MBF) lamp from switch-on to full light.',a:['Arc strikes first between the starting electrode and a main electrode','Gas ionises, the tube warms, then the arc strikes between the main electrodes','Heat vaporises the mercury → light and pressure rise','Phosphor on the outer bulb turns UV into visible light; takes several minutes'],n:2},
+{p:'T2',s:16,m:3,t:'Lamps',q:'Why are MBI (metal halide) lamps suited to high-bay industrial, high-mast and stadium lighting (incl. colour TV)?',a:['Good colour rendering (white light)','Good efficacy','Available in high wattages'],n:2},
+{p:'T2',s:16,m:2,t:'Lamps',q:'Describe four factors that affect lamp life.',a:['Operating voltage and voltage spikes','How often it is switched on/off or dimmed','Ambient temperature','Mechanical shock · lamp orientation · manufacturing defects'],n:4},
+{p:'T2',s:16,m:2,t:'Lamps',q:'SOX lamps: one place they suit, one place they do not.',a:['Suitable: car parks, roads (colour does not matter)','Not suitable: paint spray booths, shops, loading bays — poor colour rendering']},
+// Slot 17: light units & calc
+{p:'T2',s:17,m:5,t:'Lighting',q:'(a) Define luminous flux and its SI unit. (b) 5 m × 7 m floor receives 10,500 lumens. Average illuminance?',a:['(a) The total light given out by a source — measured in lumens (lm)','(b) E = F ÷ A = 10,500 ÷ 35 = 300 lux'],r:'Practise in the Formula Lab'},
+{p:'T2',s:17,m:2,t:'Lighting',q:'(a) Define illuminance and its unit. (b) Room 7 m × 12 m at 400 lux: total luminous flux?',a:['(a) Luminous flux falling on a surface per square metre — lux (lm/m²)','(b) F = E × A = 400 × 84 = 33,600 lumens']},
+{p:'T2',s:17,m:2,t:'Lighting',q:'What meter measures the lighting level in a room, and what is it measuring?',a:['A lux meter','It measures illuminance (E) in lux']},
+// Slot 18: lighting design & controls
+{p:'T2',s:18,m:8,t:'Lighting controls',q:'Lighting control strategy for offices with good daylight: describe four types of control.',a:['Dimmable (or on/off) luminaires throughout','Automatic switching: PIR / presence sensors switch off when nobody is there','Daylight-linked photo-electric sensors dim lights near windows','Local manual switches close to each work area (within about 6 m)','Time-controlled switching, or a central lighting/building management system (wired or wireless)'],n:4},
+{p:'T2',s:18,m:8,t:'Lighting design',q:'Office 8 m × 14 m needs 400 lux. Lamps 3600 lm, UF 0.7, MF 0.85. (a) Total flux? (b) Number of luminaires? (c) Controls?',a:['(a) F = E × A = 400 × 112 = 44,800 lm','(b) N = F ÷ (n × lamp lm × UF × MF) = 44,800 ÷ (1 × 3600 × 0.7 × 0.85) = 20.916 → 21 luminaires','(c) Dimmable fittings, PIR sensors, daylight photo-cells, central control system'],r:'Practise in the Formula Lab'},
+// Slot 19: storage & underfloor heating
+{p:'T2',s:19,m:6,t:'Storage heaters',q:'(a) What stores the heat in a night storage heater — and what precaution when mounting? (b) Draw the internal wiring: 3 elements, thermal cut-out, charge controller.',a:['(a) High-density clay/ceramic blocks — very heavy','(a) Fix securely to a wall and floor strong enough for the weight','(b) L → thermal cut-out → charge controller (input thermostat) → 3 elements in parallel → N'],fig:'storage'},
+{p:'T2',s:19,m:4,t:'Storage heaters',q:'Describe a fan-assisted night storage heater, with its circuit.',a:['Elements charge the blocks on the restricted (off-peak) supply','A fan boosts heat output during the day','The fan is on the unrestricted (24 h) supply, via spur or socket — NOT the off-peak supply','Fan controlled by a room thermostat, switch or time clock'],fig:'fanheater'},
+{p:'T2',s:19,m:2,t:'Storage heaters',q:'What device controls the charge (input) of a storage heater, and how does it work?',a:['The charge controller (input / auto-charge control)','A dial sets a bi-metal thermostat that limits how hot the core gets → how much heat is stored overnight']},
+{p:'T2',s:19,m:2,t:'Storage heaters',q:'What does the damper on a storage heater do?',a:['A flap that controls air flow through the blocks','Controls how much heat comes out during the day']},
+{p:'T2',s:19,m:2,t:'Storage heaters',q:'How does the supply authority control and monitor a storage heating system?',a:['A separate circuit just for the storage heaters','Controlled by a sealed time switch — supply only in off-peak hours','Measured on a separate off-peak meter']},
+{p:'T2',s:19,m:4,t:'Underfloor heating',q:'Underfloor flexible heating mats under tiles: four installation requirements.',a:['Subfloor flat, with no screws or nails sticking up','Insulation under the heated area','Thermostat/controller outside the room, with a floor probe between the heating cables','RCD / RCBO protection'],n:4},
+{p:'T2',s:19,m:4,t:'Underfloor heating',q:'(a) Construction of an electric radiant flexible sheet/mat. (b) Installation precautions.',a:['(a) Heating cable fixed to a fibreglass mesh or foil; rolls ~500 mm wide; 100–200 W/m²; cannot be cut shorter','(b) Never cut, cross or overlap the heating cable','(b) Not under fixed furniture (baths, units); keep 100 mm from pipework','(b) RCD protection; floor sensor between the cables; limit foot traffic until the floor is down'],n:4},
+{p:'T2',s:19,m:2,t:'Underfloor heating',q:'Name two systems used in off-peak underfloor electric heating.',a:['Withdrawable systems — silicone rubber or fibreglass cables in conduit','Mineral-insulated cables embedded directly in the screed','PVC-insulated cables embedded directly in the screed'],n:2},
+{p:'T2',s:19,m:2,t:'Underfloor heating',q:'Two precautions when installing embedded floor-warming cables.',a:['Screed well compacted — voids cause hot spots','Cables must not cross or touch; keep the spacing','Do not lay PVC cable below about 4 °C (goes brittle)','Never cut or coil surplus cable — adjust the last spacings instead'],n:2},
+{p:'T2',s:19,m:4,t:'Heating controls',q:'Why do some mechanical thermostats need a neutral? The advantage?',a:['To feed a small "accelerator" heater inside the thermostat','It warms the bi-metal slightly while calling for heat, so it switches off a little early','Advantage: closer, more even room temperature (less overshoot)']},
+// Slot 20: central heating & testing
+{p:'T2',s:20,m:4,t:'Central heating',q:'Compare S-Plan and Y-Plan systems: operation, valves and controls.',a:['S-Plan: a separate 2-port spring-return zone valve for each zone (heating + hot water)','S-Plan: room stat for each heating zone, cylinder stat for hot water, 2-channel programmer','Y-Plan: one 3-port mid-position valve shares the flow between heating and hot water','Y-Plan: room stat + cylinder stat + programmer; valve can sit mid-position to feed both'],fig:'splan'},
+{p:'T2',s:20,m:4,t:'Central heating',q:'In an S-Plan Plus system, explain how the 2-port valves control hot water and the heating zones.',a:['Used when there are several heating zones plus a hot water zone','Each zone has its own 2-port spring-return valve and its own room stat','Cylinder stat controls the hot water temperature','Zones and hot water controlled separately by a 2-channel programmable time clock'],fig:'splan'},
+{p:'T2',s:20,m:4,t:'Central heating',q:'Identify this system (one 3-port mid-position valve) and describe how it works.',a:['Y-Plan','Boiler and pump controlled by a programmer, room stat and cylinder stat','The mid-position valve sends flow to heating, hot water, or both','Fully pumped system'],fig:'yplan'},
+{p:'T2',s:20,m:4,t:'Testing',q:'Purpose of main protective bonding, and minimum size in a domestic installation?',a:['Connects extraneous-conductive parts (water, gas, oil pipes, structural steel) to the main earthing terminal','Keeps metalwork at the same potential during a fault → reduces shock risk','Minimum 10 mm² in a domestic installation (from your Q&A notes)'],r:'ET101 544.1',c:1},
+{p:'T2',s:20,m:2,t:'Testing',q:'Earthing requirement for equipment marked with the double-square symbol?',a:['It is Class II (double insulated)','Do NOT connect an earth to it']},
+{p:'T2',s:20,m:5,t:'Testing',q:'List any five tests to verify an installation complies with the ETCI rules.',a:['Visual inspection','Continuity of protective conductors','Insulation resistance','Polarity','Earth fault loop impedance','Operation of RCDs'],n:5},
+{p:'T2',s:20,m:2,t:'Testing',q:'Which ET101 test, used with insulation resistance, finds faulty connections between circuits before the supply is connected?',a:['Detection of erroneous connections between circuits','Switch off each circuit, disconnect loads, and insulation-test between its line conductors and all other line conductors'],r:'ET101 Part 6',c:1},
+// T1 explain-type
+{p:'T1',t:'Motors',q:'How does a shaded-pole motor make a rotating field?',a:['Part of each pole has a copper shading ring','Current induced in the ring delays the flux in that part','Flux sweeps from the unshaded part to the shaded part','This moving field drags the cage rotor round — fixed direction'],r:'',c:0,fig:'shaded'},
+{p:'T1',t:'Motors',q:'Why do motors use laminated cores?',a:['Thin insulated steel sheets','Break up eddy current paths','Less heat, less iron loss, better efficiency'],r:'',c:0},
+{p:'T1',t:'Motors',q:'What is no-volt protection and how is it done?',a:['Stops a motor restarting by itself when power returns after a loss','Done by the contactor: when voltage drops, the coil drops out','The hold-in (retaining) contact opens — Start must be pressed again'],r:'',c:0},
+{p:'T1',t:'Motors',q:'Two reasons for rotor-resistance starters on large motors?',a:['Lower starting current','High starting torque (max torque at start when R₂ = X₂)','Some speed control'],r:'',c:0},
+{p:'T1',t:'Motors',q:'Star vs delta: voltage and current rules?',a:['Star: V<sub>L</sub> = √3 × V<sub>ph</sub>, I<sub>L</sub> = I<sub>ph</sub>','Delta: V<sub>L</sub> = V<sub>ph</sub>, I<sub>L</sub> = √3 × I<sub>ph</sub>','P = √3 V<sub>L</sub> I<sub>L</sub> cos φ for both'],r:'',c:0,fig:'stardelta'},
+{p:'T1',t:'AC circuits',q:'Two conditions for maximum current in a series RLC circuit?',a:['X<sub>L</sub> = X<sub>C</sub> (resonance)','So Z = R (minimum impedance)','Power factor = 1, current in phase with voltage'],r:'',c:0,fig:'reson'},
+{p:'T1',t:'Magnetism',q:'Sketch hysteresis loops for high-loss and low-loss material.',a:['High loss: wide, fat loop (hard steel — permanent magnets)','Low loss: narrow, thin loop (silicon steel — transformer cores)','Area of loop = energy lost each cycle'],r:'',c:0,fig:'hyst'},
+{p:'T1',t:'Electronics',q:'What is ripple voltage? Single-phase vs 3-phase?',a:['The leftover AC "wobble" on the DC output of a rectifier','Single-phase full-wave: big ripple (2 peaks per cycle)','3-phase full-wave: much less ripple (6 peaks per cycle)'],r:'',c:0,fig:'rect'},
+{p:'T1',t:'Electronics',q:'Linear power supply: one advantage, one disadvantage?',a:['Advantage: simple, very clean low-noise output','Disadvantage: heavy transformer, inefficient — wastes energy as heat'],r:'',c:0},
+{p:'T1',t:'Instruments',q:'Oscilloscope: what do the X and Y axes show? What do the Y-plates do?',a:['X axis: time (time/div)','Y axis: voltage (volts/div)','Y-plates deflect the beam up and down in proportion to the input voltage'],r:'',c:0},
+];
+</script>
+
+<script>
+/* ============ FORMULA LAB generators ============ */
+const TAU=2*Math.PI, R3=Math.sqrt(3);
+const SYM={V:['V','v'],Vph:['V<sub>ph</sub>','v'],VL:['V<sub>L</sub>','v'],VC:['V<sub>C</sub>','v'],Vs:['V<sub>s</sub>','v'],Vf:['V<sub>f</sub>','v'],Vd:['V<sub>d</sub>','v'],E:['E','v'],
+ I:['I','i'],IR:['I<sub>R</sub>','i'],IL:['I<sub>L</sub>','i'],IC:['I<sub>C</sub>','i'],Iph:['I<sub>ph</sub>','i'],I0:['I<sub>0</sub>','i'],If:['I<sub>f</sub>','i'],
+ R:['R','r'],r:['r','r'],Z:['Z','r'],XL:['X<sub>L</sub>','r'],XC:['X<sub>C</sub>','r'],L:['L','r'],C:['C','r'],
+ P:['P','p'],Pin:['P<sub>in</sub>','p'],Pout:['P<sub>out</sub>','p'],
+ f:['f','f'],f0:['f<sub>0</sub>','f'],ns:['n<sub>s</sub>','f'],nr:['n<sub>r</sub>','f'],tau:['τ','f'],p:['poles','f'],n:['n','f'],
+ pf:['pf','k'],eta:['η','k'],s:['s','k'],B:['B','k'],Phi:['Φ','k'],A:['A','k'],T:['T','k'],mV:['mV/A/m','k'],len:['length','f'],N:['cells','k']};
+const sy=k=>{const s=SYM[k]||[k,'k'];return `<span class="q ${s[1]}">${s[0]}</span>`};
+const fx=s=>s.replace(/\{(\w+)\}/g,(m,k)=>sy(k));
+const G=(k,val,unit)=>({k,val,unit});
+const GENS=[
+{id:'sync',t:'Motors',n:'Synchronous speed & slip',make(){const P=pick([2,4,6,8]);const ns=120*50/P;const nr=pick({2:[2850,2880,2900,2940],4:[1420,1440,1450,1460,1470],6:[940,950,960,970],8:[705,720,730]}[P]);const s=(ns-nr)/ns*100;
+ return{given:[G('p',P,''),G('f',50,'Hz'),G('nr',nr,'rpm')],ask:'Find the percentage slip',ans:s,unit:'%',steps:[`{ns} = 120 × {f} ÷ poles = 120 × 50 ÷ ${P} = ${ns} rpm`,`{s} = ({ns} − {nr}) ÷ {ns} × 100`,`= (${ns} − ${nr}) ÷ ${ns} × 100 = <b>${n3(s)} %</b>`]}}},
+{id:'rotor',t:'Motors',n:'Rotor speed from slip',make(){const P=pick([4,6,8]);const s=pick([3,4,4.5,5,6]);const ns=6000/P;const nr=ns*(1-s/100);
+ return{given:[G('p',P,''),G('f',50,'Hz'),G('s',s,'%')],ask:'Find the rotor speed',ans:nr,unit:'rpm',steps:[`{ns} = 120 × {f} ÷ poles = 120 × 50 ÷ ${P} = ${ns} rpm`,`{nr} = {ns} × (1 − {s} ÷ 100)`,`= ${ns} × (1 − ${s/100}) = <b>${n3(nr)} rpm</b>`]}}},
+{id:'torque',t:'Motors',n:'Motor torque',make(){const P=pick([5.5,7.5,10.5,15,22]);const n=pick([1420,1440,1450,960,2900]);const T=P*1000/(TAU*n/60);
+ return{given:[G('Pout',P,'kW'),G('n',n,'rpm')],ask:'Find the torque developed',ans:T,unit:'Nm',steps:[`{T} = {P} ÷ ω, and ω = 2π × {n} ÷ 60`,`ω = 2π × ${n} ÷ 60 = ${n3(TAU*n/60)} rad/s`,`{T} = ${P*1000} ÷ ${n3(TAU*n/60)} = <b>${n3(T)} Nm</b>`]}}},
+{id:'motor3',t:'Three-phase',n:'Motor input & phase current (delta)',make(){const Po=pick([5.5,7.5,11,15,22,30]);const e=pick([0.8,0.82,0.85,0.88,0.9]);const pf=pick([0.73,0.78,0.8,0.85]);const Pi=Po*1000/e;const IL=Pi/(R3*400*pf);const Ip=IL/R3;
+ return{given:[G('Pout',Po,'kW'),G('eta',e*100,'%'),G('pf',pf,'lag'),G('VL',400,'V')],ask:'Motor is in DELTA. Find the phase current in the windings',ans:Ip,unit:'A',steps:[`{Pin} = {Pout} ÷ {eta} = ${Po*1000} ÷ ${e} = ${n3(Pi)} W`,`{IL} = {Pin} ÷ (√3 × {VL} × {pf}) = ${n3(Pi)} ÷ (1.732 × 400 × ${pf}) = ${n3(IL)} A`,`Delta: {Iph} = {IL} ÷ √3 = ${n3(IL)} ÷ 1.732 = <b>${n3(Ip)} A</b>`]}}},
+{id:'delta',t:'Three-phase',n:'Delta load: total power',make(){const Ip=pick([5.5,6.2,8.5,10,12.4]);const pf=pick([0.7,0.75,0.8,0.85,0.9]);const IL=R3*Ip;const P=R3*400*IL*pf;
+ return{given:[G('VL',400,'V'),G('Iph',Ip,'A'),G('pf',pf,'lag')],ask:'Balanced DELTA load. Find the total power',ans:P,unit:'W',steps:[`Delta: {IL} = √3 × {Iph} = 1.732 × ${Ip} = ${n3(IL)} A`,`{P} = √3 × {VL} × {IL} × {pf}`,`= 1.732 × 400 × ${n3(IL)} × ${pf} = <b>${n3(P)} W</b>`]}}},
+{id:'star',t:'Three-phase',n:'Star load with R and X: total power',make(){const R=pick([20,22.5,30,35,40]);const X=pick([15,25,30,50]);const Vp=400/R3;const Z=Math.hypot(R,X);const I=Vp/Z;const P=3*I*I*R;
+ return{given:[G('VL',400,'V'),G('R',R,'Ω'),G('XL',X,'Ω')],ask:'Balanced STAR load, R and X in each phase. Find the total power',ans:P,unit:'W',steps:[`Star: {Vph} = {VL} ÷ √3 = 400 ÷ 1.732 = ${n3(Vp)} V`,`{Z} = √({R}² + {XL}²) = √(${R}² + ${X}²) = ${n3(Z)} Ω`,`{Iph} = {Vph} ÷ {Z} = ${n3(Vp)} ÷ ${n3(Z)} = ${n3(I)} A`,`{pf} = {R} ÷ {Z} = ${n3(R/Z)}`,`{P} = 3 × {Iph}² × {R} = 3 × ${n3(I)}² × ${R} = <b>${n3(P)} W</b>`]}}},
+{id:'rl',t:'AC circuits',n:'Series R–L: supply current',make(){const R=pick([30,47,68,100,150,220,380]);const L=pick([0.1,0.15,0.2,0.3,0.4,0.6]);const XL=TAU*50*L;const Z=Math.hypot(R,XL);const I=230/Z;
+ return{given:[G('R',R,'Ω'),G('L',L,'H'),G('V',230,'V'),G('f',50,'Hz')],ask:'Find the supply current',ans:I,unit:'A',steps:[`{XL} = 2π{f}{L} = 2π × 50 × ${L} = ${n3(XL)} Ω`,`{Z} = √({R}² + {XL}²) = √(${R}² + ${n3(XL)}²) = ${n3(Z)} Ω`,`{I} = {V} ÷ {Z} = 230 ÷ ${n3(Z)} = <b>${n3(I)} A</b>`]}}},
+{id:'rlpf',t:'AC circuits',n:'Series R–L: power factor',make(){const R=pick([100,200,250,380]);const L=pick([0.3,0.5,0.6,0.8]);const XL=TAU*50*L;const Z=Math.hypot(R,XL);
+ return{given:[G('R',R,'Ω'),G('L',L,'H'),G('V',230,'V'),G('f',50,'Hz')],ask:'Find the power factor (and say leading or lagging)',ans:R/Z,unit:'',steps:[`{XL} = 2π × 50 × ${L} = ${n3(XL)} Ω`,`{Z} = √(${R}² + ${n3(XL)}²) = ${n3(Z)} Ω`,`{pf} = {R} ÷ {Z} = ${R} ÷ ${n3(Z)} = <b>${n3(R/Z)} lagging</b> (inductive)`]}}},
+{id:'rcpf',t:'AC circuits',n:'Series R–C: power factor',make(){const R=pick([20,35,47,60]);const C=pick([100,150,200,300]);const XC=1/(TAU*50*C*1e-6);const Z=Math.hypot(R,XC);
+ return{given:[G('R',R,'Ω'),G('C',C,'µF'),G('V',200,'V'),G('f',50,'Hz')],ask:'Find the power factor (and say leading or lagging)',ans:R/Z,unit:'',steps:[`{XC} = 1 ÷ (2π{f}{C}) = 1 ÷ (2π × 50 × ${C}×10⁻⁶) = ${n3(XC)} Ω`,`{Z} = √({R}² + {XC}²) = √(${R}² + ${n3(XC)}²) = ${n3(Z)} Ω`,`{pf} = {R} ÷ {Z} = <b>${n3(R/Z)} leading</b> (capacitive)`]}}},
+{id:'res',t:'AC circuits',n:'Resonant frequency',make(){const L=pick([0.1,0.2,0.3,0.398,0.5]);const C=pick([6.37,10,22,47,100]);const f=1/(TAU*Math.sqrt(L*C*1e-6));
+ return{given:[G('L',L,'H'),G('C',C,'µF')],ask:'Find the resonant frequency',ans:f,unit:'Hz',steps:[`{f0} = 1 ÷ (2π√({L} × {C}))`,`{L} × {C} = ${L} × ${C}×10⁻⁶ = ${(L*C*1e-6).toExponential(4)}`,`√ = ${(Math.sqrt(L*C*1e-6)).toExponential(4)}`,`{f0} = 1 ÷ (2π × ${(Math.sqrt(L*C*1e-6)).toExponential(4)}) = <b>${n3(f)} Hz</b>`]}}},
+{id:'par',t:'AC circuits',n:'Parallel R–L–C: supply current',make(){const IR=pick([5,8,9.2,12,15]);const IL=pick([6,11.5,15,18.5,20]);let IC=pick([3,8,15.33,26.5,10]);if(IC===IL)IC+=2;const I=Math.hypot(IR,IC-IL);const lead=IC>IL;
+ return{given:[G('IR',IR,'A'),G('IL',IL,'A'),G('IC',IC,'A')],ask:'Find the supply current',ans:I,unit:'A',steps:[`{IC} and {IL} are opposite, so subtract: ${IC} − ${IL} = ${n3(IC-IL)} A`,`{I} = √({IR}² + ({IC} − {IL})²) = √(${IR}² + ${n3(IC-IL)}²)`,`= <b>${n3(I)} A</b>`,`{pf} = {IR} ÷ {I} = ${n3(IR/I)} ${lead?'leading (I<sub>C</sub> bigger)':'lagging (I<sub>L</sub> bigger)'}`]}}},
+{id:'tau',t:'DC & capacitors',n:'Capacitor time constant',make(){const C=pick([5,10,22,47,68,100]);const R=pick([10,22,47,100,470]);const t=C*1e-6*R*1e3;
+ return{given:[G('C',C,'µF'),G('R',R,'kΩ')],ask:'Find the time constant',ans:t,unit:'s',steps:[`{tau} = {R} × {C}`,`= ${R}×10³ × ${C}×10⁻⁶`,`= <b>${n3(t)} s</b> (fully charged after about 5{tau} = ${n3(5*t)} s)`]}}},
+{id:'i0',t:'DC & capacitors',n:'Initial charging current',make(){const R=pick([10,22,47,100,500]);const V=pick([12,24,48,100]);const I=V/(R*1e3)*1000;
+ return{given:[G('V',V,'V'),G('R',R,'kΩ')],ask:'Find the initial charging current',ans:I,unit:'mA',steps:[`At switch-on the capacitor acts like a short, so {I0} = {V} ÷ {R}`,`= ${V} ÷ ${R*1000} = ${(V/(R*1e3)).toFixed(6)} A`,`= <b>${n3(I)} mA</b>`]}}},
+{id:'flux',t:'Magnetism',n:'Flux density',make(){const F=pick([0.005,0.01,0.015,0.02,0.03]);const A=pick([100,120,150,200,250]);const B=F/(A/1e4);
+ return{given:[G('Phi',F,'Wb'),G('A',A,'cm²')],ask:'Find the flux density',ans:B,unit:'T',steps:[`Convert area: ${A} cm² ÷ 10,000 = ${A/1e4} m²`,`{B} = {Phi} ÷ {A} = ${F} ÷ ${A/1e4}`,`= <b>${n3(B)} T</b>`]}}},
+{id:'vd',t:'Cables',n:'Volt drop (T2)',make(){const c=pick([[1.5,29],[2.5,18],[4,11],[6,7.3],[10,4.4],[16,2.8]]);const I=pick([14,18,25,32,38,40]);const L=pick([12,20,25,30,40,50]);const vd=c[1]*I*L/1000;const ok=vd<=9.2;
+ return{given:[G('mV',c[1],'('+c[0]+' mm²)'),G('I',I,'A'),G('len',L,'m')],ask:'Find the volt drop. Is it within 4 % of 230 V?',ans:vd,unit:'V',steps:[`{Vd} = {mV} × {I} × length ÷ 1000`,`= ${c[1]} × ${I} × ${L} ÷ 1000 = <b>${n3(vd)} V</b>`,`4 % of 230 V = 9.2 V → ${ok?'<b>OK</b>, within the limit':'<b>Too high</b> — use a bigger cable'}`,`<span class="muted">In the exam take the mV/A/m value from the ET101 table for the right installation method.</span>`]}}},
+{id:'led',t:'Electronics',n:'LED series resistor',make(){const Vs=pick([12,24,48]);const Vf=pick([1.8,2,2.2,3.2]);const If=pick([10,15,20,25]);const R=(Vs-Vf)/(If/1000);
+ return{given:[G('Vs',Vs,'V'),G('Vf',Vf,'V'),G('If',If,'mA')],ask:'Find the series resistor value',ans:R,unit:'Ω',steps:[`Voltage across the resistor = {Vs} − {Vf} = ${Vs} − ${Vf} = ${n3(Vs-Vf)} V`,`{R} = ${n3(Vs-Vf)} ÷ ${If/1000} = <b>${n3(R)} Ω</b>`,`Resistor power {P} = {If}² × {R} = ${n3((If/1000)**2*R)} W → pick a resistor rated above this`]}}},
+{id:'cells',t:'Batteries',n:'Cells in series with a load',make(){const N=pick([6,8,10,12]);const E=pick([1.2,1.5,2]);const r=pick([0.1,0.2,0.25]);const R=pick([3,4,5,10]);const I=N*E/(N*r+R);
+ return{given:[G('N',N,''),G('E',E,'V each'),G('r',r,'Ω each'),G('R',R,'Ω load')],ask:'Find the current in the load',ans:I,unit:'A',steps:[`Total EMF = ${N} × ${E} = ${n3(N*E)} V`,`Total resistance = ${N} × ${r} + ${R} = ${n3(N*r+R)} Ω`,`{I} = ${n3(N*E)} ÷ ${n3(N*r+R)} = <b>${n3(I)} A</b>`]}}},
+];
+</script>
+
+<script>
+/* ============ DIAGRAMS (tap-to-reveal labels) ============ */
+const L=(x,y,txt,anchor='start',cls='')=>{const lines=Array.isArray(txt)?txt:[txt];return `<g class="lab"><text x="${x}" y="${y}" text-anchor="${anchor}" class="${cls}">${lines.map((t,k)=>`<tspan x="${x}" dy="${k?15:0}">${t}</tspan>`).join('')}</text></g>`};
+const DIAG={
+stardelta:{n:'Star and delta windings',t:'T1 · Three-phase',svg:`<svg class="dg" viewBox="0 0 360 230" role="img" aria-label="Star and delta connections">
+<text x="90" y="20" text-anchor="middle" class="t">STAR</text><text x="270" y="20" text-anchor="middle" class="t">DELTA</text>
+<circle cx="90" cy="120" r="4" class="fa"/>
+<path class="s" d="M90 120 L90 95 M90 95 l-6 -4 l12 -6 l-12 -6 l12 -6 l-6 -3 L90 50"/>
+<path class="s" d="M90 120 L112 133 M112 133 l3 7 l8 -11 l3 13 l8 -11 l2 5 L150 155"/>
+<path class="s" d="M90 120 L68 133 M68 133 l-3 7 l-8 -11 l-3 13 l-8 -11 l-2 5 L30 155"/>
+<text x="90" y="44" text-anchor="middle">L1</text><text x="157" y="165">L2</text><text x="12" y="165">L3</text>
+<path class="d" d="M90 120 L90 200"/><text x="96" y="200">N</text>
+${L(100,118,'Star point','start','')}
+${L(10,218,'V<tspan font-size="9">L</tspan> = √3 × V<tspan font-size="9">ph</tspan>   I<tspan font-size="9">L</tspan> = I<tspan font-size="9">ph</tspan>','start')}
+<path class="s" d="M270 45 L215 150 L325 150 Z"/>
+<rect x="232" y="88" width="14" height="30" transform="rotate(28 239 103)" class="fs s"/>
+<rect x="294" y="88" width="14" height="30" transform="rotate(-28 301 103)" class="fs s"/>
+<rect x="255" y="143" width="30" height="14" class="fs s"/>
+<circle cx="270" cy="45" r="4" class="fa"/><circle cx="215" cy="150" r="4" class="fa"/><circle cx="325" cy="150" r="4" class="fa"/>
+<text x="270" y="36" text-anchor="middle">L1</text><text x="202" y="166">L3</text><text x="330" y="166">L2</text>
+${L(270,190,'No neutral','middle')}
+${L(200,218,'V<tspan font-size="9">L</tspan> = V<tspan font-size="9">ph</tspan>   I<tspan font-size="9">L</tspan> = √3 × I<tspan font-size="9">ph</tspan>','start')}
+</svg>`},
+zones:{n:'Safe zones for buried cables',t:'T2 · Cables',svg:`<svg class="dg" viewBox="0 0 360 250" role="img" aria-label="Safe cable zones in a wall">
+<rect x="30" y="20" width="300" height="190" class="s"/>
+<rect x="30" y="20" width="300" height="30" class="fs"/><rect x="30" y="20" width="30" height="190" class="fs"/><rect x="300" y="20" width="30" height="190" class="fs"/>
+<rect x="30" y="20" width="300" height="190" class="s"/>
+<rect x="160" y="140" width="26" height="26" rx="3" class="s"/><circle cx="168" cy="153" r="2" class="fi"/><circle cx="178" cy="153" r="2" class="fi"/>
+<path class="a" d="M173 50 L173 140"/><path class="a" d="M60 153 L160 153"/>
+<rect x="232" y="100" width="22" height="30" rx="3" class="s"/><path class="s" d="M243 108 v14"/><path class="a" d="M243 50 L243 100"/>
+${L(180,40,'150 mm from ceiling','middle','t')}
+${L(64,80,['150 mm','from corner'],'start')}
+${L(180,75,['Straight run','to accessory'],'start')}
+${L(64,140,'Horizontal run','start')}
+<text x="180" y="232" text-anchor="middle" class="t">Hollow wall: ≥ 50 mm from the back face</text>
+</svg>`},
+heights:{n:'Mounting heights',t:'T2 · Boards',svg:`<svg class="dg" viewBox="0 0 360 280" role="img" aria-label="Mounting heights">
+<path class="s" d="M15 250 H345"/><text x="18" y="268">Finished floor level</text>
+<path class="fs" d="M40 222 V166 H58 V222 Z"/><path class="a" d="M49 222 V166"/><path class="a" d="M42 222 H56 M42 166 H56"/>
+<rect x="38" y="180" width="22" height="22" rx="3" class="s" fill="var(--panel)"/><path class="s" d="M49 185 v12"/>
+${L(68,180,['Switches','400–1200 mm'],'start','t')}
+<path class="fs" d="M148 222 V166 H166 V222 Z"/><path class="a" d="M157 222 V166"/><path class="a" d="M150 222 H164 M150 166 H164"/>
+<rect x="144" y="200" width="26" height="20" rx="3" class="s" fill="var(--panel)"/><circle cx="153" cy="210" r="2" class="fi"/><circle cx="161" cy="210" r="2" class="fi"/>
+${L(176,180,['Sockets','400–1200 mm'],'start','t')}
+<rect x="270" y="93" width="54" height="59" rx="3" class="fs s"/><path class="s" d="M277 108 h40 M277 122 h40 M277 136 h40"/>
+<path class="d" d="M262 93 H330 M262 152 H330"/><path class="a" d="M335 250 V93 M330 93 H340"/><path class="a" d="M262 250 V152 M257 152 H267"/>
+${L(297,82,'Top ≤ 2.25 m','middle','t')}
+${L(270,176,['Bottom','≥ 1.4 m'],'start','t')}
+<text x="15" y="30">ET101 530.5, 530.6, 554.1 — check the book</text>
+</svg>`},
+discrim:{n:'Discrimination',t:'T2 · Protection',svg:`<svg class="dg" viewBox="0 0 360 200" role="img" aria-label="Discrimination between protective devices">
+<path class="s" d="M15 90 H345"/>
+<rect x="55" y="78" width="44" height="24" rx="4" class="fs s"/><rect x="150" y="78" width="44" height="24" rx="4" class="fs s"/><rect x="245" y="78" width="44" height="24" rx="4" class="fs s"/>
+<text x="77" y="95" text-anchor="middle" class="t">A</text><text x="172" y="95" text-anchor="middle" class="t">B</text><text x="267" y="95" text-anchor="middle" class="t">C</text>
+<text x="15" y="80">Supply</text><text x="345" y="80" text-anchor="end">Load</text>
+<path class="a" d="M308 78 l10 24 M318 78 l-10 24"/><text x="313" y="122" text-anchor="middle" class="t">X</text>
+${L(77,60,'Main fuse','middle')}${L(172,60,'Sub-board','middle')}${L(267,60,'Final circuit','middle')}
+${L(313,140,'Fault','middle')}
+${L(180,175,'Only C should operate. A and B stay in.','middle','t')}
+</svg>`},
+mcb:{n:'MCB tripping curve',t:'T2 · Protection',svg:`<svg class="dg" viewBox="0 0 360 260" role="img" aria-label="MCB time-current curve">
+<path class="s" d="M50 20 V220 H340"/>
+<text x="20" y="120" transform="rotate(-90 20 120)" text-anchor="middle">Time (t)</text><text x="195" y="245" text-anchor="middle">Current (multiples of I<tspan font-size="9">n</tspan>)</text>
+<path class="fs" d="M70 20 C80 90 100 130 140 150 L140 205 H335 V200 H185 V150 C150 120 120 70 105 20 Z"/>
+<path class="s" d="M70 20 C80 90 100 130 140 150 L140 205 H335"/>
+<path class="a" d="M105 20 C120 70 150 120 185 150 L185 200 H335"/>
+${L(112,95,'Thermal','start','t')}${L(112,110,'(overload)','start')}
+${L(196,175,'Magnetic','start','t')}${L(196,190,'(short circuit)','start')}
+${L(60,175,'Minimum','start')}${L(60,190,'curve','start')}
+${L(250,130,'Maximum curve','start')}
+</svg>`},
+dol:{n:'DOL starter control circuit',t:'T2 · Motor control',svg:`<svg class="dg" viewBox="0 0 360 330" role="img" aria-label="Direct-on-line starter control circuit">
+<text x="150" y="16" text-anchor="middle" class="t">L</text>
+<path class="s" d="M150 22 V40 M150 62 V80"/><rect x="143" y="40" width="14" height="22" class="s"/><path class="s" d="M150 40 V62"/>
+<path class="s" d="M150 80 V92 M150 116 V130"/><path class="s" d="M150 92 H160"/><path class="s" d="M150 116 L163 90"/><path class="s" d="M140 104 H156"/><path class="s" d="M140 99 V109"/>
+<path class="s" d="M150 130 H230 M150 130 V142 M230 130 V142"/>
+<path class="s" d="M150 168 V185 M150 142 V146"/><path class="s" d="M150 168 L138 148"/><path class="s" d="M136 158 H144"/><path class="s" d="M136 153 V163"/>
+<path class="s" d="M230 168 V185 M230 142 V146"/><path class="s" d="M230 168 L218 148"/>
+<path class="s" d="M150 185 H230 M150 185 V200"/>
+<path class="s" d="M150 200 V208 M150 232 V245"/><path class="s" d="M150 208 H160"/><path class="s" d="M150 232 L163 206"/><rect x="128" y="212" width="12" height="12" class="s"/><path class="s" d="M131 222 v-6 h6 v6"/>
+<rect x="132" y="245" width="36" height="24" class="fs s"/><path class="s" d="M150 269 V300"/>
+<text x="150" y="315" text-anchor="middle" class="t">N</text>
+${L(135,56,'Control fuse','end')}
+${L(128,106,'Stop (NC)','end')}
+${L(128,162,'Start (NO)','end')}
+${L(244,162,'KM1 hold-in','start')}${L(244,177,'contact (NO)','start')}
+${L(124,222,'Overload (NC)','end')}${L(172,222,'95–96','start')}
+${L(176,262,'KM1 coil A1–A2','start')}
+</svg>`},
+reson:{n:'Series resonance graph',t:'T1 · AC circuits',svg:`<svg class="dg" viewBox="0 0 360 240" role="img" aria-label="Reactance against frequency">
+<path class="s" d="M50 20 V200 H340"/><text x="195" y="225" text-anchor="middle">Frequency (Hz)</text><text x="20" y="110" transform="rotate(-90 20 110)" text-anchor="middle">Ohms (Ω)</text>
+<path class="a" d="M50 200 L330 40"/><path class="s" d="M62 30 C75 140 120 175 330 188"/><path class="d" d="M50 170 H330"/>
+<path class="d" d="M168 20 V200"/><circle cx="168" cy="133" r="5" class="fa"/>
+${L(300,40,'X<tspan font-size="9">L</tspan> rises','end','t')}${L(80,50,'X<tspan font-size="9">C</tspan> falls','start','t')}${L(335,164,'R','end')}
+${L(176,125,'X<tspan font-size="9">L</tspan> = X<tspan font-size="9">C</tspan>','start','t')}
+${L(168,215,'f₀ — Z = R, I max, pf = 1','middle')}
+</svg>`},
+hyst:{n:'Hysteresis loops',t:'T1 · Magnetism',svg:`<svg class="dg" viewBox="0 0 360 220" role="img" aria-label="High loss and low loss hysteresis loops">
+<path class="s" d="M90 20 V180 M20 100 H160"/><path class="s" d="M270 20 V180 M200 100 H340"/>
+<text x="96" y="28">B</text><text x="152" y="94">H</text><text x="276" y="28">B</text><text x="332" y="94">H</text>
+<path class="a" d="M35 160 C45 60 120 40 150 40 C140 140 60 160 35 160 Z"/>
+<path class="a" d="M215 160 C250 70 300 45 330 40 C300 110 245 150 215 160 Z"/>
+${L(90,205,'High loss: wide loop','middle','t')}
+${L(270,205,'Low loss: narrow loop','middle','t')}
+</svg>`},
+shaded:{n:'Shaded-pole motor',t:'T1 · Motors',svg:`<svg class="dg" viewBox="0 0 360 240" role="img" aria-label="Shaded pole motor">
+<path class="s fs" d="M120 40 H240 V70 H215 C200 85 160 85 145 70 H120 Z"/>
+<path class="s fs" d="M120 200 H240 V170 H215 C200 155 160 155 145 170 H120 Z"/>
+<path class="s" d="M110 40 H250 V200 H110 Z"/>
+<circle cx="180" cy="120" r="38" class="s"/><path class="s" d="M150 98 H210 M146 112 H214 M146 128 H214 M150 142 H210"/>
+<rect x="205" y="64" width="12" height="16" rx="2" class="fa"/><rect x="143" y="160" width="12" height="16" rx="2" class="fa"/>
+<path class="s" d="M128 52 h12 M128 58 h12 M128 64 h12"/><path class="s" d="M220 182 h12 M220 188 h12 M220 194 h12"/>
+${L(258,72,'Shading ring','start','t')}${L(258,87,'(copper)','start')}
+${L(102,58,'Main winding','end')}
+${L(258,124,'Cage rotor','start')}
+${L(102,124,'Laminated','end')}${L(102,139,'stator','end')}
+${L(180,228,'Field sweeps unshaded → shaded: one direction only','middle')}
+</svg>`},
+rect:{n:'3-phase bridge rectifier',t:'T1 · Electronics',svg:`<svg class="dg" viewBox="0 0 360 240" role="img" aria-label="Three phase full wave rectifier">
+<path class="s" d="M80 40 H280 M80 200 H280"/>
+${[120,180,240].map((x,k)=>`<path class="s" d="M${x} 40 V200"/><path class="fi" d="M${x-9} 82 h18 l-9 -14 z"/><path class="s" d="M${x-9} 66 h18"/><path class="fi" d="M${x-9} 172 h18 l-9 -14 z"/><path class="s" d="M${x-9} 156 h18"/><circle cx="${x}" cy="${100+k*20}" r="3.5" class="fa"/><path class="s" d="M${x} ${100+k*20} H36"/><text x="30" y="${104+k*20}" text-anchor="end">L${k+1}</text>`).join('')}
+<rect x="300" y="95" width="22" height="50" class="fs s"/><path class="s" d="M280 40 H311 V95 M280 200 H311 V145"/>
+${L(300,32,'+ DC','start','t')}${L(300,218,'− DC','start','t')}${L(332,124,'Load','start')}
+${L(180,232,'6 diodes · low ripple','middle')}
+</svg>`},
+load:{n:'Daily load curve',t:'T2 · Supplies',svg:`<svg class="dg" viewBox="0 0 360 230" role="img" aria-label="Daily electricity demand curve">
+<path class="s" d="M40 20 V190 H340"/>
+${[0,6,12,18,24].map(h=>`<text x="${40+h*12.5}" y="207" text-anchor="middle">${String(h).padStart(2,'0')}:00</text>`).join('')}
+<text x="16" y="105" transform="rotate(-90 16 105)" text-anchor="middle">Demand</text>
+<rect x="40" y="20" width="87.5" height="170" class="fs"/><rect x="327.5" y="20" width="12.5" height="170" class="fs"/>
+<path class="a" d="M40 140 C60 150 80 165 105 162 C125 160 130 110 150 95 C175 80 210 90 240 85 C265 78 270 45 290 45 C305 45 315 90 340 120"/>
+<path class="s" d="M40 20 V190 H340"/>
+${L(290,36,'Peak 17:00–19:00','middle','t')}
+${L(84,120,'Valley','middle','t')}${L(84,135,'23:00–07:00','middle')}
+${L(84,175,'Night Saver','middle')}
+</svg>`},
+triangle:{n:'Impedance & power triangles',t:'T1 · AC circuits',svg:`<svg class="dg" viewBox="0 0 360 200" role="img" aria-label="Impedance and power triangles">
+<path class="s" d="M20 160 H150 V60 Z"/><path class="a" d="M50 160 A30 30 0 0 0 46 142"/>
+<path class="s" d="M200 160 H340 V60 Z"/><path class="a" d="M230 160 A30 30 0 0 0 226 142"/>
+${L(85,180,'R','middle','t')}${L(158,115,'X','start','t')}${L(70,100,'Z','end','t')}${L(58,152,'φ','start')}
+${L(270,180,'P (W)','middle','t')}${L(345,105,'Q','start','t')}${L(345,120,'(VAr)','start')}${L(260,100,'S (VA)','end','t')}${L(238,152,'φ','start')}
+${L(180,30,'pf = cos φ = R ÷ Z = P ÷ S','middle','t')}
+</svg>`},
+};
+
+/* ============ SYMBOLS (IEC style) ============ */
+const sv=(inner,vb='0 0 120 70')=>`<svg class="sym" viewBox="${vb}" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+const SYMBOLS=[
+{n:'Resistor',s:sv('<path d="M5 35H35M85 35H115"/><rect x="35" y="25" width="50" height="20"/>')},
+{n:'Capacitor',s:sv('<path d="M5 35H55M65 35H115M55 15V55M65 15V55"/>')},
+{n:'Electrolytic (polarised) capacitor',s:sv('<path d="M5 35H54M68 35H115M54 15V55"/><rect x="62" y="15" width="6" height="40" fill="currentColor"/><path d="M40 14h8M44 10v8"/>')},
+{n:'Inductor (coil)',s:sv('<path d="M5 35H25M95 35H115"/><path d="M25 35a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0"/>')},
+{n:'Diode',s:sv('<path d="M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53"/>')},
+{n:'LED',s:sv('<path d="M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53"/><path d="M68 12l10-10M74 2h4v4M80 18l10-10M86 8h4v4"/>')},
+{n:'Photodiode',s:sv('<path d="M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53"/><path d="M88 2l-10 10M78 8v4h4M98 10l-10 10M88 16v4h4"/>')},
+{n:'Zener diode',s:sv('<path d="M5 35H45M75 35H115M45 17V53L75 35Z M68 53H75V17H82"/>')},
+{n:'NPN transistor',s:sv('<circle cx="60" cy="35" r="28"/><path d="M10 35H48M48 18V52M48 26L72 10M72 10V2M48 44L72 60M72 60V68"/><path d="M72 60l-11-2 5-7z" fill="currentColor"/>','0 0 120 70')},
+{n:'PNP transistor',s:sv('<circle cx="60" cy="35" r="28"/><path d="M10 35H48M48 18V52M48 26L72 10M72 10V2M48 44L72 60M72 60V68"/><path d="M50 45l11 2-5 7z" fill="currentColor"/>','0 0 120 70')},
+{n:'Fuse',s:sv('<path d="M5 35H115"/><rect x="35" y="25" width="50" height="20"/>')},
+{n:'Lamp',s:sv('<path d="M5 35H40M80 35H115"/><circle cx="60" cy="35" r="20"/><path d="M46 21L74 49M74 21L46 49"/>')},
+{n:'Earth',s:sv('<path d="M60 5V35M35 35H85M43 47H77M51 59H69"/>')},
+{n:'Cell / battery',s:sv('<path d="M5 35H52M66 35H115M52 12V58"/><path d="M66 24V46" stroke-width="7"/><path d="M36 10h8M40 6v8"/>')},
+{n:'Contactor / relay coil',s:sv('<path d="M60 2V20M60 50V68"/><rect x="35" y="20" width="50" height="30"/>')},
+{n:'Normally open contact',s:sv('<path d="M60 2V22M60 48V68M60 48L45 18"/>')},
+{n:'Normally closed contact',s:sv('<path d="M60 2V22M60 48V68M60 48L72 18M60 22H76"/>')},
+{n:'Thermal overload',s:sv('<path d="M60 2V20M60 50V68"/><rect x="35" y="20" width="50" height="30"/><path d="M60 20V30H70V40H60V50"/>')},
+{n:'3-phase motor',s:sv('<circle cx="60" cy="35" r="27"/><text x="60" y="38" text-anchor="middle" font-size="22" font-family="Lexend,Arial" fill="currentColor" stroke="none">M</text><text x="60" y="56" text-anchor="middle" font-size="12" font-family="Lexend,Arial" fill="currentColor" stroke="none">3~</text>')},
+{n:'Transformer',s:sv('<circle cx="47" cy="35" r="22"/><circle cx="73" cy="35" r="22"/><path d="M5 35H25M95 35H115"/>')},
+];
+</script>
+
+<script>
+/* ============ T2 EXTRAS: paper map, board drawing, extra calcs & diagrams ============ */
+const SLOTS=[
+ [1,'Motor couplings & bearings'],[2,'Cable rules (ET101)'],[3,'Data cable & segregation'],[4,'Aluminium cables & PVC'],
+ [5,'Cable capacity, EMI & losses'],[6,'Joints, discrimination & RCDs'],[7,'Distribution board drawing'],[8,'MCBs & HBC fuses'],
+ [9,'Conduit factors & mounting heights'],[10,'Rising mains & water'],[11,'Underground cables'],[12,'Busbar trunking & bonding'],
+ [13,'Batteries'],[14,'Emergency lighting: tests & systems'],[15,'Emergency lighting: definitions'],[16,'Lamp types compared'],
+ [17,'Light units & calculation'],[18,'Lighting design & controls'],[19,'Storage & underfloor heating'],[20,'Central heating & testing']
+];
+const SLOT_LAB={5:['vd'],9:['conduit'],13:['cells'],17:['lux','flux'],18:['lumen']};
+
+/* ---- T2 calculations ---- */
+Object.assign(SYM,{Ex:['E','k'],Fl:['F','p'],room:['room','f'],cir:['circuits','k'],nl:['n','k'],UF:['UF','k'],MF:['MF','k'],lmp:['lamp output','p'],cpc:['conduit = CPC?','k'],run:['run','f'],FLC:['FLC','i']});
+GENS.forEach(g=>{g.p=(g.id==='vd'||g.id==='cells')?'T2':'T1'});
+GENS.push(
+{id:'lux',p:'T2',t:'Lighting (T2 Q17)',n:'Illuminance from flux (E = F ÷ A)',make(){const F=pick([8400,10500,12000,15000,24000]);const d=pick([[5,7],[6,8],[7,12],[8,10],[8,16]]);const A=d[0]*d[1];const E=F/A;
+ return{given:[G('Fl',F,'lm'),G('room',d[0]+' m × '+d[1],'m')],ask:'Find the average illuminance on the floor',ans:E,unit:'lux',steps:[`Area = ${d[0]} × ${d[1]} = ${A} m²`,`E = F ÷ A = ${F} ÷ ${A}`,`= <b>${n3(E)} lux</b>`]}}},
+{id:'flux',p:'T2',t:'Lighting (T2 Q17)',n:'Luminous flux needed (F = E × A)',make(){const E=pick([300,400,450,500]);const d=pick([[7,12],[7.5,15],[8,16],[6,9],[10,12]]);const A=d[0]*d[1];const F=E*A;
+ return{given:[G('Ex',E,'lux'),G('room',d[0]+' m × '+d[1],'m')],ask:'Find the total luminous flux',ans:F,unit:'lm',steps:[`Area = ${d[0]} × ${d[1]} = ${A} m²`,`F = E × A = ${E} × ${A}`,`= <b>${n3(F)} lumens</b>`]}}},
+{id:'lumen',p:'T2',t:'Lighting (T2 Q18)',n:'Number of luminaires (lumen method)',make(){const E=pick([300,400,500]);const d=pick([[8,14],[10,12],[6,9],[12,15]]);const lm=pick([2800,3600,4000,5000]);const n=pick([1,2]);const UF=pick([0.6,0.65,0.7,0.75]);const MF=pick([0.8,0.85]);const A=d[0]*d[1];const F=E*A;const N=F/(n*lm*UF*MF);
+ return{given:[G('Ex',E,'lux'),G('room',d[0]+' m × '+d[1],'m'),G('nl',n,'lamp(s) per fitting'),G('lmp',lm,'lm'),G('UF',UF,''),G('MF',MF,'')],ask:'How many luminaires? (give the exact figure, then round up)',ans:N,unit:'',steps:[`F = E × A = ${E} × ${A} = ${F} lm`,`N = F ÷ (n × lamp lm × UF × MF)`,`= ${F} ÷ (${n} × ${lm} × ${UF} × ${MF}) = <b>${n3(N)}</b>`,`Round UP → <b>${Math.ceil(N-1e-9)} luminaires</b>`]}}},
+{id:'conduit',p:'T2',t:'Conduit (T2 Q9)',n:'Conduit cable factors (8 m, 2 bends)',make(){let a,b,cpc,per,tot;do{a=pick([1,2,3,4]);b=pick([1,2,3,4]);cpc=Math.random()<.6;per=cpc?2:3;tot=a*per*30+b*per*22}while(tot>529);
+ const fit=tot<=292?'25 mm (factor 292)':'32 mm (factor 529)';
+ return{given:[G('cir',a,'× 2.5 mm²'),G('cir',b,'× 1.5 mm²'),G('run',8,'m, 2 bends'),G('cpc',cpc?'YES':'NO','')],ask:'Find the total cable factor (stranded PVC single-core, steel conduit)',ans:tot,unit:'',steps:[`Conduit ${cpc?'IS':'is NOT'} the CPC → ${per} cables per circuit (${cpc?'L + N':'L + N + CPC'})`,`2.5 mm²: ${a} × ${per} = ${a*per} cables × 30 = ${a*per*30}`,`1.5 mm²: ${b} × ${per} = ${b*per} cables × 22 = ${b*per*22}`,`Total cable factor = <b>${tot}</b>`,`Smallest conduit with factor ≥ ${tot}: <b>${fit}</b>`,`<span class="muted">Factors from your model answers (Tables 52J.3/52J.4). Check them in ET101.</span>`]}}},
+{id:'ol1',p:'T2',t:'Motor control',n:'Overload setting: single-phase motor',make(){const P=pick([0.75,1.5,2.2,3]);const pf=pick([0.7,0.72,0.8,0.85]);const I=P*1000/(230*pf);
+ return{given:[G('Pout',P,'kW'),G('V',230,'V'),G('pf',pf,'')],ask:'Find the full-load current to set the overload',ans:I,unit:'A',steps:[`{I} = {P} ÷ ({V} × {pf})`,`= ${P*1000} ÷ (230 × ${pf}) = <b>${n3(I)} A</b>`,`Set the overload at the motor full-load current`]}}},
+{id:'olsd',p:'T2',t:'Motor control',n:'Overload setting: star-delta (in the phase windings)',make(){const F=pick([10,18,24,30,42]);const s=F/R3;
+ return{given:[G('FLC',F,'A (line)')],ask:'Overload is in the delta loop (phase windings). Find the setting',ans:s,unit:'A',steps:[`In delta, phase current = line current ÷ √3`,`Setting = ${F} ÷ 1.732 = <b>${n3(s)} A</b> (about 58 % of FLC)`]}}}
+);
+
+/* ---- distribution board drawing ---- */
+const BOARD_SCEN=[
+ {id:'a',name:'Heating, 2 lighting circuits, printing machine (fuses)',papers:'2016, 2018, 2020, 2026',prot:'fuse',loads:[['Heater','3'],['Light 1','1'],['Light 2','1'],['Printer','1']]},
+ {id:'b',name:'3-phase heater & motor, 4 lighting, 2 sockets',papers:'2019, 2021, 2024',prot:'mcb',loads:[['Heater','3'],['Motor','3'],['Light 1','1'],['Light 2','1'],['Light 3','1'],['Light 4','1'],['Skt 1','1s'],['Skt 2','1s']]},
+ {id:'c',name:'3-phase heater & oven, 3 lighting, 3 sockets (commercial)',papers:'2022, 2023',prot:'mcb',loads:[['Heater','3'],['Oven','3'],['Light 1','1'],['Light 2','1'],['Light 3','1'],['Skt 1','1s'],['Skt 2','1s'],['Skt 3','1s']]},
+ {id:'d',name:'3-phase machine & pump, lighting, socket, 1-phase machine',papers:'2017',prot:'mcb',loads:[['Machine','3'],['Pump','3'],['Light','1'],['Socket','1s'],['Machine','1']]},
+];
+function modelAssign(sc){let k=0;return sc.loads.map(([n,t])=>t==='3'?{dev:'TP',bar:'L123'}:{dev:sc.prot==='fuse'?'SP':(t==='1s'?'RCBO':'SP'),bar:['L1','L2','L3'][k++%3]})}
+function drawBoard(sc,asg){
+  const n=sc.loads.length,cw=58,W=120+n*cw,y1=40,y2=58,y3=76,yN=262,yE=284;
+  const bars={L1:y1,L2:y2,L3:y3};const colr={L1:'#8b5a2b',L2:'var(--ink)',L3:'#8a8f98'};
+  let s=`<svg class="dg" viewBox="0 0 ${W} 300" role="img" aria-label="Distribution board drawing">`;
+  s+=`<rect x="8" y="30" width="52" height="56" rx="4" class="fs s"/><text x="34" y="54" text-anchor="middle" class="t">Main</text><text x="34" y="68" text-anchor="middle">switch</text><text x="8" y="22">Supply</text>`;
+  for(const [k,y] of Object.entries(bars)){s+=`<path d="M60 ${y} H${W-24}" stroke="${colr[k]}" stroke-width="4" stroke-linecap="round"/><text x="${W-6}" y="${y+4}" text-anchor="end" class="t">${k}</text>`}
+  s+=`<path d="M60 ${yN} H${W-24}" stroke="#1f6fd1" stroke-width="4" stroke-linecap="round"/><text x="${W-6}" y="${yN+4}" text-anchor="end" class="t">N</text>`;
+  s+=`<path d="M60 ${yE} H${W-24}" stroke="#3a9a3a" stroke-width="4" stroke-dasharray="8 5" stroke-linecap="round"/><text x="${W-6}" y="${yE+4}" text-anchor="end" class="t">E</text>`;
+  s+=`<path class="s" d="M34 86 V${yN} H60"/>`;
+  sc.loads.forEach(([name,t],i)=>{
+    const cx=100+i*cw,a=asg[i]||{};const three=t==='3';
+    const label=a.dev==='TP'?(sc.prot==='fuse'?'TP fuse':'TP MCB'):a.dev==='RCBO'?'RCBO':(sc.prot==='fuse'?'Fuse':'MCB');
+    if(a.dev==='TP'){[y1,y2,y3].forEach((y,k)=>{const x=cx-12+k*12;s+=`<path class="s" d="M${x} ${y} V112"/><circle cx="${x}" cy="${y}" r="3.5" class="fi"/>`})}
+    else if(a.bar&&bars[a.bar]){const y=bars[a.bar];s+=`<path d="M${cx} ${y} V112" stroke="${colr[a.bar]}" stroke-width="2.5"/><circle cx="${cx}" cy="${y}" r="4" class="fi"/>`}
+    const bad=(three&&a.dev&&a.dev!=='TP')||(!three&&!a.bar);
+    s+=`<rect x="${cx-21}" y="112" width="42" height="34" rx="4" class="s" fill="var(--panel)" ${bad?'stroke-dasharray="4 3"':''}/><text x="${cx}" y="133" text-anchor="middle" style="font-size:10.5px" class="t">${a.dev?label:'?'}</text>`;
+    s+=`<path class="s" d="M${cx} 146 V172"/><path class="s" d="M${cx-6} 172 h12"/>`;
+    s+=`<text x="${cx}" y="190" text-anchor="middle" class="t" style="font-size:11px">${name}</text><text x="${cx}" y="204" text-anchor="middle" style="font-size:10px">${three?'3-phase':(a.bar||'—')}</text>`;
+    if(!three)s+=`<path d="M${cx+18} 146 V${yN}" stroke="#1f6fd1" stroke-width="1.5" stroke-dasharray="3 3" fill="none"/><circle cx="${cx+18}" cy="${yN}" r="3" fill="#1f6fd1"/>`;
+  });
+  return s+`</svg>`;
+}
+
+/* ---- extra T2 diagrams ---- */
+Object.assign(DIAG,{
+dbsample:{n:'Distribution board (Q7 model)',t:'T2 · Q7',svg:drawBoard(BOARD_SCEN[1],modelAssign(BOARD_SCEN[1]))},
+misalign:{n:'Coupling misalignment',t:'T2 · Q1',svg:`<svg class="dg" viewBox="0 0 360 210" role="img" aria-label="Angular and parallel misalignment">
+<text x="90" y="22" text-anchor="middle" class="t">ANGULAR</text><text x="270" y="22" text-anchor="middle" class="t">PARALLEL (OFFSET)</text>
+<path class="s" d="M15 100 H70"/><rect x="70" y="50" width="12" height="100" class="fs s"/>
+<g transform="rotate(10 100 100)"><rect x="96" y="50" width="12" height="100" class="fs s"/><path class="s" d="M108 100 H165"/></g>
+<path class="a" d="M82 56 H95"/><path class="a" d="M82 144 H104"/>
+${L(88,44,'X','middle','t')}${L(94,168,'Y','middle','t')}
+${L(90,195,'Gap X ≠ gap Y','middle')}
+<path class="s" d="M195 90 H250"/><rect x="250" y="40" width="12" height="100" class="fs s"/>
+<rect x="266" y="60" width="12" height="100" class="fs s"/><path class="s" d="M278 110 H340"/>
+<path class="d" d="M240 90 H300 M240 110 H300"/><path class="a" d="M296 90 V110"/>
+${L(304,104,'P','start','t')}
+${L(270,195,'Centres offset by P','middle')}
+</svg>`},
+hbc:{n:'HBC fuse construction',t:'T2 · Q8',svg:`<svg class="dg" viewBox="0 0 360 220" role="img" aria-label="HBC cartridge fuse">
+<rect x="20" y="96" width="30" height="18" rx="3" class="s"/><circle cx="35" cy="105" r="4" class="s"/>
+<rect x="310" y="96" width="30" height="18" rx="3" class="s"/><circle cx="325" cy="105" r="4" class="s"/>
+<rect x="50" y="68" width="24" height="74" rx="4" class="s" fill="var(--panel)"/><rect x="286" y="68" width="24" height="74" rx="4" class="s" fill="var(--panel)"/>
+<rect x="74" y="74" width="212" height="62" class="fs s"/>
+${Array.from({length:60},(_,i)=>`<circle cx="${84+(i*37)%196}" cy="${82+(i*13)%48}" r="1.3" class="fi" opacity=".45"/>`).join('')}
+<path class="a" d="M74 105 H110 M120 105 H160 M170 105 H210 M220 105 H260 M270 105 H286" stroke-width="4"/>
+<path class="a" d="M110 105 L115 101 L120 105 M160 105 L165 101 L170 105 M210 105 L215 101 L220 105 M260 105 L265 101 L270 105" stroke-width="2"/>
+<rect x="170" y="62" width="20" height="12" rx="3" class="fa"/>
+${L(180,50,'Indicator','middle')}
+${L(180,170,'Ceramic body','middle','t')}
+${L(130,92,'Silver element','middle')}
+${L(240,128,'Quartz sand','middle')}
+${L(62,58,'End cap','middle')}
+${L(35,135,'Fixing tag','middle')}
+${L(180,200,'High Breaking Capacity: safely clears big fault currents','middle')}
+</svg>`},
+storage:{n:'Storage heater internal wiring',t:'T2 · Q19',svg:`<svg class="dg" viewBox="0 0 360 240" role="img" aria-label="Storage heater internal wiring">
+<text x="16" y="44" class="t">L</text><text x="16" y="214" class="t">N</text>
+<path class="s" d="M30 40 H70"/><rect x="70" y="28" width="56" height="24" rx="4" class="fs s"/>
+<path class="s" d="M126 40 H160"/><rect x="160" y="28" width="56" height="24" rx="4" class="fs s"/>
+<path class="s" d="M216 40 H300 V70 M240 40 V70 M270 40 V70"/>
+${[240,270,300].map(x=>`<rect x="${x-8}" y="70" width="16" height="70" class="s" fill="var(--panel)"/><path class="s" d="M${x} 140 V210"/>`).join('')}
+<path class="s" d="M30 210 H300"/>
+${L(98,22,'Thermal cut-out','middle')}
+${L(216,72,'Charge controller','end')}
+${L(270,232,'3 elements in parallel','middle')}
+${L(40,120,['Restricted','(off-peak)','supply'],'start')}
+</svg>`},
+fanheater:{n:'Fan-assisted storage heater',t:'T2 · Q19',svg:`<svg class="dg" viewBox="0 0 360 260" role="img" aria-label="Fan assisted storage heater supplies">
+<rect x="190" y="20" width="155" height="225" rx="8" class="d"/>
+<text x="268" y="38" text-anchor="middle" class="t">HEATER</text>
+<path class="a" d="M20 70 H70"/><rect x="70" y="58" width="56" height="24" rx="4" class="fs s"/><path class="a" d="M126 70 H210"/>
+<rect x="210" y="58" width="56" height="24" rx="4" class="fs s"/><path class="s" d="M266 70 H290 V95"/><rect x="282" y="95" width="16" height="45" class="s" fill="var(--panel)"/>
+<path class="s" d="M20 190 H70"/><rect x="70" y="178" width="56" height="24" rx="4" class="s" fill="var(--panel)"/><path class="s" d="M126 190 H230"/>
+<circle cx="252" cy="190" r="20" class="s"/><text x="252" y="195" text-anchor="middle" class="t">M</text>
+${L(20,55,'Restricted (off-peak)','start','t')}
+${L(98,100,'Time switch','middle')}
+${L(238,100,['Charge','controller'],'middle')}
+${L(306,124,'Elements','start')}
+${L(20,175,'Unrestricted (24 h)','start','t')}
+${L(98,220,['Fused spur','+ room stat'],'middle')}
+${L(252,226,'Fan','middle')}
+</svg>`},
+splan:{n:'S-Plan central heating',t:'T2 · Q20',svg:`<svg class="dg" viewBox="0 0 360 250" role="img" aria-label="S-Plan control scheme">
+<rect x="4" y="100" width="78" height="50" rx="6" class="fs s"/><text x="43" y="122" text-anchor="middle" class="t">2-channel</text><text x="43" y="138" text-anchor="middle">programmer</text>
+<path class="s" d="M82 115 H92 V60 H100 M82 135 H92 V190 H100"/>
+<rect x="100" y="45" width="86" height="30" rx="6" class="s" fill="var(--panel)"/><rect x="100" y="175" width="86" height="30" rx="6" class="s" fill="var(--panel)"/>
+<path class="s" d="M186 60 H194 M186 190 H194"/>
+<rect x="194" y="40" width="88" height="40" rx="6" class="fs s"/><rect x="194" y="170" width="88" height="40" rx="6" class="fs s"/>
+<path class="s" d="M282 60 H312 V105 M282 190 H312 V145"/>
+<rect x="290" y="105" width="66" height="40" rx="6" class="s" fill="var(--panel)"/>
+${L(143,64,'Room stat','middle')}
+${L(143,194,'Cylinder stat','middle')}
+${L(238,56,['2-port valve','(heating)'],'middle')}
+${L(238,186,['2-port valve','(hot water)'],'middle')}
+${L(323,121,['Boiler','+ pump'],'middle','t')}
+${L(180,238,'One 2-port valve per zone · add zones for S-Plan Plus','middle')}
+</svg>`},
+yplan:{n:'Y-Plan central heating',t:'T2 · Q20',svg:`<svg class="dg" viewBox="0 0 360 260" role="img" aria-label="Y-Plan control scheme">
+<rect x="4" y="95" width="78" height="50" rx="6" class="fs s"/><text x="43" y="117" text-anchor="middle" class="t">Programmer</text><text x="43" y="133" text-anchor="middle">CH + HW</text>
+<path class="s" d="M82 110 H92 V60 H100 M82 130 H92 V180 H100"/>
+<rect x="100" y="45" width="86" height="30" rx="6" class="s" fill="var(--panel)"/><rect x="100" y="165" width="86" height="30" rx="6" class="s" fill="var(--panel)"/>
+<path class="s" d="M186 60 H225 V98 M186 180 H225 V142"/>
+<circle cx="225" cy="120" r="22" class="fs s"/><path class="s" d="M247 120 H290"/>
+<rect x="290" y="100" width="66" height="40" rx="6" class="s" fill="var(--panel)"/>
+${L(143,64,'Room stat','middle')}
+${L(143,184,'Cylinder stat','middle')}
+${L(225,124,'3-port','middle','t')}
+${L(323,116,['Boiler','+ pump'],'middle','t')}
+${L(180,222,['3-port mid-position valve','→ heating, hot water or both'],'middle')}
+</svg>`},
+});
+
+</script>
+
+<script>
+/* ============ VIEWS ============ */
+const view=document.getElementById('view');
+let quizTimer=null, snapTimer=null;
+function clearTimers(){clearInterval(quizTimer);clearInterval(snapTimer);try{speechSynthesis.cancel()}catch(e){}}
+const NAVMAP={t2:'t2',mock:'t2',board:'t2',quiz:'quiz',lab:'lab',cards:'cards',pictures:'pictures',snap:'pictures',home:'home'};
+function route(){
+  clearTimers();
+  const h=(location.hash||'#home').slice(1);
+  document.querySelectorAll('nav.bottom a').forEach(a=>a.classList.toggle('on',a.dataset.v===(NAVMAP[h]||'home')));
+  ({home:viewHome,t2:viewT2Map,mock:viewMockStart,board:viewBoard,quiz:viewQuizSetup,lab:viewLab,cards:viewCardsSetup,pictures:viewPictures,snap:viewSnapSetup}[h]||viewHome)();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+function go(h){if(location.hash==='#'+h)route();else location.hash=h}
+
+const ICON={
+ quiz:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>',
+ lab:'<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>',
+ cards:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 2h14v14"/></svg>',
+ pic:'<svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>',
+ snap:'<svg viewBox="0 0 24 24"><path d="M2 12h5M17 12h5"/><rect x="7" y="8" width="10" height="8"/></svg>',
+ mock:'<svg viewBox="0 0 24 24"><path d="M6 2h9l4 4v16H6z"/><path d="M9 10h7M9 14h7M9 18h4"/></svg>',
+ map:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>',
+ board:'<svg viewBox="0 0 24 24"><path d="M3 5h18M3 9h18M3 13h18"/><path d="M7 5v12M12 9v8M17 13v4"/></svg>',
+};
+
+/* card helpers */
+const T2C=()=>CARDS.map((c,i)=>[c,i]).filter(([c])=>c.p==='T2');
+function slotCards(s){return CARDS.map((c,i)=>[c,i]).filter(([c])=>c.s===s)}
+function slotPct(s){const l=slotCards(s);if(!l.length)return 0;return Math.round(l.reduce((a,[c,i])=>a+Math.min(3,S.boxes[i]||0),0)/(l.length*3)*100)}
+
+function viewHome(){
+  const lv=level();const pct=lv.next?Math.round((S.xp-lv.cur[0])/(lv.next[0]-lv.cur[0])*100):100;
+  const acc=S.answered?Math.round(S.correct/S.answered*100):0;
+  const mockBest=store.get('mockBest',null);
+  const weak=SLOTS.map(([n,t])=>[n,t,slotPct(n)]).sort((a,b)=>a[2]-b[2]).slice(0,3);
+  view.innerHTML=`<div class="stack">
+  <section class="panel level">
+    <div class="row" style="justify-content:space-between"><h2>${lv.cur[1]}</h2><span class="chip">${S.xp} XP</span></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="small muted">${lv.next?`${lv.next[0]-S.xp} XP to ${lv.next[1]}`:'Top level reached'}</div>
+    <div class="stats"><div class="stat"><b>${S.answered}</b><span>answered</span></div><div class="stat"><b>${acc}%</b><span>accuracy</span></div><div class="stat"><b>${mockBest==null?'—':mockBest+'%'}</b><span>best mock T2</span></div></div>
+  </section>
+  <section class="panel stack focus">
+    <div class="row" style="justify-content:space-between"><h2>T2 Installation</h2><span class="chip t2">Main focus</span></div>
+    <p class="small muted" style="margin:0">The T2 paper has the same 20 questions in the same order every year. Only the wording changes. Learn each question slot and you know the paper.</p>
+    <div class="tiles">
+      <button class="tile" onclick="go('mock')"><div class="ic">${ICON.mock}</div><div><b>Mock T2 paper</b><span>20 questions in exam order. Mark yourself against the key points.</span></div></button>
+      <button class="tile" onclick="go('t2')"><div class="ic">${ICON.map}</div><div><b>T2 paper map</b><span>All 20 question slots and every version that has come up.</span></div></button>
+      <button class="tile wide" onclick="go('board')"><div class="ic">${ICON.board}</div><div><b>Board Builder (Q7)</b><span>The distribution board drawing comes up every year. Build it and get it checked.</span></div></button>
+    </div>
+    <div><div class="small muted" style="margin-bottom:6px">Weakest question slots right now</div><div class="row">${weak.map(([n,t,p])=>`<button class="chip" style="min-height:40px;cursor:pointer" onclick="openSlot(${n})">Q${n} · ${t} · ${p}%</button>`).join('')}</div></div>
+  </section>
+  <section class="tiles">
+    <button class="tile" onclick="go('cards')"><div class="ic">${ICON.cards}</div><div><b>Flashcards</b><span>Written answers as key points. T2 first.</span></div></button>
+    <button class="tile" onclick="go('quiz')"><div class="ic">${ICON.quiz}</div><div><b>Quick Shift</b><span>10 multiple-choice questions, about 5 minutes.</span></div></button>
+    <button class="tile" onclick="go('lab')"><div class="ic">${ICON.lab}</div><div><b>Formula Lab</b><span>T2 calcs: lux, lumen method, conduit, volt drop, batteries.</span></div></button>
+    <button class="tile" onclick="go('pictures')"><div class="ic">${ICON.pic}</div><div><b>Diagrams</b><span>Exam drawings. Hide the labels and test yourself.</span></div></button>
+    <button class="tile wide" onclick="go('snap')"><div class="ic">${ICON.snap}</div><div><b>Symbol Snap</b><span>60 seconds. Name as many circuit symbols as you can.</span></div></button>
+  </section>
+  ${S.missed.length?`<section class="panel row" style="justify-content:space-between"><div><h3>Review your misses</h3><div class="small muted">${S.missed.length} question${S.missed.length>1?'s':''} to go back over</div></div><button class="btn" onclick="startQuiz('review')">Review</button></section>`:''}
+  <section class="panel stack">
+    <h3>Colour code used in calculations</h3>
+    <div class="legend"><span>${sy('V')} voltage</span><span>${sy('I')} current</span><span>${sy('R')} ${sy('Z')} ${sy('XL')} resistance / impedance</span><span>${sy('P')} power</span><span>${sy('f')} ${sy('ns')} ${sy('tau')} frequency, speed, time</span><span>${sy('pf')} ${sy('B')} other</span></div>
+  </section>
+  </div>`;
+}
+
+/* ---------- T2 PAPER MAP ---------- */
+function viewT2Map(){
+  view.innerHTML=`<div class="stack">
+  <section class="panel stack"><h2>T2 paper map</h2>
+   <p class="muted" style="margin:0">Every T2 paper from 2016 to 2026 follows this order. Tap a question to see every version that has been asked and practise it.</p>
+   <div class="row"><button class="btn" style="flex:1" onclick="go('mock')">Sit a mock T2</button><button class="btn ghost" style="flex:1" onclick="go('board')">Board Builder (Q7)</button></div>
+  </section>
+  <div class="slotgrid">${SLOTS.map(([n,t])=>{const p=slotPct(n);const k=slotCards(n).length;return `<button class="slot" onclick="openSlot(${n})"><span class="num">Q${n}</span><span class="st">${t}</span><span class="small muted">${k} version${k>1?'s':''}</span><span class="bar"><i style="width:${p}%"></i></span></button>`}).join('')}</div>
+  <section class="note">The bar fills as you mark cards "Got it". Cards tagged <span class="chip chk">Check ET101</span> quote the regs — check those in the ET101 book, because your model answers do not always agree.</section>
+  </div>`;
+}
+function openSlot(n){
+  if(location.hash!=='#t2')history.replaceState(null,'','#t2');
+  document.querySelectorAll('nav.bottom a').forEach(a=>a.classList.toggle('on',a.dataset.v==='t2'));
+  const t=SLOTS[n-1][1];const list=slotCards(n);const labs=(SLOT_LAB[n]||[]).map(id=>GENS.find(g=>g.id===id)).filter(Boolean);
+  const bx=['New','Learning','Nearly','Known'];
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><button class="btn ghost" style="min-height:44px" onclick="viewT2Map()">‹ Paper map</button><span class="chip t2">T2 · Q${n}</span></div>
+  <section class="panel stack"><h2>Q${n}: ${t}</h2>
+   <p class="small muted" style="margin:0">These are the versions of question ${n} that have appeared. Learn the key points for each one.</p>
+   <button class="btn full" id="slotgo">Practise these ${list.length} cards</button>
+   ${n===7?'<button class="btn ghost full" onclick="go(\'board\')">Open the Board Builder</button>':''}
+   ${labs.map(g=>`<button class="btn ghost full" onclick="startLab('${g.id}')">Calculation: ${g.n}</button>`).join('')}
+  </section>
+  <div class="stack" style="gap:8px">${list.map(([c,i])=>`<div class="panel" style="padding:14px"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><span>${c.q}</span><span class="chip" style="flex:none">${c.m} mark${c.m>1?'s':''}</span></div><div class="row small muted" style="margin-top:6px">${bx[S.boxes[i]||0]}${c.c?' · <span class="chip chk">Check ET101</span>':''}</div></div>`).join('')}</div>
+  </div>`;
+  $('#slotgo').onclick=()=>{FC={list:shuffle(list.map(([c,i])=>i)),i:0,flipped:false,again:[],back:()=>openSlot(n)};showCard()};
+  window.scrollTo(0,0);
+}
+
+/* ---------- MOCK T2 ---------- */
+let MK=null;
+function viewMockStart(){
+  const best=store.get('mockBest',null),last=store.get('mockLast',null);
+  view.innerHTML=`<div class="stack"><section class="panel stack">
+   <h2>Mock T2 paper</h2>
+   <p class="muted" style="margin:0">20 questions in the real exam order, one version of each picked at random. Answer on paper, out loud or in the box, then tick the key points you got. The app adds up your marks.</p>
+   <div class="stats"><div class="stat"><b>20</b><span>questions</span></div><div class="stat"><b>${best==null?'—':best+'%'}</b><span>best</span></div><div class="stat"><b>${last==null?'—':last+'%'}</b><span>last</span></div></div>
+   <div class="small muted">Pass 50 % · Merit 65 % · Distinction 80 %. The real paper is 3 hours. Take breaks between questions if you need to.</div>
+   <button class="btn full" id="mgo">Start mock paper</button>
+   <button class="btn ghost full" id="mhalf">Half paper (10 questions)</button>
+  </section></div>`;
+  $('#mgo').onclick=()=>startMock(20);$('#mhalf').onclick=()=>startMock(10);
+}
+function startMock(k){
+  let slots=SLOTS.map(s=>s[0]);
+  if(k<20)slots=shuffle(slots).slice(0,k).sort((a,b)=>a-b);
+  MK={items:slots.map(s=>{const l=slotCards(s);return pick(l)}),i:0,got:[],typed:{}};
+  showMock();
+}
+function showMock(){
+  const [c,ci]=MK.items[MK.i];sayTexts.mq=c.q;sayTexts.ma=c.a.join('. ');
+  const need=c.n||c.a.length;
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><div class="dots">${MK.items.map((_,k)=>`<i class="${k<MK.i?(MK.got[k]>=MK.items[k][0].m?'ok':MK.got[k]>0?'now':'no'):k===MK.i?'now':''}"></i>`).join('')}</div><span class="small muted">${MK.i+1} / ${MK.items.length}</span></div>
+  <section class="panel stack">
+    <div class="row"><span class="chip t2">Question ${c.s}</span><span class="chip">${c.t}</span><span class="chip chk">${c.m} mark${c.m>1?'s':''}</span></div>
+    <div class="qtext">${c.q}</div>
+    <div>${sayBtn('mq')}</div>
+    <label class="small muted" for="mtyped">Your answer (optional — paper or saying it out loud works too)</label>
+    <textarea id="mtyped" rows="4" placeholder="Jot key words…">${esc(MK.typed[MK.i]||'')}</textarea>
+  </section>
+  <div id="mrev"><button class="btn full" id="mshow">Show the key points</button></div></div>`;
+  $('#mtyped').oninput=e=>MK.typed[MK.i]=e.target.value;
+  $('#mshow').onclick=()=>{
+    $('#mrev').innerHTML=`<section class="panel stack">
+      <h3>Tick the points you got</h3>
+      <div class="small muted">Full marks needs ${need} point${need>1?'s':''}.</div>
+      ${c.fig&&DIAG[c.fig]?DIAG[c.fig].svg:''}
+      <div class="ticks">${c.a.map((x,k)=>`<label class="tick"><input type="checkbox" data-k="${k}"><span>${x}</span></label>`).join('')}</div>
+      ${c.r?`<div class="ref">Reference: ${c.r}${c.c?' — check in ET101':''}</div>`:''}
+      <div>${sayBtn('ma')}</div>
+      <div class="row" style="justify-content:space-between"><span>Marks: <b id="mscore">0</b> / ${c.m}</span><button class="btn" id="mnext">${MK.i<MK.items.length-1?'Next question':'Finish paper'}</button></div>
+    </section>`;
+    const upd=()=>{const t=document.querySelectorAll('.ticks input:checked').length;$('#mscore').textContent=Math.round(c.m*Math.min(1,t/need))};
+    document.querySelectorAll('.ticks input').forEach(x=>x.onchange=upd);
+    $('#mnext').onclick=()=>{
+      const sc=+$('#mscore').textContent;MK.got[MK.i]=sc;
+      S.boxes[ci]=sc>=c.m?Math.min(3,(S.boxes[ci]||0)+1):1;addXP(sc*2);save();
+      MK.i++;if(MK.i>=MK.items.length)endMock();else showMock();
+    };
+    $('#mrev').scrollIntoView({behavior:'smooth',block:'start'});
+  };
+}
+function endMock(){
+  const tot=MK.got.reduce((a,b)=>a+b,0),max=MK.items.reduce((a,[c])=>a+c.m,0),pc=Math.round(tot/max*100);
+  store.set('mockLast',pc);if(MK.items.length===20){const b=store.get('mockBest',null);if(b==null||pc>b)store.set('mockBest',pc)}
+  const grade=pc>=80?'Distinction':pc>=65?'Merit':pc>=50?'Pass':'Not yet a pass';
+  const rows=MK.items.map(([c],k)=>({c,g:MK.got[k]})).sort((a,b)=>a.g/a.c.m-b.g/b.c.m);
+  view.innerHTML=`<div class="stack"><section class="panel stack" style="text-align:center">
+   <div class="big">${pc}%</div><h2>${grade}</h2><div class="small muted">${tot} of ${max} marks</div></section>
+   <section class="panel stack"><h3>Work on these first</h3>${rows.slice(0,5).map(({c,g})=>`<button class="labitem" onclick="openSlot(${c.s})"><span><b>Q${c.s}</b> · ${SLOTS[c.s-1][1]}</span><small>${g}/${c.m}</small></button>`).join('')}</section>
+   <section class="panel stack"><h3>All questions</h3>${MK.items.map(([c],k)=>`<div class="row" style="flex-wrap:nowrap;justify-content:space-between"><span class="small">Q${c.s} · ${SLOTS[c.s-1][1]}</span><span class="chip" style="border-color:${MK.got[k]>=c.m?'var(--good)':MK.got[k]>0?'var(--acc)':'var(--bad)'}">${MK.got[k]}/${c.m}</span></div>`).join('')}</section>
+   <div class="row"><button class="btn" style="flex:1" onclick="viewMockStart()">New mock</button><button class="btn ghost" style="flex:1" onclick="go('t2')">Paper map</button></div></div>`;
+  window.scrollTo(0,0);
+}
+
+/* ---------- BOARD BUILDER ---------- */
+let BB=null;
+function viewBoard(scId){
+  const sc=BOARD_SCEN.find(s=>s.id===(scId||store.get('bbsc','b')))||BOARD_SCEN[1];store.set('bbsc',sc.id);
+  BB={sc,asg:sc.loads.map(([n,t])=>t==='3'?{dev:null,bar:'L123'}:{dev:sc.prot==='fuse'?'SP':null,bar:null})};
+  renderBoard();
+}
+function renderBoard(msg){
+  const {sc,asg}=BB;
+  view.innerHTML=`<div class="stack">
+  <section class="panel stack"><h2>Board Builder — T2 Q7</h2>
+   <p class="small muted" style="margin:0">Choose the protective device and busbar for each load. The drawing updates as you go — this is what you draw in the exam.</p>
+   <label class="small muted" for="bbsel">Which version of the question?</label>
+   <select id="bbsel">${BOARD_SCEN.map(s=>`<option value="${s.id}" ${s.id===sc.id?'selected':''}>${s.name} (${s.papers})</option>`).join('')}</select>
+  </section>
+  <section class="panel" style="overflow-x:auto;padding:10px">${drawBoard(sc,asg)}</section>
+  <div class="stack" style="gap:8px">${sc.loads.map(([n,t],i)=>{const a=asg[i];const three=t==='3';
+    const devs=three?[['TP','Triple-pole'],['SP','Single-pole']]:(sc.prot==='fuse'?[]:[['SP','MCB'],['RCBO','RCBO']]);
+    return `<div class="panel bbrow" style="padding:12px"><div class="row" style="justify-content:space-between"><b>${n}</b><span class="chip">${three?'3-phase':'single-phase'}${t==='1s'?' socket':''}</span></div>
+    ${devs.length?`<div class="seg sm" data-i="${i}" data-f="dev">${devs.map(([k,l])=>`<button data-k="${k}" class="${a.dev===k?'on':''}">${l}</button>`).join('')}</div>`:''}
+    ${three?'':`<div class="seg sm" data-i="${i}" data-f="bar">${['L1','L2','L3'].map(k=>`<button data-k="${k}" class="${a.bar===k?'on':''}">${k}</button>`).join('')}</div>`}</div>`}).join('')}</div>
+  <div id="bbmsg">${msg||''}</div>
+  <div class="row"><button class="btn" style="flex:1" id="bbcheck">Check my board</button><button class="btn ghost" style="flex:1" id="bbmodel">Show model answer</button></div>
+  <section class="note">Exam tips: draw the main switch and the L1, L2, L3, N and E bars. Use triple-pole devices for 3-phase loads, spread single-phase loads evenly across the phases, put sockets on RCBOs, and label every circuit.</section>
+  </div>`;
+  $('#bbsel').onchange=e=>viewBoard(e.target.value);
+  document.querySelectorAll('.seg.sm').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;BB.asg[+g.dataset.i][g.dataset.f]=b.dataset.k;renderBoard()});
+  $('#bbcheck').onclick=checkBoard;
+  $('#bbmodel').onclick=()=>{BB.asg=modelAssign(sc);renderBoard('<div class="feedback"><b>Model answer</b>: 3-phase loads on triple-pole devices, single-phase loads rotated L1 → L2 → L3, sockets on RCBOs.</div>')};
+}
+function checkBoard(){
+  const {sc,asg}=BB;const issues=[];
+  sc.loads.forEach(([n,t],i)=>{const a=asg[i];
+    if(t==='3'&&a.dev!=='TP')issues.push(`${n}: a 3-phase load needs a triple-pole device across L1, L2 and L3.`);
+    if(t!=='3'&&!a.bar)issues.push(`${n}: pick which phase it is on.`);
+    if(t!=='3'&&sc.prot!=='fuse'&&!a.dev)issues.push(`${n}: pick MCB or RCBO.`);
+    if(t==='1s'&&a.dev&&a.dev!=='RCBO')issues.push(`${n}: socket circuits should have RCD protection — use an RCBO.`);
+  });
+  const cnt={L1:0,L2:0,L3:0};asg.forEach(a=>{if(cnt[a.bar]!=null)cnt[a.bar]++});
+  const v=Object.values(cnt);if(asg.every((a,i)=>sc.loads[i][1]==='3'||a.bar)&&Math.max(...v)-Math.min(...v)>1)issues.push(`Phases are not balanced (L1: ${cnt.L1}, L2: ${cnt.L2}, L3: ${cnt.L3}). Spread the single-phase loads out.`);
+  if(!issues.length){addXP(20);renderBoard('<div class="feedback"><b>Board passes</b>. Balanced phases, right devices. Now draw it on paper from memory.</div>')}
+  else renderBoard(`<div class="feedback no stack" style="gap:4px"><b>Not yet</b>${issues.map(x=>`<div>• ${x}</div>`).join('')}</div>`);
+}
+
+/* ---------- QUICK SHIFT QUIZ ---------- */
+let Q=null;
+function viewQuizSetup(){
+  const mode=store.get('qmode','T2');const timed=store.get('qtimed',false);
+  view.innerHTML=`<div class="stack"><section class="panel stack">
+  <h2>Quick Shift</h2><p class="muted" style="margin:0">10 questions, one at a time. Get the explanation straight after each one.</p>
+  <div><div class="small muted" style="margin-bottom:6px">Paper</div><div class="seg" id="qm">${[['T2','T2 Installation'],['T1','T1 Science'],['mix','Mixed']].map(([k,l])=>`<button data-k="${k}" class="${k===mode?'on':''}">${l}</button>`).join('')}</div></div>
+  <div><div class="small muted" style="margin-bottom:6px">Mode</div><div class="seg" id="qt"><button data-k="0" class="${!timed?'on':''}">Relaxed</button><button data-k="1" class="${timed?'on':''}">Inspector (2 min clock)</button></div></div>
+  <button class="btn full" id="go">Start shift</button>
+  </section>
+  <section class="panel small muted">${MCQ.filter(q=>q.p==='T2').length} T2 and ${MCQ.filter(q=>q.p==='T1').length} T1 questions in the bank. Wrong answers go to your review list.</section></div>`;
+  $('#qm').onclick=e=>{const b=e.target.closest('button');if(!b)return;store.set('qmode',b.dataset.k);viewQuizSetup()};
+  $('#qt').onclick=e=>{const b=e.target.closest('button');if(!b)return;store.set('qtimed',b.dataset.k==='1');viewQuizSetup()};
+  $('#go').onclick=()=>startQuiz(store.get('qmode','T2'));
+}
+function startQuiz(mode){
+  if(location.hash!=='#quiz'){history.replaceState(null,'','#quiz')}
+  let pool;
+  if(mode==='review'){pool=S.missed.map(i=>MCQ[i]).filter(Boolean)}
+  else pool=MCQ.filter(q=>mode==='mix'||q.p===mode);
+  const items=shuffle(pool).slice(0,10).map(q=>{const idx=shuffle(q.o.map((_,i)=>i));return{q,order:idx}});
+  Q={items,i:0,res:[],mode,timed:mode!=='review'&&store.get('qtimed',false),left:120,streak:0};
+  if(Q.timed){quizTimer=setInterval(()=>{Q.left--;const t=$('#qclock');if(t)t.textContent=fmtT(Q.left);if(Q.left<=0){clearInterval(quizTimer);endQuiz()}},1000)}
+  showQ();
+}
+const fmtT=s=>`${Math.floor(Math.max(0,s)/60)}:${String(Math.max(0,s)%60).padStart(2,'0')}`;
+function showQ(){
+  const it=Q.items[Q.i];if(!it)return endQuiz();
+  const q=it.q;sayTexts.q=q.q+'. '+it.order.map((oi,k)=>'ABCD'[k]+'. '+q.o[oi]).join('. ');
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><div class="dots">${Q.items.map((_,k)=>`<i class="${k<Q.i?(Q.res[k]?'ok':'no'):k===Q.i?'now':''}"></i>`).join('')}</div>${Q.timed?`<span class="timer" id="qclock">${fmtT(Q.left)}</span>`:`<span class="small muted">${Q.i+1} / ${Q.items.length}</span>`}</div>
+  <section class="panel stack">
+    <div class="row"><span class="chip ${q.p.toLowerCase()}">${q.p}</span><span class="chip">${q.t}</span>${Q.streak>=3?`<span class="chip chk">${Q.streak} in a row</span>`:''}</div>
+    <div class="qtext">${bold(q.q)}</div>
+    <div>${sayBtn('q')}</div>
+  </section>
+  <div class="opts" id="opts">${it.order.map((oi,k)=>`<button class="opt" data-oi="${oi}"><span class="let">${'ABCD'[k]}</span><span>${q.o[oi]}</span></button>`).join('')}</div>
+  <div id="fb"></div></div>`;
+  $('#opts').onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;answer(+b.dataset.oi)};
+}
+function answer(oi){
+  const it=Q.items[Q.i],q=it.q,ok=oi===q.a;
+  Q.res[Q.i]=ok;S.answered++;
+  const gi=MCQ.indexOf(q);
+  if(ok){S.correct++;Q.streak++;addXP(10+(Q.streak>=3?5:0));S.missed=S.missed.filter(x=>x!==gi)}
+  else{Q.streak=0;if(!S.missed.includes(gi))S.missed.push(gi)}
+  save();
+  document.querySelectorAll('.opt').forEach(b=>{b.disabled=true;const v=+b.dataset.oi;if(v===q.a)b.classList.add('right');else if(v===oi)b.classList.add('wrong');else b.classList.add('dim')});
+  sayTexts.w=q.w;
+  $('#fb').innerHTML=`<div class="feedback ${ok?'':'no'} stack" style="gap:6px"><b>${ok?'Correct':'Not quite'}</b><div>${q.w}</div><div>${sayBtn('w')}</div></div>
+  <div style="margin-top:14px"><button class="btn full" id="next">${Q.i<Q.items.length-1?'Next question':'See results'}</button></div>`;
+  $('#next').onclick=()=>{Q.i++;showQ()};$('#next').focus({preventScroll:true});
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function endQuiz(){
+  clearInterval(quizTimer);
+  const score=Q.res.filter(Boolean).length,total=Q.items.length;
+  if(Q.mode!=='review'&&total===10&&score>S.bestShift){S.bestShift=score;save()}
+  const msg=score>=8?'Distinction territory. Nice work.':score>=6.5?'Solid shift. Merit level.':score>=5?'A pass. Have a go at the review list.':'Tough shift. Do the review list, then try again.';
+  view.innerHTML=`<div class="stack"><section class="panel stack" style="text-align:center">
+   <div class="big">${score}/${total}</div><h2>${msg}</h2>
+   <div class="small muted">Exam grades: Pass 50 % · Merit 65 % · Distinction 80 %</div>
+   ${Q.timed&&Q.left<=0?'<div class="chip chk" style="margin:0 auto">Time ran out</div>':''}
+  </section>
+  <section class="panel stack"><h3>This shift</h3>${Q.items.map((it,k)=>`<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="chip" style="border-color:${Q.res[k]?'var(--good)':'var(--bad)'}">${Q.res[k]?'✓':'✗'}</span><span class="small">${bold(it.q.q)}</span></div>`).join('')}</section>
+  <div class="row"><button class="btn" onclick="startQuiz('${Q.mode==='review'?'review':Q.mode}')" style="flex:1">Another shift</button>${S.missed.length?`<button class="btn ghost" onclick="startQuiz('review')" style="flex:1">Review misses (${S.missed.length})</button>`:''}</div></div>`;
+}
+
+/* ---------- FORMULA LAB ---------- */
+let LAB=null;
+function viewLab(){
+  const pf=store.get('labp','T2');
+  const gens=GENS.filter(g=>pf==='all'||g.p===pf);
+  const topics=[...new Set(gens.map(g=>g.t))];
+  view.innerHTML=`<div class="stack"><section class="panel stack">
+  <h2>Formula Lab</h2><p class="muted" style="margin:0">New numbers every time. Try it, then reveal the steps one at a time.</p>
+  <div class="seg" id="lp">${[['T2','T2 calcs'],['T1','T1 calcs'],['all','All']].map(([k,l])=>`<button data-k="${k}" class="${k===pf?'on':''}">${l}</button>`).join('')}</div>
+  <button class="btn full" id="mix">Random mix (${pf==='all'?'all':pf})</button></section>
+  ${topics.map(t=>`<section class="stack" style="gap:8px"><h3>${t}</h3><div class="lablist">${gens.filter(g=>g.t===t).map(g=>`<button class="labitem" data-id="${g.id}"><span>${g.n}</span><small>Start ›</small></button>`).join('')}</div></section>`).join('')}</div>`;
+  $('#lp').onclick=e=>{const b=e.target.closest('button');if(!b)return;store.set('labp',b.dataset.k);viewLab()};
+  $('#mix').onclick=()=>startLab(null,pf);
+  view.querySelectorAll('.labitem').forEach(b=>b.onclick=()=>startLab(b.dataset.id));
+}
+function startLab(id,pf){
+  if(location.hash!=='#lab')history.replaceState(null,'','#lab');
+  document.querySelectorAll('nav.bottom a').forEach(a=>a.classList.toggle('on',a.dataset.v==='lab'));
+  LAB={id,pf:pf||'all',count:0,right:0};nextLab()}
+function nextLab(){
+  const pool=GENS.filter(g=>LAB.pf==='all'||g.p===LAB.pf);
+  const g=LAB.id?GENS.find(x=>x.id===LAB.id):pick(pool);
+  const p=g.make();LAB.cur={g,p,tries:0,done:false};
+  const gl=x=>(SYM[x.k]?SYM[x.k][0]:x.k).replace(/<[^>]+>/g,'');
+  sayTexts.lab=p.ask+'. Given: '+p.given.map(x=>gl(x)+' equals '+x.val+' '+x.unit).join(', ');
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><button class="btn ghost" onclick="go('lab')" style="min-height:44px">‹ All formulas</button><span class="small muted">${LAB.right}/${LAB.count} right${LAB.id?'':' · mix'}</span></div>
+  <section class="panel stack">
+   <div class="row"><span class="chip ${g.p.toLowerCase()}">${g.p}</span><span class="chip">${g.t}</span></div>
+   <div class="qtext">${p.ask}</div>
+   <div class="given">${p.given.map(x=>{const s=SYM[x.k]||[x.k,'k'];return `<div class="gv ${s[1]}"><small>given</small>${sy(x.k)} = <b>${x.val}</b> ${x.unit}</div>`}).join('')}</div>
+   <div>${sayBtn('lab')}</div>
+  </section>
+  <section class="panel stack">
+   <label for="ans" class="small muted">Your answer (3 decimal places)</label>
+   <div class="ansrow"><input id="ans" inputmode="decimal" autocomplete="off" placeholder="e.g. 4.205">${p.unit?`<span class="unit">${p.unit}</span>`:''}</div>
+   <div class="row"><button class="btn" id="chk" style="flex:1">Check</button><button class="btn ghost" id="hint" style="flex:1">Show next step</button></div>
+   <div id="lfb"></div>
+  </section>
+  <section class="panel stack"><h3>Working</h3><ol class="steps" id="steps">${p.steps.map(s=>`<li class="hid">${fx(s)}</li>`).join('')}</ol><div class="small muted" id="stepnote">Steps are hidden. Tap “Show next step” if you get stuck.</div></section>
+  </div>`;
+  const inp=$('#ans');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+  $('#chk').onclick=check;
+  $('#hint').onclick=()=>revealStep();
+  function revealStep(all){const lis=[...document.querySelectorAll('#steps li')];if(all)lis.forEach(l=>l.classList.remove('hid'));else{const h=lis.find(l=>l.classList.contains('hid'));if(h)h.classList.remove('hid')}if(!lis.some(l=>l.classList.contains('hid')))$('#stepnote').classList.add('hidden')}
+  function check(){
+    const c=LAB.cur;if(c.done){nextLab();return}
+    const v=parseFloat(inp.value.replace(',','.').replace(/[^0-9.\-eE]/g,''));
+    if(isNaN(v)){$('#lfb').innerHTML='<div class="feedback no">Type a number first.</div>';return}
+    c.tries++;const a=c.p.ans;const ok=Math.abs(v-a)<=Math.max(0.0015,Math.abs(a)*0.005);
+    if(ok||c.tries>=2){
+      c.done=true;LAB.count++;if(ok){LAB.right++;addXP(15);S.answered++;S.correct++}else{S.answered++}save();
+      revealStep(true);
+      $('#lfb').innerHTML=`<div class="feedback ${ok?'':'no'}"><b>${ok?'Spot on':'Answer'}</b>: ${n3(a)} ${c.p.unit}${ok?'':' — check the working below.'}</div>`;
+      $('#chk').textContent='Next problem';$('#hint').classList.add('hidden');
+    } else {
+      $('#lfb').innerHTML='<div class="feedback no"><b>Not yet.</b> Have one more go — or show a step.</div>';
+    }
+  }
+}
+
+/* ---------- FLASHCARDS (Leitner boxes) ---------- */
+let FC=null;
+function viewCardsSetup(){
+  const deck=store.get('fdeck','T2');
+  const cnt=b=>CARDS.filter((c,i)=>(deck==='all'||c.p===deck)&&(S.boxes[i]||0)===b).length;
+  view.innerHTML=`<div class="stack"><section class="panel stack">
+  <h2>Flashcards</h2><p class="muted" style="margin:0">Read the question, say your answer out loud, then flip. Answers are key points — the words examiners look for.</p>
+  <div class="seg" id="fd">${[['T2','T2 written'],['T1','T1 explain'],['all','All']].map(([k,l])=>`<button data-k="${k}" class="${k===deck?'on':''}">${l}</button>`).join('')}</div>
+  <div class="boxes"><span><b>${cnt(0)}</b>New</span><span><b>${cnt(1)}</b>Learning</span><span><b>${cnt(2)}</b>Nearly</span><span><b>${cnt(3)}</b>Known</span></div>
+  <button class="btn full" id="fgo">Start 10 cards</button>
+  ${deck==='T2'?'<button class="btn ghost full" onclick="go(\'t2\')">Pick by question number (paper map)</button>':''}
+  </section>
+  <section class="note">Cards marked <span class="chip chk">Check ET101</span> come from the regs. Your past-paper answers sometimes disagree with each other, so check those against the ET101 book.</section></div>`;
+  $('#fd').onclick=e=>{const b=e.target.closest('button');if(!b)return;store.set('fdeck',b.dataset.k);viewCardsSetup()};
+  $('#fgo').onclick=()=>{
+    const idx=CARDS.map((c,i)=>i).filter(i=>deck==='all'||CARDS[i].p===deck);
+    const sorted=shuffle(idx).sort((a,b)=>(S.boxes[a]||0)-(S.boxes[b]||0));
+    FC={list:sorted.slice(0,10),i:0,flipped:false,again:[],back:viewCardsSetup};showCard();
+  };
+}
+function showCard(){
+  if(FC.i>=FC.list.length){
+    if(FC.again.length){FC.list=FC.list.concat(FC.again);FC.again=[]}else return endCards();
+  }
+  const ci=FC.list[FC.i],c=CARDS[ci];
+  sayTexts.fq=c.q;sayTexts.fa=c.a.join('. ');
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><span class="small muted">Card ${Math.min(FC.i+1,FC.list.length)} of ${FC.list.length}</span><button class="btn ghost" style="min-height:44px" id="fend">End</button></div>
+  <section class="panel card" id="card">
+    <div class="row"><span class="chip ${c.p.toLowerCase()}">${c.p}${c.s?' · Q'+c.s:''}</span>${c.m?`<span class="chip">${c.m} mark${c.m>1?'s':''}</span>`:''}<span class="chip">${c.t}</span>${c.c?'<span class="chip chk">Check ET101</span>':''}</div>
+    <div class="qtext">${c.q}</div>
+    <div>${sayBtn('fq')}</div>
+    <div id="back" class="${FC.flipped?'':'hidden'} stack">
+      ${c.fig&&DIAG[c.fig]?DIAG[c.fig].svg:''}
+      <ul>${c.a.map(x=>`<li>${x}</li>`).join('')}</ul>
+      ${c.n&&c.n<c.a.length?`<div class="ref">Any ${c.n} of these for full marks.</div>`:''}
+      ${c.r?`<div class="ref">Reference: ${c.r}</div>`:''}
+      <div>${sayBtn('fa')}</div>
+    </div>
+  </section>
+  <div id="ctl">${FC.flipped?rateHTML():'<button class="btn full" id="flip">Show answer</button>'}</div></div>`;
+  $('#fend').onclick=()=>(FC.back||viewCardsSetup)();
+  if(!FC.flipped)$('#flip').onclick=()=>{FC.flipped=true;showCard()};
+  else bindRate(ci);
+}
+function rateHTML(){return `<div class="rate"><button class="btn r-again" data-r="0">Again</button><button class="btn r-ok" data-r="1">Nearly</button><button class="btn r-good" data-r="2">Got it</button></div>`}
+function bindRate(ci){document.querySelectorAll('.rate .btn').forEach(b=>b.onclick=()=>{
+  const r=+b.dataset.r;const box=S.boxes[ci]||0;
+  if(r===0){S.boxes[ci]=1;FC.again.push(ci)}else if(r===1){S.boxes[ci]=Math.max(1,Math.min(2,box))}else{S.boxes[ci]=Math.min(3,box+1);addXP(5)}
+  save();FC.i++;FC.flipped=false;showCard();
+})}
+function endCards(){view.innerHTML=`<div class="stack"><section class="panel stack" style="text-align:center"><div class="big">Done</div><h2>Deck finished</h2><p class="muted" style="margin:0">Cards you marked “Again” came back round until you had them.</p></section><button class="btn full" id="fback">Back</button></div>`;$('#fback').onclick=()=>(FC.back||viewCardsSetup)()}
+
+/* ---------- PICTURES: diagrams ---------- */
+function viewPictures(){
+  const ent=Object.entries(DIAG).sort((a,b)=>(a[1].t.startsWith('T2')?0:1)-(b[1].t.startsWith('T2')?0:1));
+  view.innerHTML=`<div class="stack"><section class="panel stack"><h2>Diagrams</h2><p class="muted" style="margin:0">These are the drawings the papers ask for. T2 first. Open one, hide the labels, and name each part before you tap it.</p></section>
+  <div class="dglist">${ent.map(([k,d])=>`<button class="dgthumb" data-k="${k}">${d.svg}<b>${d.n}</b><span class="small muted">${d.t}</span></button>`).join('')}</div>
+  <button class="btn ghost full" onclick="go('snap')">Play Symbol Snap ›</button></div>`;
+  view.querySelectorAll('.dgthumb').forEach(b=>b.onclick=()=>openDiagram(b.dataset.k));
+}
+function openDiagram(k){
+  const d=DIAG[k];
+  view.innerHTML=`<div class="stack">
+  <div class="qhead"><button class="btn ghost" style="min-height:44px" onclick="viewPictures()">‹ All diagrams</button><span class="chip">${d.t}</span></div>
+  <section class="panel stack"><h2>${d.n}</h2>
+   <div class="seg" id="lm"><button class="on" data-k="show">Show labels</button><button data-k="hide">Test me (hide labels)</button></div>
+   <div id="dgw" style="overflow-x:auto">${d.svg}</div>
+   <div class="small muted" id="dgnote">Practise drawing this on paper, then compare.</div>
+  </section></div>`;
+  addCovers($('#dgw svg'));
+  $('#lm').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+    $('#lm').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    const hide=b.dataset.k==='hide';$('#dgw').classList.toggle('hidelabels',hide);
+    $('#dgw').querySelectorAll('.lab').forEach(l=>l.classList.remove('shown'));
+    $('#dgnote').textContent=hide?'Say what each orange box is, then tap it to check.':'Practise drawing this on paper, then compare.';
+  };
+  $('#dgw').addEventListener('click',e=>{const l=e.target.closest('.lab');if(l&&$('#dgw').classList.contains('hidelabels'))l.classList.add('shown')});
+}
+function addCovers(svg){
+  svg.querySelectorAll('.lab').forEach(g=>{
+    const t=g.querySelector('text');let bb;try{bb=t.getBBox()}catch(e){return}
+    if(!bb.width)return;
+    const ns='http://www.w3.org/2000/svg';
+    const r=document.createElementNS(ns,'rect');r.setAttribute('x',bb.x-4);r.setAttribute('y',bb.y-2);r.setAttribute('width',bb.width+8);r.setAttribute('height',bb.height+4);r.setAttribute('class','cover');r.setAttribute('rx','5');
+    const q=document.createElementNS(ns,'text');q.setAttribute('x',bb.x+bb.width/2);q.setAttribute('y',bb.y+bb.height/2+4);q.setAttribute('text-anchor','middle');q.setAttribute('class','qm');q.textContent='?';
+    g.insertBefore(r,t);g.appendChild(q);
+  });
+}
+
+/* ---------- SYMBOL SNAP ---------- */
+let SN=null;
+function viewSnapSetup(){
+  const best=store.get('snapBest',0);
+  view.innerHTML=`<div class="stack"><section class="panel stack" style="text-align:center">
+  <h2>Symbol Snap</h2><p class="muted" style="margin:0">60 seconds. A symbol appears — tap its name. Wrong answers cost 3 seconds.</p>
+  <div class="symbox">${SYMBOLS[6].s}</div>
+  <div class="small muted">Best score: <b>${best}</b></div>
+  <button class="btn full" id="sgo">Start</button>
+  <button class="btn ghost full" id="slearn">Learn the symbols first</button></section></div>`;
+  $('#sgo').onclick=startSnap;
+  $('#slearn').onclick=()=>{view.innerHTML=`<div class="stack"><div class="qhead"><button class="btn ghost" style="min-height:44px" onclick="viewSnapSetup()">‹ Back</button></div><div class="dglist">${SYMBOLS.map(s=>`<div class="dgthumb" style="cursor:default"><div class="symbox" style="min-height:110px;padding:10px">${s.s}</div><b>${s.n}</b></div>`).join('')}</div></div>`};
+}
+function startSnap(){
+  if(location.hash!=='#snap')history.replaceState(null,'','#snap');
+  SN={left:60,score:0,last:-1};
+  snapTimer=setInterval(()=>{SN.left--;const t=$('#sclock');if(t)t.textContent=SN.left+'s';if(SN.left<=0)endSnap()},1000);
+  nextSnap();
+}
+function nextSnap(){
+  let i;do{i=Math.floor(Math.random()*SYMBOLS.length)}while(i===SN.last);SN.last=i;
+  const opts=shuffle([i,...shuffle(SYMBOLS.map((_,k)=>k).filter(k=>k!==i)).slice(0,3)]);
+  view.innerHTML=`<div class="stack"><div class="qhead"><span class="timer" id="sclock">${SN.left}s</span><span class="chip chk">Score ${SN.score}</span></div>
+  <div class="symbox">${SYMBOLS[i].s}</div>
+  <div class="opts" id="sopts">${opts.map(k=>`<button class="opt" data-k="${k}"><span>${SYMBOLS[k].n}</span></button>`).join('')}</div></div>`;
+  $('#sopts').onclick=e=>{const b=e.target.closest('.opt');if(!b||b.disabled)return;const k=+b.dataset.k;
+    document.querySelectorAll('#sopts .opt').forEach(x=>{x.disabled=true;if(+x.dataset.k===i)x.classList.add('right');else if(x===b)x.classList.add('wrong')});
+    if(k===i){SN.score++;addXP(2)}else{SN.left=Math.max(0,SN.left-3)}
+    setTimeout(()=>{if(SN.left>0)nextSnap()},k===i?350:1100);
+  };
+}
+function endSnap(){
+  clearInterval(snapTimer);const best=store.get('snapBest',0);const nb=SN.score>best;if(nb)store.set('snapBest',SN.score);
+  view.innerHTML=`<div class="stack"><section class="panel stack" style="text-align:center"><div class="big">${SN.score}</div><h2>${nb?'New best score':'Time up'}</h2><div class="small muted">Best: ${Math.max(best,SN.score)}</div></section>
+  <div class="row"><button class="btn" style="flex:1" onclick="startSnap()">Play again</button><button class="btn ghost" style="flex:1" onclick="go('pictures')">Diagrams</button></div></div>`;
+}
+
+route();
+
+</script>
+</body>
+</html>
