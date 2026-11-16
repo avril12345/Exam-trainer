@@ -203,10 +203,21 @@ input,textarea{{font-size:1.05rem !important}}
   background:radial-gradient(circle,var(--muted) 0 3px,transparent 3.5px) 0 50%/28px 14px repeat-x}}
 .bd-block.ok{{border-color:var(--good);background:var(--good-soft)}} .bd-block.ok .bd-tag{{background:var(--good);color:var(--panel)}}
 .bd-block.bad{{border-color:var(--bad);background:var(--bad-soft)}} .bd-block.bad .bd-tag{{background:var(--bad);color:var(--panel)}}
-.bd-over{{position:absolute;inset:0;display:grid;place-items:center;padding:12px;z-index:3;background:color-mix(in srgb,var(--bg) 82%,transparent)}}
+.bd-over{{position:absolute;inset:0;display:grid;place-items:center;padding:12px;z-index:4;background:color-mix(in srgb,var(--bg) 82%,transparent)}}
+.bd-over.miss{{background:transparent;align-items:start}}  /* keep the splash in view */
 .bd-over .panel{{max-width:320px;width:100%;text-align:center}}
 .bd-over .head{{font-family:var(--display);font-size:1.4rem;display:block;margin-bottom:4px}}
 .bd-over button{{width:100%;justify-content:center;margin-top:8px}}
+.bd-block{{z-index:2}}
+/* the stick man on the rail, and the splash when a block lands on him (owner's request) */
+.bd-man{{position:absolute;bottom:12px;left:calc(50% - 15px);width:30px;height:46px;color:var(--ink);transform-origin:50% 100%;z-index:1}}
+.bd-man svg{{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}}
+.bd-man.flat{{transform:scaleY(.12)}}
+.bd-splash{{position:absolute;inset:0;z-index:3;pointer-events:none;display:none;transform-origin:50% 100%;
+  background:radial-gradient(ellipse 75% 45% at 50% 100%,rgba(200,16,16,.5),rgba(200,16,16,.12) 60%,transparent 80%)}}
+.bd-splash svg{{position:absolute;left:50%;bottom:4px;width:220px;margin-left:-110px;fill:#c81010}}
+.bd-splash.on{{display:block;animation:bd-splat .8s ease-out forwards}}
+@keyframes bd-splat{{0%{{opacity:0;transform:scale(.5)}}20%{{opacity:1;transform:scale(1.04)}}100%{{opacity:.85;transform:scale(1)}}}}
 .bd-ans{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}}
 .bd-ans .opt{{margin:0;min-height:56px;cursor:pointer;font:inherit;font-size:.86rem;color:var(--ink);text-align:left;
   padding:8px 10px;gap:8px;align-items:center;line-height:1.3;overflow-wrap:anywhere}}
@@ -454,16 +465,23 @@ export default function({ parentElement, data, setTriggerValue }) {
   let idx = -1, cur = null, score = 0, lives = 3, streak = 0, bestStreak = 0, correct = 0, results = [];
   let state = 'idle', paused = false, holding = false, elapsed = 0, T = 1, showLeft = 0, travel = 0;
   let last = performance.now(), raf = 0, dead = false, holdTimer = 0, reveal = '';
+  let manH = 0, crushT = 0, crushFrom = 0, crushMs = 300, missPicked = -1;
+  const MAN = '<svg viewBox="0 0 30 46" aria-hidden="true"><circle cx="15" cy="7" r="5.5"/><path d="M15 12.5V30M5 21l10-4 10 4M15 30l-8 14M15 30l8 14"/></svg>';
+  const SPLAT = '<svg viewBox="0 0 180 90" aria-hidden="true"><path d="M14 88c6-12 20-9 27-18s-5-21 9-23 13 13 23 9 5-21 19-17 6 19 17 21 21-7 25 4-13 13-6 21 18 1 22 3z"/>' +
+    '<circle cx="30" cy="42" r="5"/><circle cx="150" cy="36" r="6"/><circle cx="62" cy="16" r="4"/><circle cx="118" cy="12" r="3.5"/>' +
+    '<circle cx="96" cy="30" r="3"/><circle cx="12" cy="64" r="3"/><circle cx="168" cy="64" r="4"/></svg>';
 
   root.innerHTML = '<div class="bdrop">' +
     '<div class="bd-top"><div class="bd-score" aria-live="polite"></div>' +
     '<div class="bd-mid"><div class="bd-lives" aria-label="Lives"></div><span class="chip chk bd-streak" hidden></span></div>' +
     '<button type="button" class="say bd-pause">Pause</button></div>' +
-    '<div class="bd-play"><div class="bd-bar" hidden></div><div class="bd-block"></div><div class="bd-rail"></div><div class="bd-over" hidden></div></div>' +
+    '<div class="bd-play"><div class="bd-bar" hidden></div><div class="bd-block"></div><div class="bd-man">' + MAN + '</div><div class="bd-rail"></div>' +
+    '<div class="bd-splash">' + SPLAT + '</div><div class="bd-over" hidden></div></div>' +
     '<div class="bd-ans"></div></div>';
   const $ = s => root.querySelector(s);
   const scoreEl = $('.bd-score'), livesEl = $('.bd-lives'), streakEl = $('.bd-streak'), pauseBtn = $('.bd-pause');
   const play = $('.bd-play'), bar = $('.bd-bar'), blk = $('.bd-block'), over = $('.bd-over'), ans = $('.bd-ans'), top = $('.bd-top');
+  const man = $('.bd-man'), splash = $('.bd-splash');
   bar.hidden = !RM;
 
   const paint = () => {
@@ -488,13 +506,18 @@ export default function({ parentElement, data, setTriggerValue }) {
     const docTop = root.getBoundingClientRect().top + sc.scrollTop;
     const h = window.innerHeight - docTop - top.offsetHeight - ans.offsetHeight - 22;
     play.style.height = Math.max(180, Math.round(h)) + 'px';
-    travel = RM ? 0 : Math.max(0, play.clientHeight - blk.offsetHeight - 14);
+    travel = RM ? 0 : Math.max(0, play.clientHeight - blk.offsetHeight - 14);  // block resting on the rail
+    manH = man.offsetHeight;
     place();
   }
   function place() {
     const p = Math.min(1, elapsed / T);
     if (RM) bar.style.transform = 'scaleX(' + (1 - p) + ')';
-    else blk.style.transform = 'translateY(' + (p * travel).toFixed(1) + 'px)';
+    else blk.style.transform = 'translateY(' + (p * fallEnd()).toFixed(1) + 'px)';
+  }
+  const fallEnd = () => Math.max(0, travel - manH);  // time runs out as the block reaches his head
+  function squash(y) {
+    man.style.transform = 'scaleY(' + Math.max(0.12, Math.min(1, (travel - y) / (manH || 1))).toFixed(3) + ')';
   }
   function fallTime(b) {
     // Questions: 15 s plus 0.25 s per word, kept between 15 and 25 s (speeding up never goes below 15 s).
@@ -506,7 +529,7 @@ export default function({ parentElement, data, setTriggerValue }) {
   function next() {
     if (lives <= 0 || idx + 1 >= N) return finish(false);
     cur = B[++idx]; elapsed = 0; T = fallTime(cur) * 1000;  // the clock counts milliseconds
-    blk.className = 'bd-block';
+    blk.className = 'bd-block'; man.className = 'bd-man'; man.style.transform = ''; splash.classList.remove('on');
     blk.innerHTML = '<div class="bd-tag"><span>' + cur.label + '</span><span>' + (idx + 1) + ' / ' + N + '</span></div>' +
       '<div class="bd-body">' + cur.html + '</div><div class="bd-term"></div>';
     ans.innerHTML = cur.opts.map((o, k) => '<button type="button" class="opt" data-k="' + k + '"><span class="let">' + LET[k] +
@@ -543,14 +566,23 @@ export default function({ parentElement, data, setTriggerValue }) {
     endHold(); hush();
     lives--; streak = 0; results.push({ k: cur.k, i: cur.i, ok: false });
     blk.classList.add('bad'); mark(picked); paint();
-    reveal = '<div class="panel"><span class="head">' + (picked < 0 ? 'Out of time' : 'Not quite') + '</span>' +
+    missPicked = picked;
+    if (RM) return crushed();
+    // the block drops the rest of the way and lands on the man
+    crushFrom = Math.min(1, elapsed / T) * fallEnd(); crushT = 0;
+    crushMs = Math.min(400, 140 + 0.5 * (travel - crushFrom)); state = 'crush';
+  }
+  function crushed() {
+    man.classList.add('flat'); splash.classList.add('on');
+    reveal = '<div class="panel"><span class="head">' + (missPicked < 0 ? 'Out of time' : 'Not quite') + '</span>' +
       '<div class="small muted">Correct answer</div><div><b>' + LET[cur.a] + '.</b> ' + cur.opts[cur.a] + '</div></div>';
-    over.innerHTML = reveal; over.hidden = false; state = 'show'; showLeft = 1500;
+    over.innerHTML = reveal; over.classList.add('miss'); over.hidden = false; state = 'show'; showLeft = 1500;
   }
   function finish(stopped) {
     if (state === 'over') return;
     state = 'over'; stop();
     ans.querySelectorAll('.opt').forEach(b => b.disabled = true);
+    over.classList.remove('miss');
     over.innerHTML = '<div class="panel"><span class="head">' + (stopped ? 'Game ended' : lives > 0 ? 'Deck cleared' : 'Game over') +
       '</span><div class="small muted">Adding up your score…</div></div>';
     over.hidden = false; pauseBtn.disabled = true;
@@ -558,7 +590,7 @@ export default function({ parentElement, data, setTriggerValue }) {
   }
   function pause() {
     if (paused || state === 'over' || state === 'idle') return;
-    paused = true; hush(); endHold(); pauseBtn.textContent = 'Resume';
+    paused = true; hush(); endHold(); pauseBtn.textContent = 'Resume'; over.classList.remove('miss');
     over.innerHTML = '<div class="panel"><span class="head">Paused</span>' +
       '<button type="button" class="say on bd-resume">Resume</button><button type="button" class="say bd-end">End game</button></div>';
     over.hidden = false;
@@ -569,6 +601,7 @@ export default function({ parentElement, data, setTriggerValue }) {
     if (!paused) return;
     paused = false; pauseBtn.textContent = 'Pause'; last = performance.now();
     over.innerHTML = reveal; over.hidden = !reveal;   // bring back the answer card if one was showing
+    over.classList.toggle('miss', !!reveal);
   }
   function frame(now) {
     if (dead) return;
@@ -576,6 +609,11 @@ export default function({ parentElement, data, setTriggerValue }) {
     const dt = Math.min(100, now - last); last = now;
     if (!paused) {
       if (state === 'fall' && !holding) { elapsed += dt; if (elapsed >= T) { elapsed = T; place(); miss(-1); } else place(); }
+      else if (state === 'crush') {
+        crushT += dt; const q = Math.min(1, crushT / crushMs), y = crushFrom + (travel - crushFrom) * q * q;
+        blk.style.transform = 'translateY(' + y.toFixed(1) + 'px)'; squash(y);
+        if (q >= 1) crushed();
+      }
       else if (state === 'show') { showLeft -= dt; if (showLeft <= 0) next(); }
     }
     raf = requestAnimationFrame(frame);

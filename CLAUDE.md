@@ -10,6 +10,7 @@ A 27-year-old electrical apprentice with dyslexia and some ADHD, studying for th
 ## Rules when editing
 - Keep the tone adult and trade-like. Nothing childish (no cartoons or emoji in content).
 - Celebrations (asked for by the owner): short wire-colour confetti (`ui.cheer`) for a right answer or a finished set, and an electric-arc "buzz" (`ui.buzz`) each time the level bar passes another 10 %. Both skip for reduced motion; confetti can be turned off in Display.
+- Block Drop exception (asked for by the owner): a small stick man stands on the rail; on a miss the block lands on him and a red splash shows (`.bd-man`, `.bd-splash` in `ui.py`). Reduced motion: no fall, he just flattens and the splash shows still.
 - Feedback is encouraging: a mistake is "not yet" and goes to the review list. Use soft terracotta (`--bad`), not alarm red.
 - Dyslexia-friendly: Lexend body font, short sentences, one question per screen, bold the key word in questions (`**word**`), read-aloud on all text (`ui.read_aloud`), big tap targets (≥ 44 px), no italics.
 - Image-led: prefer diagrams (inline SVG using the `dg` classes) over text.
