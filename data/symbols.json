@@ -1,0 +1,82 @@
+[
+ {
+  "n": "Resistor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H35M85 35H115\"/><rect x=\"35\" y=\"25\" width=\"50\" height=\"20\"/></svg>"
+ },
+ {
+  "n": "Capacitor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H55M65 35H115M55 15V55M65 15V55\"/></svg>"
+ },
+ {
+  "n": "Electrolytic (polarised) capacitor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H54M68 35H115M54 15V55\"/><rect x=\"62\" y=\"15\" width=\"6\" height=\"40\" fill=\"currentColor\"/><path d=\"M40 14h8M44 10v8\"/></svg>"
+ },
+ {
+  "n": "Inductor (coil)",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H25M95 35H115\"/><path d=\"M25 35a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0a8.75 8.75 0 0 1 17.5 0\"/></svg>"
+ },
+ {
+  "n": "Diode",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53\"/></svg>"
+ },
+ {
+  "n": "LED",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53\"/><path d=\"M68 12l10-10M74 2h4v4M80 18l10-10M86 8h4v4\"/></svg>"
+ },
+ {
+  "n": "Photodiode",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H45M75 35H115M45 17V53L75 35Z M75 17V53\"/><path d=\"M88 2l-10 10M78 8v4h4M98 10l-10 10M88 16v4h4\"/></svg>"
+ },
+ {
+  "n": "Zener diode",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H45M75 35H115M45 17V53L75 35Z M68 53H75V17H82\"/></svg>"
+ },
+ {
+  "n": "NPN transistor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"60\" cy=\"35\" r=\"28\"/><path d=\"M10 35H48M48 18V52M48 26L72 10M72 10V2M48 44L72 60M72 60V68\"/><path d=\"M72 60l-11-2 5-7z\" fill=\"currentColor\"/></svg>"
+ },
+ {
+  "n": "PNP transistor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"60\" cy=\"35\" r=\"28\"/><path d=\"M10 35H48M48 18V52M48 26L72 10M72 10V2M48 44L72 60M72 60V68\"/><path d=\"M50 45l11 2-5 7z\" fill=\"currentColor\"/></svg>"
+ },
+ {
+  "n": "Fuse",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H115\"/><rect x=\"35\" y=\"25\" width=\"50\" height=\"20\"/></svg>"
+ },
+ {
+  "n": "Lamp",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H40M80 35H115\"/><circle cx=\"60\" cy=\"35\" r=\"20\"/><path d=\"M46 21L74 49M74 21L46 49\"/></svg>"
+ },
+ {
+  "n": "Earth",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 5V35M35 35H85M43 47H77M51 59H69\"/></svg>"
+ },
+ {
+  "n": "Cell / battery",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 35H52M66 35H115M52 12V58\"/><path d=\"M66 24V46\" stroke-width=\"7\"/><path d=\"M36 10h8M40 6v8\"/></svg>"
+ },
+ {
+  "n": "Contactor / relay coil",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 2V20M60 50V68\"/><rect x=\"35\" y=\"20\" width=\"50\" height=\"30\"/></svg>"
+ },
+ {
+  "n": "Normally open contact",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 2V22M60 48V68M60 48L45 18\"/></svg>"
+ },
+ {
+  "n": "Normally closed contact",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 2V22M60 48V68M60 48L72 18M60 22H76\"/></svg>"
+ },
+ {
+  "n": "Thermal overload",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M60 2V20M60 50V68\"/><rect x=\"35\" y=\"20\" width=\"50\" height=\"30\"/><path d=\"M60 20V30H70V40H60V50\"/></svg>"
+ },
+ {
+  "n": "3-phase motor",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"60\" cy=\"35\" r=\"27\"/><text x=\"60\" y=\"38\" text-anchor=\"middle\" font-size=\"22\" font-family=\"Lexend,Arial\" fill=\"currentColor\" stroke=\"none\">M</text><text x=\"60\" y=\"56\" text-anchor=\"middle\" font-size=\"12\" font-family=\"Lexend,Arial\" fill=\"currentColor\" stroke=\"none\">3~</text></svg>"
+ },
+ {
+  "n": "Transformer",
+  "s": "<svg class=\"sym\" viewBox=\"0 0 120 70\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"47\" cy=\"35\" r=\"22\"/><circle cx=\"73\" cy=\"35\" r=\"22\"/><path d=\"M5 35H25M95 35H115\"/></svg>"
+ }
+]

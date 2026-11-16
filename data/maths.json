@@ -1,0 +1,1324 @@
+{
+ "source": "Based on 'Electrical Apprenticeship Phase 4 Electrical Science Notes' (D. Ó Briain). Reworded; all answers recalculated to 3 d.p.",
+ "topics": [
+  {
+   "id": "trig",
+   "name": "Triangles: sin, cos, tan & Pythagoras"
+  },
+  {
+   "id": "ac",
+   "name": "AC waveforms: peak, RMS, frequency"
+  },
+  {
+   "id": "units",
+   "name": "Units, prefixes & the calculator"
+  },
+  {
+   "id": "reactance",
+   "name": "Reactance: XL and XC"
+  },
+  {
+   "id": "series",
+   "name": "Series circuits: impedance & power factor"
+  },
+  {
+   "id": "parallel",
+   "name": "Parallel circuits"
+  },
+  {
+   "id": "capcharge",
+   "name": "Capacitor charging: time constant"
+  },
+  {
+   "id": "threephase",
+   "name": "Three-phase: star & delta"
+  },
+  {
+   "id": "magnetism",
+   "name": "Magnetism & solenoids"
+  },
+  {
+   "id": "generators",
+   "name": "AC generators (alternators)"
+  },
+  {
+   "id": "motors",
+   "name": "AC motors: speed & slip"
+  }
+ ],
+ "examples": [
+  {
+   "topic": "trig",
+   "title": "Find the long side (hypotenuse)",
+   "problem": "A right-angled triangle has sides **20** and **15**. Find the **hypotenuse** and the angle θ next to the side of 20.",
+   "steps": [
+    "**Pythagoras**: hypotenuse² = opposite² + adjacent²",
+    "c² = 20² + 15² = 400 + 225 = 625",
+    "c = √625 = **25.000**",
+    "cos θ = adjacent ÷ hypotenuse = 20 ÷ 25 = 0.800",
+    "θ = cos⁻¹(0.800) = **36.870°**"
+   ],
+   "answer": "Hypotenuse = **25.000**, θ = **36.870°**",
+   "tip": "Remember **SOH CAH TOA**: Sin = Opposite ÷ Hypotenuse, Cos = Adjacent ÷ Hypotenuse, Tan = Opposite ÷ Adjacent. In AC work this same triangle is the impedance triangle: Z is the hypotenuse, R is next to θ."
+  },
+  {
+   "topic": "ac",
+   "title": "Peak voltage to RMS",
+   "problem": "The mains has a **peak voltage** (V<sub>P</sub>) of **325 V**. Find the **RMS** voltage and the **peak-to-peak** voltage.",
+   "steps": [
+    "RMS = V<sub>P</sub> ÷ √2 (the same as V<sub>P</sub> × 0.707)",
+    "RMS = 325 ÷ 1.414 = **229.810 V**",
+    "Peak-to-peak = V<sub>P</sub> + V<sub>P</sub> = 325 + 325 = **650 V**"
+   ],
+   "answer": "V<sub>RMS</sub> = **229.810 V** (about 230 V), V<sub>PP</sub> = **650 V**",
+   "tip": "Going **from peak to RMS: × 0.707** (or ÷ √2). Going **from RMS to peak: ÷ 0.707** (or × √2). Using √2 on the calculator is more accurate than 0.707."
+  },
+  {
+   "topic": "ac",
+   "title": "Instantaneous value of a sine wave",
+   "problem": "A sine wave has a peak of **325 V**. What is the voltage at **45°** and at **270°**?",
+   "steps": [
+    "Instantaneous value = V<sub>P</sub> × sin(angle)",
+    "At 45°: 325 × sin 45° = 325 × 0.7071 = **229.810 V**",
+    "At 270°: 325 × sin 270° = 325 × (−1) = **−325 V**"
+   ],
+   "answer": "**229.810 V** at 45°, **−325 V** at 270°",
+   "tip": "sin 0° = 0, sin 90° = 1, sin 180° = 0, sin 270° = −1, sin 360° = 0. Set the calculator to **degrees (D)**, not radians."
+  },
+  {
+   "topic": "reactance",
+   "title": "Inductive reactance and current",
+   "problem": "A **0.3 H** inductor is on a **230 V, 50 Hz** supply. Find the **inductive reactance** X<sub>L</sub> and the current.",
+   "steps": [
+    "X<sub>L</sub> = 2πfL",
+    "= 2 × π × 50 × 0.3 = **94.248 Ω**",
+    "I = U ÷ X<sub>L</sub>",
+    "= 230 ÷ 94.248 = **2.440 A**"
+   ],
+   "answer": "X<sub>L</sub> = **94.248 Ω**, I = **2.440 A**",
+   "tip": "Higher frequency → **higher** X<sub>L</sub>. In an inductor the current **lags** the voltage by 90°."
+  },
+  {
+   "topic": "reactance",
+   "title": "Capacitive reactance and current",
+   "problem": "A **1 mF** capacitor is on a **230 V, 50 Hz** supply. Find the **capacitive reactance** X<sub>C</sub> and the current.",
+   "steps": [
+    "X<sub>C</sub> = 1 ÷ (2πfC)",
+    "1 mF = 1 × 10⁻³ F",
+    "X<sub>C</sub> = 1 ÷ (2 × π × 50 × 1 × 10⁻³) = **3.183 Ω**",
+    "I = U ÷ X<sub>C</sub> = 230 ÷ 3.183 = **72.257 A**"
+   ],
+   "answer": "X<sub>C</sub> = **3.183 Ω**, I = **72.257 A**",
+   "tip": "Calculator: type **2 × π × 50 × 1 ×10ˣ −3**, press =, then press **x⁻¹** and =. Higher frequency → **lower** X<sub>C</sub>. In a capacitor the current **leads** the voltage by 90°."
+  },
+  {
+   "topic": "series",
+   "title": "Resistor and inductor in series (R–L)",
+   "problem": "A coil has **R = 20 Ω** and **L = 0.3 H**. It is on **230 V, 50 Hz**. Find the **impedance**, the **current**, the **power factor** and the **phase angle**.",
+   "steps": [
+    "X<sub>L</sub> = 2πfL = 2π × 50 × 0.3 = 94.248 Ω",
+    "Z = √(R² + X<sub>L</sub>²)",
+    "= √(20² + 94.248²) = √(9282.644) = **96.346 Ω**",
+    "I = U ÷ Z = 230 ÷ 96.346 = **2.387 A**",
+    "PF = cos θ = R ÷ Z = 20 ÷ 96.346 = **0.208 lagging**",
+    "θ = cos⁻¹(0.208) = **78.019°**"
+   ],
+   "answer": "Z = **96.346 Ω**, I = **2.387 A**, PF = **0.208 lagging**, θ = **78.019°**",
+   "tip": "Inductive loads are **lagging** (I lags V)."
+  },
+  {
+   "topic": "series",
+   "title": "Resistor and capacitor in series (R–C)",
+   "problem": "**R = 20 Ω** is in series with **C = 100 μF** on **230 V, 50 Hz**. Find X<sub>C</sub>, Z and the current.",
+   "steps": [
+    "100 μF = 100 × 10⁻⁶ F",
+    "X<sub>C</sub> = 1 ÷ (2π × 50 × 100 × 10⁻⁶) = **31.831 Ω**",
+    "Z = √(20² + 31.831²) = √(1413.212) = **37.593 Ω**",
+    "I = 230 ÷ 37.593 = **6.118 A**"
+   ],
+   "answer": "X<sub>C</sub> = **31.831 Ω**, Z = **37.593 Ω**, I = **6.118 A**",
+   "tip": "Capacitive loads are **leading** (I leads V)."
+  },
+  {
+   "topic": "series",
+   "title": "R, L and C all in series",
+   "problem": "**R = 20 Ω**, **L = 0.3 H** and **C = 100 μF** are in series on **230 V, 50 Hz**. Find Z and the current.",
+   "steps": [
+    "X<sub>L</sub> = 2π × 50 × 0.3 = 94.248 Ω",
+    "X<sub>C</sub> = 1 ÷ (2π × 50 × 100 × 10⁻⁶) = 31.831 Ω",
+    "Z = √(R² + (X<sub>L</sub> − X<sub>C</sub>)²)",
+    "X<sub>L</sub> − X<sub>C</sub> = 94.248 − 31.831 = 62.417 Ω",
+    "Z = √(20² + 62.417²) = **65.543 Ω**",
+    "I = 230 ÷ 65.543 = **3.509 A**"
+   ],
+   "answer": "Z = **65.543 Ω**, I = **3.509 A**",
+   "tip": "X<sub>L</sub> and X<sub>C</sub> pull in **opposite directions**, so **subtract** them before squaring."
+  },
+  {
+   "topic": "parallel",
+   "title": "Resistor and capacitor in parallel (simple)",
+   "problem": "A capacitor takes **2 A** and a resistor in parallel with it takes **1.5 A**, on a 100 V, 50 Hz supply. Find the **supply current**.",
+   "steps": [
+    "In parallel the currents are **not in phase**, so you cannot just add them",
+    "I<sub>T</sub>² = I<sub>R</sub>² + I<sub>C</sub>²",
+    "= 1.5² + 2² = 2.25 + 4 = 6.25",
+    "I<sub>T</sub> = √6.25 = **2.500 A**"
+   ],
+   "answer": "I<sub>T</sub> = **2.500 A**",
+   "tip": "In parallel the **voltage** is the same across every branch. Work out each branch current first."
+  },
+  {
+   "topic": "parallel",
+   "title": "Resistor and capacitor in parallel (with values)",
+   "problem": "A **45 μF** capacitor and a **70 Ω** resistor are in parallel on **110 V, 50 Hz**. Find the supply current.",
+   "steps": [
+    "I<sub>R</sub> = U ÷ R = 110 ÷ 70 = 1.571 A",
+    "X<sub>C</sub> = 1 ÷ (2π × 50 × 45 × 10⁻⁶) = 70.736 Ω",
+    "I<sub>C</sub> = U ÷ X<sub>C</sub> = 110 ÷ 70.736 = 1.555 A",
+    "I<sub>T</sub> = √(I<sub>R</sub>² + I<sub>C</sub>²) = √(1.571² + 1.555²) = **2.211 A**"
+   ],
+   "answer": "I<sub>T</sub> = **2.211 A**"
+  },
+  {
+   "topic": "parallel",
+   "title": "R, L and C in parallel: current, angle and power",
+   "problem": "**R = 10 Ω**, **X<sub>L</sub> = 12.5 Ω** and **X<sub>C</sub> = 20 Ω** are in parallel on **100 V, 50 Hz**. Find each branch current, the supply current, the phase angle and the power.",
+   "steps": [
+    "I<sub>R</sub> = 100 ÷ 10 = **10 A**",
+    "I<sub>L</sub> = 100 ÷ 12.5 = **8 A**",
+    "I<sub>C</sub> = 100 ÷ 20 = **5 A**",
+    "I<sub>T</sub> = √(I<sub>R</sub>² + (I<sub>L</sub> − I<sub>C</sub>)²) = √(10² + 3²) = √109",
+    "I<sub>T</sub> = **10.440 A**",
+    "cos θ = I<sub>R</sub> ÷ I<sub>T</sub> = 10 ÷ 10.440 = 0.958",
+    "θ = cos⁻¹(0.958) = **16.699°**",
+    "P = U × I × cos θ = 100 × 10.440 × 0.958 = **1000.000 W**"
+   ],
+   "answer": "I<sub>T</sub> = **10.440 A**, θ = **16.699°**, P = **1000.000 W**",
+   "tip": "Power is only used by the **resistor**: 100 V × 10 A = 1000 W. That's a good way to check your answer."
+  },
+  {
+   "topic": "capcharge",
+   "title": "Time constant of a capacitor",
+   "problem": "A **1000 μF** capacitor charges through a **3 kΩ** resistor from a **9 V** supply. Find the **time constant**, the voltage after one time constant, and after 5 time constants.",
+   "steps": [
+    "τ = R × C",
+    "= 3 × 10³ × 1000 × 10⁻⁶ = **3 s**",
+    "After 1τ the capacitor reaches **63 %**: 0.63 × 9 = **5.670 V**",
+    "After 5τ (15.000 s) it reaches about **99 %**: 0.99 × 9 = **8.910 V** (treated as fully charged)"
+   ],
+   "answer": "τ = **3.000 s**, V after 1τ = **5.670 V**, V after 5τ ≈ **9 V**",
+   "tip": "**63 % after 1τ, fully charged after 5τ.** k = 10³, μ = 10⁻⁶."
+  },
+  {
+   "topic": "threephase",
+   "title": "Star-connected load: find X<sub>L</sub>",
+   "problem": "A balanced **star** load is on a **400 V** supply. Each phase has **R = 20 Ω** and an inductor. The line current is **9.2 A**. Find X<sub>L</sub> in each phase.",
+   "steps": [
+    "Star: U<sub>P</sub> = U<sub>L</sub> ÷ √3 and I<sub>P</sub> = I<sub>L</sub>",
+    "U<sub>P</sub> = 400 ÷ 1.732 = 230.940 V",
+    "Z = U<sub>P</sub> ÷ I<sub>P</sub> = 230.940 ÷ 9.2 = 25.102 Ω",
+    "Z² = R² + X<sub>L</sub>², so X<sub>L</sub>² = Z² − R²",
+    "X<sub>L</sub>² = 25.102² − 20² = 230.120",
+    "X<sub>L</sub> = **15.170 Ω**"
+   ],
+   "answer": "X<sub>L</sub> = **15.170 Ω** in each phase",
+   "tip": "If you round U<sub>P</sub> to 230 V early you get Z = 25 Ω and X<sub>L</sub> = 15 Ω. Keep the full number in the calculator for 3 decimal places."
+  },
+  {
+   "topic": "threephase",
+   "title": "Delta-connected load: line current and PF",
+   "problem": "A balanced **delta** load is on a **400 V** supply. Each phase has **R = 20 Ω** and **X<sub>L</sub> = 15 Ω**. Find the line current and the power factor.",
+   "steps": [
+    "Delta: U<sub>P</sub> = U<sub>L</sub> = 400 V and I<sub>L</sub> = √3 × I<sub>P</sub>",
+    "Z = √(20² + 15²) = √625 = 25 Ω",
+    "I<sub>P</sub> = 400 ÷ 25 = 16 A",
+    "I<sub>L</sub> = 1.732 × 16 = **27.713 A**",
+    "PF = cos θ = R ÷ Z = 20 ÷ 25 = **0.800 lagging**"
+   ],
+   "answer": "I<sub>L</sub> = **27.713 A**, PF = **0.800 lagging**",
+   "tip": "**Star**: line voltage is √3 × phase voltage, currents equal. **Delta**: voltages equal, line current is √3 × phase current."
+  },
+  {
+   "topic": "magnetism",
+   "title": "Flux in an air-cored solenoid",
+   "problem": "An air-cored ring solenoid has a mean length of **0.2 m**, a cross-section of **1000 mm²**, **1000 turns** and carries **2 A**. Find the flux density B and the flux Φ.",
+   "steps": [
+    "H = (I × N) ÷ l = (2 × 1000) ÷ 0.2 = **10,000 At/m**",
+    "B = μ₀ × H, where μ₀ = 4π × 10⁻⁷",
+    "B = 4π × 10⁻⁷ × 10,000 = 0.012566 T = **12.566 mT**",
+    "A = 1000 mm² = 1000 × 10⁻⁶ = 0.001 m²",
+    "Φ = B × A = 0.012566 × 0.001 = **12.566 μWb**"
+   ],
+   "answer": "B = **12.566 mT**, Φ = **12.566 μWb**",
+   "tip": "mm² to m²: **× 10⁻⁶**. Flux Φ is in webers (Wb); flux density B is in tesla (T) = Wb/m²."
+  },
+  {
+   "topic": "magnetism",
+   "title": "Current needed for a given flux",
+   "problem": "A solenoid of **10,000 turns** is wound on a ring with a mean diameter of **100 mm** and a cross-section of **0.01 m²**. What current gives a flux of **5 mWb**?",
+   "steps": [
+    "B = Φ ÷ A = 5 × 10⁻³ ÷ 0.01 = 0.5 T",
+    "H = B ÷ μ₀ = 0.5 ÷ (4π × 10⁻⁷) = 397887.358 At/m",
+    "Path length l = π × diameter = π × 0.1 = 0.314 m",
+    "H = (I × N) ÷ l, so I = (H × l) ÷ N",
+    "I = (397887.358 × 0.314) ÷ 10,000 = **12.500 A**"
+   ],
+   "answer": "I = **12.500 A**"
+  },
+  {
+   "topic": "generators",
+   "title": "Generator EMF when speed and flux change",
+   "problem": "A loop turns at **10 r/s** in a flux of **60 mWb** and makes **8 V**. Find the EMF at **16 r/s** with a flux of **50 mWb**.",
+   "steps": [
+    "E is proportional to Φ × n, so E₂ ÷ E₁ = (Φ₂ ÷ Φ₁) × (n₂ ÷ n₁)",
+    "E₂ ÷ 8 = (0.05 ÷ 0.06) × (16 ÷ 10)",
+    "E₂ ÷ 8 = 0.833 × 1.6 = 1.333",
+    "E₂ = 8 × 1.333 = **10.667 V**"
+   ],
+   "answer": "E₂ = **10.667 V**",
+   "tip": "Put the **new** values on top and the **old** values underneath."
+  },
+  {
+   "topic": "generators",
+   "title": "Alternator frequency",
+   "problem": "An **8-pole** alternator runs at **750 r/min**. What frequency does it make?",
+   "steps": [
+    "f = (p × N) ÷ 60, where p = **pairs** of poles and N = r/min",
+    "8 poles = 4 pairs",
+    "f = (4 × 750) ÷ 60 = 3000 ÷ 60 = **50 Hz**"
+   ],
+   "answer": "f = **50.000 Hz**",
+   "tip": "Always halve the number of poles to get **pole pairs**."
+  },
+  {
+   "topic": "generators",
+   "title": "Alternator poles and a new speed",
+   "problem": "An alternator at **20 r/s** gives **140 V at 60 Hz**. How many poles has it? What are the voltage and frequency at **32 r/s** (same flux)?",
+   "steps": [
+    "f = p × n, so p = f ÷ n = 60 ÷ 20 = 3 pairs = **6 poles**",
+    "Flux is the same, so E is proportional to n: E₂ = 140 × (32 ÷ 20) = **224 V**",
+    "f₂ = p × n₂ = 3 × 32 = **96 Hz**"
+   ],
+   "answer": "**6 poles**; **224 V at 96 Hz**"
+  },
+  {
+   "topic": "motors",
+   "title": "Synchronous speed",
+   "problem": "A **4-pole** motor runs from a **50 Hz** supply. Find its **synchronous speed** in rpm.",
+   "steps": [
+    "N<sub>S</sub> = (60 × f) ÷ pole pairs",
+    "4 poles = 2 pairs",
+    "N<sub>S</sub> = (60 × 50) ÷ 2 = **1500 rpm**"
+   ],
+   "answer": "N<sub>S</sub> = **1500 rpm**",
+   "tip": "Same answer as 120 × f ÷ poles = 120 × 50 ÷ 4 = 1500 rpm."
+  },
+  {
+   "topic": "motors",
+   "title": "Percentage slip",
+   "problem": "A motor has a synchronous speed of **1500 rpm** and runs at **1450 rpm**. Find the **slip**.",
+   "steps": [
+    "Slip = (N<sub>S</sub> − N<sub>R</sub>) ÷ N<sub>S</sub> × 100",
+    "= (1500 − 1450) ÷ 1500 × 100",
+    "= 50 ÷ 1500 × 100 = **3.333 %**"
+   ],
+   "answer": "Slip = **3.333 %**"
+  },
+  {
+   "topic": "motors",
+   "title": "Rotor speed from slip",
+   "problem": "A **6-pole**, **50 Hz** motor has **8 % slip**. Find the rotor speed.",
+   "steps": [
+    "N<sub>S</sub> = (60 × 50) ÷ 3 pairs = 1000 rpm",
+    "8 % slip means the rotor runs at 100 − 8 = **92 %** of N<sub>S</sub>",
+    "N<sub>R</sub> = 1000 × 0.92 = **920 rpm**"
+   ],
+   "answer": "N<sub>R</sub> = **920.000 rpm**",
+   "tip": "Quick way: rotor speed = N<sub>S</sub> × (100 − slip) ÷ 100."
+  },
+  {
+   "topic": "motors",
+   "title": "Find synchronous speed and poles from the rotor speed",
+   "problem": "An induction motor runs at **1470 rpm** with **3 % slip** on **50 Hz**. Find the synchronous speed and the number of poles.",
+   "steps": [
+    "The rotor runs at 97 % of N<sub>S</sub>: 1470 = N<sub>S</sub> × 0.97",
+    "N<sub>S</sub> = 1470 ÷ 0.97 = **1515.464 rpm**",
+    "Pole pairs = (60 × f) ÷ N<sub>S</sub> = 3000 ÷ 1515.464 = 1.980",
+    "Pole pairs must be a whole number, so **2 pairs = 4 poles**"
+   ],
+   "answer": "N<sub>S</sub> = **1515.464 rpm**, **4 poles**",
+   "tip": "Real synchronous speeds on 50 Hz are 3000, 1500, 1000, 750 rpm… so the true N<sub>S</sub> here is 1500 rpm."
+  },
+  {
+   "topic": "units",
+   "title": "Prefixes: mF and μF to farads",
+   "problem": "Write **1 mF**, **100 μF** and **45 μF** in farads.",
+   "steps": [
+    "m (milli) = 10⁻³, μ (micro) = 10⁻⁶, n (nano) = 10⁻⁹, p (pico) = 10⁻¹²",
+    "1 mF = 1 × 10⁻³ F = **0.001 F**",
+    "100 μF = 100 × 10⁻⁶ F = **0.0001 F**",
+    "45 μF = 45 × 10⁻⁶ F = **0.000045 F**"
+   ],
+   "answer": "**0.001 F**, **0.0001 F**, **0.000045 F**",
+   "tip": "On the calculator use the **×10ˣ** key: 45 ×10ˣ −6. It avoids counting zeros."
+  }
+ ],
+ "questions": [
+  {
+   "topic": "trig",
+   "type": "number",
+   "q": "A right-angled triangle has sides **6** and **8**. Find the **hypotenuse**.",
+   "a": 10.0,
+   "unit": "",
+   "steps": [
+    "c² = 6² + 8² = 36 + 64 = 100",
+    "c = √100 = **10.000**"
+   ]
+  },
+  {
+   "topic": "trig",
+   "type": "number",
+   "q": "The hypotenuse is **13** and one side is **5**. Find the **other side**.",
+   "a": 12.0,
+   "unit": "",
+   "steps": [
+    "a² = c² − b² = 13² − 5² = 169 − 25 = 144",
+    "a = √144 = **12.000**"
+   ]
+  },
+  {
+   "topic": "trig",
+   "type": "number",
+   "q": "In an impedance triangle **R = 30 Ω** and **Z = 50 Ω**. Find the angle **θ** (degrees).",
+   "a": 53.13,
+   "unit": "°",
+   "steps": [
+    "cos θ = R ÷ Z = 30 ÷ 50 = 0.6",
+    "θ = cos⁻¹(0.6) = **53.130°**"
+   ]
+  },
+  {
+   "topic": "trig",
+   "type": "mcq",
+   "q": "In a right-angled triangle, **cos θ** equals…",
+   "o": [
+    "Opposite ÷ Hypotenuse",
+    "Adjacent ÷ Hypotenuse",
+    "Opposite ÷ Adjacent",
+    "Hypotenuse ÷ Adjacent"
+   ],
+   "a": 1,
+   "w": "Remember **CAH**: Cos = Adjacent ÷ Hypotenuse."
+  },
+  {
+   "topic": "trig",
+   "type": "mcq",
+   "q": "Which side is the **hypotenuse**?",
+   "o": [
+    "The side next to the angle θ",
+    "The side opposite the angle θ",
+    "The longest side, opposite the right angle",
+    "The shortest side"
+   ],
+   "a": 2,
+   "w": "The hypotenuse is always the longest side and sits opposite the 90° angle."
+  },
+  {
+   "topic": "ac",
+   "type": "number",
+   "q": "The RMS voltage is **230 V**. Find the **peak** voltage.",
+   "a": 325.269,
+   "unit": "V",
+   "steps": [
+    "V<sub>P</sub> = V<sub>RMS</sub> × √2",
+    "= 230 × 1.414 = **325.269 V**"
+   ]
+  },
+  {
+   "topic": "ac",
+   "type": "number",
+   "q": "A sine wave has a peak of **340 V**. Find the **RMS** voltage.",
+   "a": 240.416,
+   "unit": "V",
+   "steps": [
+    "V<sub>RMS</sub> = V<sub>P</sub> ÷ √2",
+    "= 340 ÷ 1.414 = **240.416 V**"
+   ]
+  },
+  {
+   "topic": "ac",
+   "type": "number",
+   "q": "A sine wave has a peak of **12 A**. Find the **average** value (over half a cycle).",
+   "a": 7.632,
+   "unit": "A",
+   "steps": [
+    "I<sub>AV</sub> = 0.636 × I<sub>P</sub>",
+    "= 0.636 × 12 = **7.632 A**"
+   ]
+  },
+  {
+   "topic": "ac",
+   "type": "number",
+   "q": "A sine wave has a peak of **100 V**. What is the voltage at **30°**?",
+   "a": 50.0,
+   "unit": "V",
+   "steps": [
+    "v = V<sub>P</sub> × sin θ",
+    "= 100 × sin 30° = 100 × 0.5 = **50.000 V**"
+   ]
+  },
+  {
+   "topic": "ac",
+   "type": "mcq",
+   "q": "What is the frequency of the Irish mains supply?",
+   "o": [
+    "25 Hz",
+    "50 Hz",
+    "60 Hz",
+    "100 Hz"
+   ],
+   "a": 1,
+   "w": "Mains is **50 Hz**: 50 complete cycles every second."
+  },
+  {
+   "topic": "ac",
+   "type": "mcq",
+   "q": "**Peak-to-peak** voltage is…",
+   "o": [
+    "V<sub>P</sub> × 0.707",
+    "V<sub>P</sub> ÷ 2",
+    "2 × V<sub>P</sub>",
+    "V<sub>P</sub> × 1.414"
+   ],
+   "a": 2,
+   "w": "From the top of the wave to the bottom: V<sub>P</sub> + V<sub>P</sub> = 2 × V<sub>P</sub>."
+  },
+  {
+   "topic": "units",
+   "type": "mcq",
+   "q": "**47 μF** in farads is…",
+   "o": [
+    "0.047 F",
+    "0.0047 F",
+    "0.000047 F",
+    "47 000 F"
+   ],
+   "a": 2,
+   "w": "μ (micro) = 10⁻⁶, so 47 × 10⁻⁶ = 0.000047 F."
+  },
+  {
+   "topic": "units",
+   "type": "mcq",
+   "q": "**2.2 kΩ** in ohms is…",
+   "o": [
+    "22 Ω",
+    "220 Ω",
+    "2200 Ω",
+    "22 000 Ω"
+   ],
+   "a": 2,
+   "w": "k (kilo) = 10³, so 2.2 × 1000 = 2200 Ω."
+  },
+  {
+   "topic": "units",
+   "type": "mcq",
+   "q": "**1 nF** is…",
+   "o": [
+    "10⁻³ F",
+    "10⁻⁶ F",
+    "10⁻⁹ F",
+    "10⁻¹² F"
+   ],
+   "a": 2,
+   "w": "n (nano) = 10⁻⁹."
+  },
+  {
+   "topic": "units",
+   "type": "mcq",
+   "q": "Which calculator key turns 2πfC into **1 ÷ 2πfC**?",
+   "o": [
+    "x²",
+    "√",
+    "x⁻¹",
+    "×10ˣ"
+   ],
+   "a": 2,
+   "w": "Work out 2πfC, then press **x⁻¹** and =. That gives the reciprocal."
+  },
+  {
+   "topic": "reactance",
+   "type": "number",
+   "q": "Find **X<sub>L</sub>** for a **0.15 H** inductor at **50 Hz**.",
+   "a": 47.124,
+   "unit": "Ω",
+   "steps": [
+    "X<sub>L</sub> = 2πfL",
+    "= 2π × 50 × 0.15 = **47.124 Ω**"
+   ]
+  },
+  {
+   "topic": "reactance",
+   "type": "number",
+   "q": "Find **X<sub>C</sub>** for a **47 μF** capacitor at **50 Hz**.",
+   "a": 67.726,
+   "unit": "Ω",
+   "steps": [
+    "X<sub>C</sub> = 1 ÷ (2πfC)",
+    "= 1 ÷ (2π × 50 × 47 × 10⁻⁶) = **67.726 Ω**"
+   ]
+  },
+  {
+   "topic": "reactance",
+   "type": "number",
+   "q": "A **0.2 H** inductor is on **230 V, 50 Hz**. Find the **current**.",
+   "a": 3.661,
+   "unit": "A",
+   "steps": [
+    "X<sub>L</sub> = 2π × 50 × 0.2 = 62.832 Ω",
+    "I = 230 ÷ 62.832 = **3.661 A**"
+   ]
+  },
+  {
+   "topic": "reactance",
+   "type": "mcq",
+   "q": "If the frequency goes **up**, inductive reactance X<sub>L</sub>…",
+   "o": [
+    "goes up",
+    "goes down",
+    "stays the same",
+    "becomes zero"
+   ],
+   "a": 0,
+   "w": "X<sub>L</sub> = 2πfL: f is on top, so higher f means higher X<sub>L</sub>."
+  },
+  {
+   "topic": "reactance",
+   "type": "mcq",
+   "q": "If the frequency goes **up**, capacitive reactance X<sub>C</sub>…",
+   "o": [
+    "goes up",
+    "goes down",
+    "stays the same",
+    "doubles"
+   ],
+   "a": 1,
+   "w": "X<sub>C</sub> = 1 ÷ 2πfC: f is underneath, so higher f means lower X<sub>C</sub>."
+  },
+  {
+   "topic": "reactance",
+   "type": "mcq",
+   "q": "In a pure **inductor**, the current…",
+   "o": [
+    "is in phase with the voltage",
+    "leads the voltage by 90°",
+    "lags the voltage by 90°",
+    "lags by 180°"
+   ],
+   "a": 2,
+   "w": "Inductive = **lagging**. Lenz's law: the coil opposes the change in current."
+  },
+  {
+   "topic": "reactance",
+   "type": "mcq",
+   "q": "In a pure **capacitor**, the current…",
+   "o": [
+    "is in phase with the voltage",
+    "leads the voltage by 90°",
+    "lags the voltage by 90°",
+    "is always zero"
+   ],
+   "a": 1,
+   "w": "Capacitive = **leading**. The current flows first to put charge on the plates."
+  },
+  {
+   "topic": "reactance",
+   "type": "mcq",
+   "q": "Can **DC** flow through a capacitor (once charged)?",
+   "o": [
+    "Yes, freely",
+    "Yes, but only at high voltage",
+    "No — the dielectric blocks it",
+    "Only in a parallel circuit"
+   ],
+   "a": 2,
+   "w": "The plates are separated by an insulator (the dielectric). DC stops once the capacitor has charged."
+  },
+  {
+   "topic": "series",
+   "type": "number",
+   "q": "A coil has **R = 30 Ω** and **X<sub>L</sub> = 40 Ω**. Find the **impedance**.",
+   "a": 50.0,
+   "unit": "Ω",
+   "steps": [
+    "Z = √(R² + X<sub>L</sub>²)",
+    "= √(30² + 40²) = √2500 = **50.000 Ω**"
+   ]
+  },
+  {
+   "topic": "series",
+   "type": "number",
+   "q": "**R = 25 Ω** and **L = 0.1 H** are in series on **230 V, 50 Hz**. Find the **current**.",
+   "a": 5.729,
+   "unit": "A",
+   "steps": [
+    "X<sub>L</sub> = 2π × 50 × 0.1 = 31.416 Ω",
+    "Z = √(25² + 31.416²) = 40.149 Ω",
+    "I = 230 ÷ 40.149 = **5.729 A**"
+   ]
+  },
+  {
+   "topic": "series",
+   "type": "number",
+   "q": "**R = 40 Ω**, **Z = 50 Ω**. Find the **power factor**.",
+   "a": 0.8,
+   "unit": "",
+   "steps": [
+    "PF = cos θ = R ÷ Z",
+    "= 40 ÷ 50 = **0.800**"
+   ]
+  },
+  {
+   "topic": "series",
+   "type": "number",
+   "q": "**R = 30 Ω**, **L = 0.2 H** and **C = 50 μF** are in series at **50 Hz**. Find **Z**.",
+   "a": 30.011,
+   "unit": "Ω",
+   "steps": [
+    "X<sub>L</sub> = 2π × 50 × 0.2 = 62.832 Ω",
+    "X<sub>C</sub> = 1 ÷ (2π × 50 × 50 × 10⁻⁶) = 63.662 Ω",
+    "X<sub>L</sub> − X<sub>C</sub> = -0.830 Ω",
+    "Z = √(30² + (-0.830)²) = **30.011 Ω**"
+   ]
+  },
+  {
+   "topic": "series",
+   "type": "number",
+   "q": "A load takes **5 A** from **230 V** at a power factor of **0.8**. Find the **power**.",
+   "a": 920.0,
+   "unit": "W",
+   "steps": [
+    "P = U × I × PF",
+    "= 230 × 5 × 0.8 = **920.000 W**"
+   ]
+  },
+  {
+   "topic": "series",
+   "type": "mcq",
+   "q": "For R, L and C in series, which formula gives the impedance?",
+   "o": [
+    "Z = R + X<sub>L</sub> + X<sub>C</sub>",
+    "Z = √(R² + X<sub>L</sub>² + X<sub>C</sub>²)",
+    "Z = √(R² + (X<sub>L</sub> − X<sub>C</sub>)²)",
+    "Z = R × X<sub>L</sub> ÷ X<sub>C</sub>"
+   ],
+   "a": 2,
+   "w": "X<sub>L</sub> and X<sub>C</sub> act in opposite directions, so you **subtract** them."
+  },
+  {
+   "topic": "series",
+   "type": "mcq",
+   "q": "Power factor is the ratio of…",
+   "o": [
+    "apparent power to real power",
+    "real power to apparent power",
+    "voltage to current",
+    "reactance to resistance"
+   ],
+   "a": 1,
+   "w": "PF = real power (W) ÷ apparent power (VA) = cos θ."
+  },
+  {
+   "topic": "parallel",
+   "type": "number",
+   "q": "In parallel: **I<sub>R</sub> = 3 A** and **I<sub>C</sub> = 4 A**. Find the **supply current**.",
+   "a": 5,
+   "unit": "A",
+   "steps": [
+    "I<sub>T</sub> = √(I<sub>R</sub>² + I<sub>C</sub>²)",
+    "= √(9 + 16) = √25 = **5.000 A**"
+   ]
+  },
+  {
+   "topic": "parallel",
+   "type": "number",
+   "q": "In parallel: **I<sub>R</sub> = 6 A**, **I<sub>L</sub> = 8 A**, **I<sub>C</sub> = 2 A**. Find the **supply current**.",
+   "a": 8.485,
+   "unit": "A",
+   "steps": [
+    "I<sub>T</sub> = √(I<sub>R</sub>² + (I<sub>L</sub> − I<sub>C</sub>)²)",
+    "= √(6² + 6²) = √72 = **8.485 A**"
+   ]
+  },
+  {
+   "topic": "parallel",
+   "type": "number",
+   "q": "**230 V** across **R = 46 Ω**, **X<sub>L</sub> = 23 Ω** and **X<sub>C</sub> = 92 Ω**, all in parallel. Find the **supply current**.",
+   "a": 9.014,
+   "unit": "A",
+   "steps": [
+    "I<sub>R</sub> = 230 ÷ 46 = 5.000 A",
+    "I<sub>L</sub> = 230 ÷ 23 = 10.000 A",
+    "I<sub>C</sub> = 230 ÷ 92 = 2.500 A",
+    "I<sub>T</sub> = √(5.000² + (10.000 − 2.500)²) = **9.014 A**"
+   ]
+  },
+  {
+   "topic": "parallel",
+   "type": "number",
+   "q": "In parallel, **I<sub>R</sub> = 8 A** and **I<sub>T</sub> = 10 A**. Find the **power factor**.",
+   "a": 0.8,
+   "unit": "",
+   "steps": [
+    "PF = cos θ = I<sub>R</sub> ÷ I<sub>T</sub>",
+    "= 8 ÷ 10 = **0.800**"
+   ]
+  },
+  {
+   "topic": "parallel",
+   "type": "mcq",
+   "q": "In a parallel circuit, what is the **same** in every branch?",
+   "o": [
+    "Current",
+    "Voltage",
+    "Impedance",
+    "Power"
+   ],
+   "a": 1,
+   "w": "Every branch is connected across the same supply, so the **voltage** is the same."
+  },
+  {
+   "topic": "capcharge",
+   "type": "number",
+   "q": "Find the **time constant** for **R = 10 kΩ** and **C = 100 μF**.",
+   "a": 1.0,
+   "unit": "s",
+   "steps": [
+    "τ = R × C",
+    "= 10 × 10³ × 100 × 10⁻⁶ = **1.000 s**"
+   ]
+  },
+  {
+   "topic": "capcharge",
+   "type": "number",
+   "q": "A capacitor charges from **12 V**. What is its voltage after **one time constant**?",
+   "a": 7.56,
+   "unit": "V",
+   "steps": [
+    "After 1τ it reaches 63 %",
+    "0.63 × 12 = **7.560 V**"
+   ]
+  },
+  {
+   "topic": "capcharge",
+   "type": "number",
+   "q": "**R = 4.7 kΩ**, **C = 220 μF**. How long until it is **fully charged** (5τ)?",
+   "a": 5.17,
+   "unit": "s",
+   "steps": [
+    "τ = 4.7 × 10³ × 220 × 10⁻⁶ = 1.034 s",
+    "5τ = 5 × 1.034 = **5.170 s**"
+   ]
+  },
+  {
+   "topic": "capcharge",
+   "type": "mcq",
+   "q": "After **one time constant**, a charging capacitor reaches about…",
+   "o": [
+    "37 %",
+    "50 %",
+    "63 %",
+    "99 %"
+   ],
+   "a": 2,
+   "w": "63 % after 1τ. About 99 % (fully charged) after 5τ."
+  },
+  {
+   "topic": "threephase",
+   "type": "number",
+   "q": "A **star** system has a line voltage of **400 V**. Find the **phase voltage**.",
+   "a": 230.94,
+   "unit": "V",
+   "steps": [
+    "U<sub>P</sub> = U<sub>L</sub> ÷ √3",
+    "= 400 ÷ 1.732 = **230.940 V**"
+   ]
+  },
+  {
+   "topic": "threephase",
+   "type": "number",
+   "q": "A **delta** load has a phase current of **10 A**. Find the **line current**.",
+   "a": 17.321,
+   "unit": "A",
+   "steps": [
+    "I<sub>L</sub> = √3 × I<sub>P</sub>",
+    "= 1.732 × 10 = **17.321 A**"
+   ]
+  },
+  {
+   "topic": "threephase",
+   "type": "number",
+   "q": "A **delta** load on **400 V** has **R = 16 Ω** and **X<sub>L</sub> = 12 Ω** per phase. Find the **line current**.",
+   "a": 34.641,
+   "unit": "A",
+   "steps": [
+    "Z = √(16² + 12²) = 20.000 Ω",
+    "I<sub>P</sub> = 400 ÷ 20.000 = 20.000 A",
+    "I<sub>L</sub> = 1.732 × 20.000 = **34.641 A**"
+   ]
+  },
+  {
+   "topic": "threephase",
+   "type": "mcq",
+   "q": "In a **star** connection…",
+   "o": [
+    "U<sub>L</sub> = U<sub>P</sub> and I<sub>L</sub> = √3 × I<sub>P</sub>",
+    "U<sub>L</sub> = √3 × U<sub>P</sub> and I<sub>L</sub> = I<sub>P</sub>",
+    "U<sub>L</sub> = 3 × U<sub>P</sub>",
+    "I<sub>L</sub> = I<sub>P</sub> ÷ √3"
+   ],
+   "a": 1,
+   "w": "Star: the **voltages** differ by √3, the currents are the same."
+  },
+  {
+   "topic": "threephase",
+   "type": "mcq",
+   "q": "The three phases of a 3-phase supply are separated by…",
+   "o": [
+    "90°",
+    "120°",
+    "180°",
+    "360°"
+   ],
+   "a": 1,
+   "w": "360° ÷ 3 = 120°."
+  },
+  {
+   "topic": "threephase",
+   "type": "mcq",
+   "q": "Under the current colour code, the three line conductors are…",
+   "o": [
+    "Red, yellow, blue",
+    "Brown, black, grey",
+    "Brown, blue, green/yellow",
+    "Black, grey, blue"
+   ],
+   "a": 1,
+   "w": "L1 brown, L2 black, L3 grey. Neutral is blue."
+  },
+  {
+   "topic": "magnetism",
+   "type": "number",
+   "q": "A solenoid has **500 turns**, carries **3 A** and has a flux path of **0.25 m**. Find **H**.",
+   "a": 6000.0,
+   "unit": "At/m",
+   "steps": [
+    "H = (I × N) ÷ l",
+    "= (3 × 500) ÷ 0.25 = **6000.000 At/m**"
+   ]
+  },
+  {
+   "topic": "magnetism",
+   "type": "number",
+   "q": "Air-cored: **H = 8000 At/m**. Find the flux density **B** in **millitesla**.",
+   "a": 10.053,
+   "unit": "mT",
+   "steps": [
+    "B = μ₀ × H = 4π × 10⁻⁷ × 8000",
+    "= 0.010053 T = **10.053 mT**"
+   ]
+  },
+  {
+   "topic": "magnetism",
+   "type": "number",
+   "q": "**B = 0.4 T** over an area of **0.005 m²**. Find the flux **Φ** in **milliwebers**.",
+   "a": 2.0,
+   "unit": "mWb",
+   "steps": [
+    "Φ = B × A",
+    "= 0.4 × 0.005 = 0.002 Wb = **2.000 mWb**"
+   ]
+  },
+  {
+   "topic": "magnetism",
+   "type": "mcq",
+   "q": "Flux density **B** is measured in…",
+   "o": [
+    "webers",
+    "tesla",
+    "ampere-turns",
+    "henrys"
+   ],
+   "a": 1,
+   "w": "1 tesla = 1 Wb/m²."
+  },
+  {
+   "topic": "magnetism",
+   "type": "mcq",
+   "q": "Magnetomotive force (MMF) is…",
+   "o": [
+    "current × turns",
+    "flux × area",
+    "voltage × current",
+    "turns ÷ length"
+   ],
+   "a": 0,
+   "w": "MMF = I × N, measured in ampere-turns (At)."
+  },
+  {
+   "topic": "generators",
+   "type": "number",
+   "q": "A **4-pole** alternator runs at **1500 r/min**. Find the **frequency**.",
+   "a": 50.0,
+   "unit": "Hz",
+   "steps": [
+    "f = (pairs × N) ÷ 60",
+    "4 poles = 2 pairs",
+    "f = (2 × 1500) ÷ 60 = **50.000 Hz**"
+   ]
+  },
+  {
+   "topic": "generators",
+   "type": "number",
+   "q": "A generator makes **120 V at 25 r/s**. Flux stays the same. What EMF at **40 r/s**?",
+   "a": 192.0,
+   "unit": "V",
+   "steps": [
+    "E is proportional to n",
+    "E₂ = 120 × (40 ÷ 25) = **192.000 V**"
+   ]
+  },
+  {
+   "topic": "generators",
+   "type": "mcq",
+   "q": "Fleming's **right-hand** rule is used for…",
+   "o": [
+    "motors",
+    "generators",
+    "transformers",
+    "capacitors"
+   ],
+   "a": 1,
+   "w": "**Right** hand = generators. **Left** hand = motors. Thumb = motion, first finger = field, second finger = current."
+  },
+  {
+   "topic": "generators",
+   "type": "mcq",
+   "q": "Which three things are needed to induce an EMF?",
+   "o": [
+    "A battery, a switch and a load",
+    "A conductor, a magnetic field and relative motion",
+    "A capacitor, an inductor and a resistor",
+    "A rotor, a stator and a centrifugal switch"
+   ],
+   "a": 1,
+   "w": "No movement between conductor and field = no induced EMF."
+  },
+  {
+   "topic": "motors",
+   "type": "number",
+   "q": "Find the synchronous speed of a **2-pole** motor on **50 Hz**.",
+   "a": 3000,
+   "unit": "rpm",
+   "steps": [
+    "N<sub>S</sub> = (60 × f) ÷ pairs",
+    "= (60 × 50) ÷ 1 = **3000 rpm**"
+   ]
+  },
+  {
+   "topic": "motors",
+   "type": "number",
+   "q": "Synchronous speed **1000 rpm**, rotor speed **960 rpm**. Find the **slip**.",
+   "a": 4,
+   "unit": "%",
+   "steps": [
+    "Slip = (N<sub>S</sub> − N<sub>R</sub>) ÷ N<sub>S</sub> × 100",
+    "= 40 ÷ 1000 × 100 = **4.000 %**"
+   ]
+  },
+  {
+   "topic": "motors",
+   "type": "number",
+   "q": "A **4-pole**, **50 Hz** motor has **5 % slip**. Find the **rotor speed**.",
+   "a": 1425.0,
+   "unit": "rpm",
+   "steps": [
+    "N<sub>S</sub> = (60 × 50) ÷ 2 = 1500 rpm",
+    "N<sub>R</sub> = 1500 × 0.95 = **1425.000 rpm**"
+   ]
+  },
+  {
+   "topic": "motors",
+   "type": "number",
+   "q": "Synchronous speed **2000 rpm**, rotor speed **1800 rpm**. Find the **slip**.",
+   "a": 10,
+   "unit": "%",
+   "steps": [
+    "Slip = (2000 − 1800) ÷ 2000 × 100",
+    "= 200 ÷ 2000 × 100 = **10.000 %**"
+   ]
+  },
+  {
+   "topic": "motors",
+   "type": "mcq",
+   "q": "Why does a single-phase induction motor need help to start?",
+   "o": [
+    "Its rotor is too heavy",
+    "One coil gives a pulsating field, not a rotating one",
+    "The supply is too low",
+    "It has no rotor bars"
+   ],
+   "a": 1,
+   "w": "The two counter-rotating fields cancel at standstill, so there is no starting torque."
+  },
+  {
+   "topic": "motors",
+   "type": "mcq",
+   "q": "Fleming's **left-hand** rule is used for…",
+   "o": [
+    "generators",
+    "motors",
+    "batteries",
+    "transformers"
+   ],
+   "a": 1,
+   "w": "**Left** hand = motors (the motor effect)."
+  }
+ ],
+ "terms": [
+  {
+   "topic": "trig",
+   "term": "Hypotenuse",
+   "def": "The **longest side** of a right-angled triangle. It is opposite the right angle."
+  },
+  {
+   "topic": "trig",
+   "term": "Opposite",
+   "def": "The side **across from** the angle θ."
+  },
+  {
+   "topic": "trig",
+   "term": "Adjacent",
+   "def": "The side **next to** the angle θ (not the hypotenuse)."
+  },
+  {
+   "topic": "trig",
+   "term": "Pythagoras' theorem",
+   "def": "In a right-angled triangle, **hypotenuse² = opposite² + adjacent²**."
+  },
+  {
+   "topic": "ac",
+   "term": "Sine wave",
+   "def": "The smooth up-and-down shape of AC. It rises to a peak at 90°, falls to zero at 180°, to a negative peak at 270° and back to zero at 360°."
+  },
+  {
+   "topic": "ac",
+   "term": "Peak value (V<sub>P</sub>)",
+   "def": "The **highest** value the wave reaches. For mains it is about 325 V."
+  },
+  {
+   "topic": "ac",
+   "term": "Peak-to-peak (V<sub>PP</sub>)",
+   "def": "From the top of the wave to the bottom: **2 × peak**."
+  },
+  {
+   "topic": "ac",
+   "term": "RMS value",
+   "def": "Root mean square. The AC value that gives the **same heating as DC**. RMS = peak × 0.707. Mains is 230 V RMS."
+  },
+  {
+   "topic": "ac",
+   "term": "Average value",
+   "def": "The average over half a cycle: **0.636 × peak**."
+  },
+  {
+   "topic": "ac",
+   "term": "Frequency",
+   "def": "The number of **complete cycles per second**, measured in hertz (Hz). Mains is 50 Hz."
+  },
+  {
+   "topic": "ac",
+   "term": "Cycle",
+   "def": "One complete wave, from 0° round to 360°."
+  },
+  {
+   "topic": "reactance",
+   "term": "Inductance (L)",
+   "def": "How much a coil opposes a **change** in current. Measured in **henrys (H)**."
+  },
+  {
+   "topic": "reactance",
+   "term": "Lenz's law",
+   "def": "An induced EMF always makes a current whose magnetic field **opposes the change** that caused it."
+  },
+  {
+   "topic": "reactance",
+   "term": "Inductive reactance (X<sub>L</sub>)",
+   "def": "An inductor's opposition to AC. **X<sub>L</sub> = 2πfL**, in ohms. It rises with frequency."
+  },
+  {
+   "topic": "reactance",
+   "term": "Capacitance (C)",
+   "def": "How much charge a capacitor stores per volt. Measured in **farads (F)**."
+  },
+  {
+   "topic": "reactance",
+   "term": "Dielectric",
+   "def": "The **insulating** layer between the plates of a capacitor."
+  },
+  {
+   "topic": "reactance",
+   "term": "Capacitive reactance (X<sub>C</sub>)",
+   "def": "A capacitor's opposition to AC. **X<sub>C</sub> = 1 ÷ 2πfC**, in ohms. It falls as frequency rises."
+  },
+  {
+   "topic": "reactance",
+   "term": "Angular velocity (ω)",
+   "def": "**ω = 2πf**. At 50 Hz, ω = 100π ≈ 314 rad/s."
+  },
+  {
+   "topic": "series",
+   "term": "Impedance (Z)",
+   "def": "The **total opposition** to AC from resistance and reactance together, in ohms. Z = √(R² + X²)."
+  },
+  {
+   "topic": "series",
+   "term": "Power factor (PF)",
+   "def": "**Real power ÷ apparent power** = cos θ = R ÷ Z. A PF of 1 means voltage and current are in step."
+  },
+  {
+   "topic": "series",
+   "term": "Lagging",
+   "def": "The current is **behind** the voltage. Inductive loads are lagging."
+  },
+  {
+   "topic": "series",
+   "term": "Leading",
+   "def": "The current is **ahead of** the voltage. Capacitive loads are leading."
+  },
+  {
+   "topic": "series",
+   "term": "Phase angle (θ)",
+   "def": "The angle between the voltage and the current."
+  },
+  {
+   "topic": "parallel",
+   "term": "Phasor",
+   "def": "An arrow showing the **size and phase** of a voltage or current. Phasor diagrams are drawn to scale."
+  },
+  {
+   "topic": "capcharge",
+   "term": "Time constant (τ)",
+   "def": "**τ = R × C**, in seconds. After 1τ a capacitor reaches 63 % of the supply voltage; after 5τ it is fully charged."
+  },
+  {
+   "topic": "threephase",
+   "term": "Line voltage (U<sub>L</sub>)",
+   "def": "The voltage **between two lines**. 400 V on a standard supply."
+  },
+  {
+   "topic": "threephase",
+   "term": "Phase voltage (U<sub>P</sub>)",
+   "def": "The voltage **across one load** (phase). In star, U<sub>P</sub> = U<sub>L</sub> ÷ √3 = 230 V."
+  },
+  {
+   "topic": "threephase",
+   "term": "Star connection",
+   "def": "Each load connects from a line to a common star point. **U<sub>L</sub> = √3 × U<sub>P</sub>**, I<sub>L</sub> = I<sub>P</sub>."
+  },
+  {
+   "topic": "threephase",
+   "term": "Delta connection",
+   "def": "Each load connects between two lines. **U<sub>L</sub> = U<sub>P</sub>**, I<sub>L</sub> = √3 × I<sub>P</sub>."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Magnetic flux (Φ)",
+   "def": "The total amount of magnetic field. Measured in **webers (Wb)**."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Flux density (B)",
+   "def": "Flux per square metre. Measured in **tesla (T)**. Φ = B × A."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Magnetomotive force (MMF)",
+   "def": "The 'push' that makes magnetic flux: **current × turns**, in ampere-turns (At)."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Magnetising force (H)",
+   "def": "MMF per metre of flux path: **H = I × N ÷ l**, in At/m."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Permeability of free space (μ₀)",
+   "def": "The fixed link between B and H in air: **μ₀ = 4π × 10⁻⁷**, so B = μ₀ × H."
+  },
+  {
+   "topic": "magnetism",
+   "term": "Solenoid",
+   "def": "A coil of wire wound in a tight **spiral**. Current through it makes a magnetic field."
+  },
+  {
+   "topic": "generators",
+   "term": "Alternator",
+   "def": "An AC generator. A magnetic field and conductors move relative to each other to induce an EMF."
+  },
+  {
+   "topic": "generators",
+   "term": "EMF (E)",
+   "def": "Electromotive force: the voltage **induced** or generated, in volts. E is proportional to flux × speed."
+  },
+  {
+   "topic": "generators",
+   "term": "Fleming's right-hand rule",
+   "def": "For **generators**. Thumb = motion, first finger = field, second finger = induced current."
+  },
+  {
+   "topic": "motors",
+   "term": "Stator",
+   "def": "The **stationary** part of a motor. Its coils make the rotating magnetic field."
+  },
+  {
+   "topic": "motors",
+   "term": "Rotor",
+   "def": "The **rotating** part of a motor, fixed to the output shaft."
+  },
+  {
+   "topic": "motors",
+   "term": "Synchronous speed (N<sub>S</sub>)",
+   "def": "The speed of the rotating magnetic field: **N<sub>S</sub> = 60 × f ÷ pole pairs**."
+  },
+  {
+   "topic": "motors",
+   "term": "Slip",
+   "def": "How much slower the rotor turns than the field: **(N<sub>S</sub> − N<sub>R</sub>) ÷ N<sub>S</sub> × 100 %**."
+  },
+  {
+   "topic": "motors",
+   "term": "Pole pairs",
+   "def": "Number of poles ÷ 2. A 4-pole machine has 2 pole pairs."
+  },
+  {
+   "topic": "motors",
+   "term": "Fleming's left-hand rule",
+   "def": "For **motors**. Thumb = motion (force), first finger = field, second finger = current."
+  },
+  {
+   "topic": "units",
+   "term": "Milli (m)",
+   "def": "**10⁻³**: one thousandth. 1 mF = 0.001 F."
+  },
+  {
+   "topic": "units",
+   "term": "Micro (μ)",
+   "def": "**10⁻⁶**: one millionth. 1 μF = 0.000001 F."
+  },
+  {
+   "topic": "units",
+   "term": "Kilo (k)",
+   "def": "**10³**: one thousand. 1 kΩ = 1000 Ω."
+  }
+ ]
+}

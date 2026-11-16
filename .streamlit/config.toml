@@ -1,0 +1,25 @@
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"
+
+[theme]
+font = "Lexend:https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap"
+headingFont = "'Barlow Condensed':https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap"
+baseRadius = "0.75rem"
+buttonRadius = "0.75rem"
+
+[theme.light]
+primaryColor = "#c98a00"
+backgroundColor = "#f6f1e4"
+secondaryBackgroundColor = "#fffaf0"
+textColor = "#1d2430"
+borderColor = "#d9cfb8"
+
+[theme.dark]
+primaryColor = "#f5b700"
+backgroundColor = "#11161d"
+secondaryBackgroundColor = "#1a212b"
+textColor = "#eef1f5"
+borderColor = "#2c3644"

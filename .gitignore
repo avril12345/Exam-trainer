@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Source notes (copyright of the author) - keep out of the public repo
+*.pdf

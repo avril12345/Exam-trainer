@@ -1,0 +1,1380 @@
+[
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "What is the **synchronous speed** of a 4-pole motor on a 50 Hz supply?",
+  "o": [
+   "3000 rpm",
+   "1500 rpm",
+   "1000 rpm",
+   "750 rpm"
+  ],
+  "a": 1,
+  "w": "n<sub>s</sub> = 120 × f ÷ poles = 120 × 50 ÷ 4 = 1500 rpm."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "What is the synchronous speed of an **8-pole** motor on 50 Hz?",
+  "o": [
+   "375 rpm",
+   "750 rpm",
+   "1000 rpm",
+   "1500 rpm"
+  ],
+  "a": 1,
+  "w": "120 × 50 ÷ 8 = 750 rpm. More poles = slower speed."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "A 4-pole, 50 Hz motor runs at **1420 rpm**. What is the slip?",
+  "o": [
+   "4.000 %",
+   "5.333 %",
+   "5.634 %",
+   "8.000 %"
+  ],
+  "a": 1,
+  "w": "Slip = (1500 − 1420) ÷ 1500 × 100 = 5.333 %."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "What does **slip** mean in an induction motor?",
+  "o": [
+   "The rotor speed in rpm",
+   "The gap between rotor and stator",
+   "The difference between synchronous speed and rotor speed, as a % of synchronous speed",
+   "The loss of one phase while running"
+  ],
+  "a": 2,
+  "w": "The rotor always runs a bit slower than the rotating field. That difference is the slip."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Why are motor rotors and cores **laminated**?",
+  "o": [
+   "To make them lighter",
+   "To reduce eddy current losses",
+   "To increase the speed",
+   "To improve the power factor"
+  ],
+  "a": 1,
+  "w": "Thin insulated sheets break up the paths for eddy currents, so less heat and less loss."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Can a **shaded-pole** motor be reversed by swapping the supply leads?",
+  "o": [
+   "Yes, swap line and neutral",
+   "Yes, swap the main winding leads",
+   "No — direction is set by where the shading rings are",
+   "Only with a capacitor added"
+  ],
+  "a": 2,
+  "w": "The field always sweeps from the unshaded part of the pole to the shaded part. The rings are fixed, so the direction is fixed."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "In a shaded-pole motor, what is the **shading ring** made of?",
+  "o": [
+   "Laminated steel",
+   "Copper (a short-circuited ring)",
+   "Rubber",
+   "Aluminium foil tape"
+  ],
+  "a": 1,
+  "w": "A thick copper ring around part of each pole. Induced current in it delays the flux in that part, creating a moving field."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "On a **capacitor-start** motor, what disconnects the start winding?",
+  "o": [
+   "The thermal overload",
+   "A centrifugal switch",
+   "The contactor",
+   "The MCB"
+  ],
+  "a": 1,
+  "w": "At about 75 % of full speed the centrifugal switch opens and the start winding drops out."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "How do you **reverse** a series universal motor?",
+  "o": [
+   "Swap the two supply leads",
+   "Reverse the connections to the field OR the armature (not both)",
+   "Reverse both field and armature",
+   "It cannot be reversed"
+  ],
+  "a": 1,
+  "w": "Reversing only one of them changes the direction. Reversing both leaves it the same."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Maximum torque in a 3-phase induction motor happens when rotor resistance equals…",
+  "o": [
+   "Stator resistance",
+   "Rotor reactance",
+   "Supply impedance",
+   "Zero"
+  ],
+  "a": 1,
+  "w": "Max torque when R₂ = X₂. A rotor-resistance (slip-ring) starter adds resistance at start to get max torque at standstill."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "With a **star-delta** starter, the starting current is about…",
+  "o": [
+   "the same as DOL",
+   "½ of DOL",
+   "⅓ of DOL",
+   "3 × DOL"
+  ],
+  "a": 2,
+  "w": "In star each winding gets 230 V instead of 400 V, so starting current and torque drop to about one third."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "What is **single phasing**?",
+  "o": [
+   "Running a motor on a single-phase supply",
+   "Loss of one phase while a 3-phase motor is running",
+   "Wiring a motor in star",
+   "Using one overload for three phases"
+  ],
+  "a": 1,
+  "w": "The motor keeps turning but draws too much current in the other two windings, so it overheats and can burn out."
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "**No-volt protection** on a motor starter is there to…",
+  "o": [
+   "Stop the motor restarting by itself when power comes back",
+   "Protect against earth faults",
+   "Limit the starting current",
+   "Correct the power factor"
+  ],
+  "a": 0,
+  "w": "If the supply drops, the contactor drops out. The hold-in (retaining) contact is lost, so someone has to press Start again."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "A series R-L-C circuit is at **resonance**. Which is true?",
+  "o": [
+   "X<sub>L</sub> = X<sub>C</sub>, so Z = R and current is at its maximum",
+   "X<sub>L</sub> = R",
+   "Current is at its minimum",
+   "Power factor is 0"
+  ],
+  "a": 0,
+  "w": "The two reactances cancel, leaving only R. Lowest impedance → biggest current, power factor 1."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "Which formula gives the **resonant frequency**?",
+  "o": [
+   "f = 2πLC",
+   "f = 1 ÷ (2π√(LC))",
+   "f = R ÷ L",
+   "f = 1 ÷ (RC)"
+  ],
+  "a": 1,
+  "w": "f₀ = 1 ÷ (2π √(L × C)). Remember to convert µF to F first."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "In a mainly **inductive** circuit the current…",
+  "o": [
+   "leads the voltage",
+   "lags the voltage",
+   "is in phase with the voltage",
+   "is always zero"
+  ],
+  "a": 1,
+  "w": "Inductive = lagging. Capacitive = leading. Memory trick: CIVIL — in a C, I before V; V before I in an L."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "Power factor equals…",
+  "o": [
+   "Z ÷ R",
+   "R ÷ Z (= cos φ)",
+   "X ÷ R",
+   "V × I"
+  ],
+  "a": 1,
+  "w": "pf = cos φ = R ÷ Z = True power ÷ Apparent power (P ÷ S)."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "In a parallel R-L-C circuit, I<sub>R</sub> = 9 A, I<sub>L</sub> = 15 A, I<sub>C</sub> = 3 A. The circuit is…",
+  "o": [
+   "leading",
+   "lagging",
+   "at resonance",
+   "purely resistive"
+  ],
+  "a": 1,
+  "w": "I<sub>L</sub> is bigger than I<sub>C</sub>, so the circuit is inductive overall → lagging."
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "What does X<sub>C</sub> do when frequency goes **up**?",
+  "o": [
+   "Goes up",
+   "Goes down",
+   "Stays the same",
+   "Becomes equal to R"
+  ],
+  "a": 1,
+  "w": "X<sub>C</sub> = 1 ÷ (2πfC). Higher f → smaller X<sub>C</sub>. X<sub>L</sub> does the opposite."
+ },
+ {
+  "p": "T1",
+  "t": "Three-phase",
+  "q": "In a **delta** connection, line current equals…",
+  "o": [
+   "phase current",
+   "√3 × phase current",
+   "phase current ÷ √3",
+   "3 × phase current"
+  ],
+  "a": 1,
+  "w": "Delta: V<sub>L</sub> = V<sub>ph</sub>, I<sub>L</sub> = √3 × I<sub>ph</sub>."
+ },
+ {
+  "p": "T1",
+  "t": "Three-phase",
+  "q": "In a **star** connection on a 400 V supply, the phase voltage is…",
+  "o": [
+   "400 V",
+   "692.8 V",
+   "230.940 V",
+   "133.3 V"
+  ],
+  "a": 2,
+  "w": "Star: V<sub>ph</sub> = V<sub>L</sub> ÷ √3 = 400 ÷ 1.732 = 230.940 V. I<sub>L</sub> = I<sub>ph</sub>."
+ },
+ {
+  "p": "T1",
+  "t": "Three-phase",
+  "q": "Total power of a balanced 3-phase load is…",
+  "o": [
+   "P = V<sub>L</sub> × I<sub>L</sub>",
+   "P = √3 × V<sub>L</sub> × I<sub>L</sub> × cos φ",
+   "P = 3 × V<sub>L</sub> × I<sub>L</sub>",
+   "P = V<sub>L</sub> ÷ I<sub>L</sub>"
+  ],
+  "a": 1,
+  "w": "P = √3 V<sub>L</sub> I<sub>L</sub> cos φ. Or 3 × V<sub>ph</sub> × I<sub>ph</sub> × cos φ — same answer."
+ },
+ {
+  "p": "T1",
+  "t": "Three-phase",
+  "q": "How do you find total power with the **two-wattmeter** method?",
+  "o": [
+   "W1 − W2",
+   "W1 + W2",
+   "W1 × W2",
+   "(W1 + W2) × √3"
+  ],
+  "a": 1,
+  "w": "On a 3-phase 3-wire system, total power = the sum of the two readings."
+ },
+ {
+  "p": "T1",
+  "t": "Magnetism",
+  "q": "Flux density B equals…",
+  "o": [
+   "Φ × A",
+   "Φ ÷ A",
+   "A ÷ Φ",
+   "Φ ÷ length"
+  ],
+  "a": 1,
+  "w": "B = Φ ÷ A, in tesla (T). Convert cm² to m² by dividing by 10,000."
+ },
+ {
+  "p": "T1",
+  "t": "Magnetism",
+  "q": "A **low-loss** magnetic material has a hysteresis loop that is…",
+  "o": [
+   "wide and fat",
+   "narrow and thin",
+   "a straight line",
+   "a circle"
+  ],
+  "a": 1,
+  "w": "Narrow loop = little energy lost each cycle → good for transformer cores. Wide loop = high loss → good for permanent magnets."
+ },
+ {
+  "p": "T1",
+  "t": "DC & capacitors",
+  "q": "The **time constant** of an R-C circuit is…",
+  "o": [
+   "τ = R ÷ C",
+   "τ = R × C",
+   "τ = V ÷ R",
+   "τ = 5RC"
+  ],
+  "a": 1,
+  "w": "τ = R × C (in seconds). Fully charged after about 5 time constants."
+ },
+ {
+  "p": "T1",
+  "t": "DC & capacitors",
+  "q": "68 µF in series with 47 kΩ. Time constant?",
+  "o": [
+   "0.320 s",
+   "3.196 s",
+   "31.96 s",
+   "1.446 s"
+  ],
+  "a": 1,
+  "w": "68 × 10⁻⁶ × 47,000 = 3.196 s."
+ },
+ {
+  "p": "T1",
+  "t": "DC & capacitors",
+  "q": "Initial charging current of a capacitor = …",
+  "o": [
+   "V ÷ R",
+   "V × C",
+   "0",
+   "R ÷ V"
+  ],
+  "a": 0,
+  "w": "At switch-on the capacitor acts like a short, so I₀ = V ÷ R."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "How many diodes in a **three-phase full-wave** bridge rectifier?",
+  "o": [
+   "2",
+   "3",
+   "4",
+   "6"
+  ],
+  "a": 3,
+  "w": "Two diodes per phase × 3 phases = 6."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "Compared with single-phase, a 3-phase rectifier has…",
+  "o": [
+   "more ripple",
+   "less ripple",
+   "the same ripple",
+   "no DC output"
+  ],
+  "a": 1,
+  "w": "The peaks overlap, so the DC is much smoother (less ripple)."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "A **photodiode** normally works in…",
+  "o": [
+   "forward bias",
+   "reverse bias",
+   "either, no difference",
+   "only on AC"
+  ],
+  "a": 1,
+  "w": "Reverse biased: light frees charge carriers and a small reverse current flows in proportion to the light."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "In an NPN transistor, which current is the **largest**?",
+  "o": [
+   "Base",
+   "Collector",
+   "Emitter",
+   "They are equal"
+  ],
+  "a": 2,
+  "w": "I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub>, so the emitter current is the biggest."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "What causes the **depletion layer** in a P-N junction?",
+  "o": [
+   "Heat from soldering",
+   "Electrons and holes crossing the junction and recombining",
+   "The plastic case",
+   "Too much current"
+  ],
+  "a": 1,
+  "w": "Near the junction, free electrons fill holes. That leaves a thin zone with no free carriers, which acts as a barrier."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "An LED runs from 48 V. It needs 2 V at 20 mA. What series resistor?",
+  "o": [
+   "2.4 kΩ",
+   "2.3 kΩ",
+   "2.5 kΩ",
+   "230 Ω"
+  ],
+  "a": 1,
+  "w": "R = (48 − 2) ÷ 0.020 = 2300 Ω = 2.3 kΩ."
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "One disadvantage of a **linear** power supply is…",
+  "o": [
+   "high electrical noise",
+   "heavy and wastes energy as heat",
+   "cannot give DC",
+   "too complicated"
+  ],
+  "a": 1,
+  "w": "Advantage: simple, clean output, low noise. Disadvantage: big transformer, heavy, inefficient."
+ },
+ {
+  "p": "T1",
+  "t": "Instruments",
+  "q": "On an oscilloscope showing AC, the **X-axis** shows…",
+  "o": [
+   "voltage",
+   "time",
+   "current",
+   "frequency"
+  ],
+  "a": 1,
+  "w": "X (horizontal) = time (time/div). Y (vertical) = voltage (volts/div). The Y-plates move the beam up and down."
+ },
+ {
+  "p": "T1",
+  "t": "Instruments",
+  "q": "A signal is **21.21 V RMS**. What is its peak voltage?",
+  "o": [
+   "15 V",
+   "21.21 V",
+   "30 V",
+   "42.42 V"
+  ],
+  "a": 2,
+  "w": "Peak = RMS × √2 = 21.21 × 1.414 ≈ 30 V."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "Colour code for 3-phase cores: L1, L2, L3 are…",
+  "o": [
+   "Red, yellow, blue",
+   "Brown, black, grey",
+   "Brown, blue, green",
+   "Black, grey, blue"
+  ],
+  "a": 1,
+  "w": "L1 brown, L2 black, L3 grey. Blue = neutral only. Green/yellow = protective conductor only."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "AC cables entering a **ferromagnetic** (steel) enclosure must be arranged so…",
+  "o": [
+   "each conductor has its own steel entry hole",
+   "all conductors of the circuit, including the CPC, go through together",
+   "only the line goes through steel",
+   "the neutral is kept separate"
+  ],
+  "a": 1,
+  "w": "Conductors must only be surrounded by steel together, never one by one — otherwise eddy currents heat the steel."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "PVC/PVC cable will touch **expanded polystyrene** in a cavity. What do you do?",
+  "o": [
+   "Nothing, it is fine",
+   "Wrap it in tape",
+   "Put it in conduit or another barrier so it does not touch",
+   "Use a bigger cable"
+  ],
+  "a": 2,
+  "w": "Polystyrene draws the plasticiser out of PVC and the insulation goes brittle. Keep them apart."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "Unprotected cable buried in a wall is allowed within **150 mm** of…",
+  "o": [
+   "the floor",
+   "the ceiling or a corner",
+   "any window",
+   "the DB only"
+  ],
+  "a": 1,
+  "w": "Safe zones: within 150 mm of the ceiling, within 150 mm of a corner, or straight vertical/horizontal runs to an accessory. Check the exact wording in ET101."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "In a hollow wall, the cable must be at least ___ from the **reverse side** of the wall.",
+  "o": [
+   "10 mm",
+   "25 mm",
+   "50 mm",
+   "150 mm"
+  ],
+  "a": 2,
+  "w": "Not less than 50 mm from the back face, so a screw from the other side will not hit it. Check in ET101."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "An aluminium conductor is about ___ as conductive as copper.",
+  "o": [
+   "30 %",
+   "61 %",
+   "90 %",
+   "120 %"
+  ],
+  "a": 1,
+  "w": "About 61 %, so aluminium needs a bigger size (usually one size up) for the same current. It is lighter and cheaper."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "Joining aluminium to copper, you should use…",
+  "o": [
+   "a standard brass connector",
+   "a bi-metallic lug, clean and dry, with contact grease",
+   "solder",
+   "insulating tape only"
+  ],
+  "a": 1,
+  "w": "Stops electrolytic corrosion. Keep it dry, clean, isolated, and torque it correctly."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "One advantage of **XLPE** over PVC insulation is…",
+  "o": [
+   "lower cost",
+   "higher operating temperature, so more current for the same size",
+   "softer to bend",
+   "it does not need a sheath"
+  ],
+  "a": 1,
+  "w": "XLPE runs at 90 °C vs 70 °C for PVC, so it carries more current. It also lasts longer and handles overloads better."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "Low-voltage and **ELV** cables in the same trunking are OK if…",
+  "o": [
+   "they are different colours",
+   "every cable is insulated for the highest voltage present",
+   "the ELV is on top",
+   "the trunking is plastic"
+  ],
+  "a": 1,
+  "w": "Or: separate compartments, a partition on tray, or separate conduit/trunking (ET101 528.1)."
+ },
+ {
+  "p": "T2",
+  "t": "Data",
+  "q": "Maximum length of the **permanent link** (patch panel to outlet) for Cat5e/Cat6?",
+  "o": [
+   "50 m",
+   "90 m",
+   "100 m",
+   "150 m"
+  ],
+  "a": 1,
+  "w": "90 m permanent link + up to 10 m of patch/work-area leads = 100 m channel."
+ },
+ {
+  "p": "T2",
+  "t": "Data",
+  "q": "What makes an **STP** cable different from UTP?",
+  "o": [
+   "It has 2 pairs",
+   "It has a foil/metal shield around the pairs",
+   "It is not twisted",
+   "It is fibre"
+  ],
+  "a": 1,
+  "w": "Both have 4 twisted pairs with different twist rates and an outer jacket. STP adds a shield against interference (EMI)."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "**Discrimination** between protective devices means…",
+  "o": [
+   "all devices trip together",
+   "the device nearest the fault (supply side) operates first",
+   "the main fuse always goes first",
+   "using only RCDs"
+  ],
+  "a": 1,
+  "w": "Only the fuse/MCB just upstream of the fault should go, so the rest of the installation stays on."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "HBC stands for…",
+  "o": [
+   "High Breaking Capacity",
+   "Heavy Busbar Circuit",
+   "High Bonding Conductor",
+   "Heat Balanced Cartridge"
+  ],
+  "a": 0,
+  "w": "HBC fuses can safely break very high fault currents, and discriminate well, so they back up MCBs."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "On an RCD marked **32A / 30mA / AC**, what is 30 mA?",
+  "o": [
+   "Load current rating",
+   "The residual (leakage) current that will trip it",
+   "The short-circuit rating",
+   "Trip time"
+  ],
+  "a": 1,
+  "w": "32 A = how much load it can carry. 30 mA = sensitivity. AC = type (for loads with no significant DC component)."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "An MCB has two trip actions. Overloads are handled by the…",
+  "o": [
+   "magnetic trip",
+   "thermal (bi-metal) trip",
+   "RCD",
+   "neutral link"
+  ],
+  "a": 1,
+  "w": "Thermal = slow, for overloads. Magnetic = instant, for short circuits."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "In a **fuse-switch**…",
+  "o": [
+   "the fuse is a separate box next to the switch",
+   "the fuse link forms the moving contact",
+   "there is no fuse",
+   "the switch is inside the fuse"
+  ],
+  "a": 1,
+  "w": "Fuse-switch: the fuse carrier moves as the switch blade. Switch-fuse: a switch with fuses in series in one unit."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "Thermistors for motor protection are fitted…",
+  "o": [
+   "in the control panel",
+   "embedded in the motor windings",
+   "on the supply cable",
+   "on the fan cover"
+  ],
+  "a": 1,
+  "w": "Embedded in the windings and wired to a thermistor relay that opens the control circuit if they heat up."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "A thermostat's **bi-metallic strip** works because…",
+  "o": [
+   "the metals are magnetic",
+   "two metals expand by different amounts, so the strip bends",
+   "it melts",
+   "it is spring-loaded only"
+  ],
+  "a": 1,
+  "w": "The bend opens or closes the contacts."
+ },
+ {
+  "p": "T2",
+  "t": "Boards",
+  "q": "Where is a distribution board **NOT** allowed?",
+  "o": [
+   "A utility room",
+   "Under timber stairs",
+   "A hallway",
+   "A garage"
+  ],
+  "a": 1,
+  "w": "Also not in bathrooms/WCs, storage or airing cupboards, above cookers/heaters, or where clothes could cover it (ET101 530.5)."
+ },
+ {
+  "p": "T2",
+  "t": "Motors (mechanical)",
+  "q": "A new bearing is pressed onto a shaft. The press should push on…",
+  "o": [
+   "the outer race",
+   "the inner race only",
+   "the balls",
+   "the seal"
+  ],
+  "a": 1,
+  "w": "Pressing the outer race forces load through the balls and damages them. Remove old bearings with a puller."
+ },
+ {
+  "p": "T2",
+  "t": "Motors (mechanical)",
+  "q": "Alignment of a direct coupling is finally checked with…",
+  "o": [
+   "a tape measure",
+   "a feeler gauge at 4 points 90° apart",
+   "a multimeter",
+   "your eye"
+  ],
+  "a": 1,
+  "w": "Straight edge first, then feeler gauge at four points. All four the same = aligned."
+ },
+ {
+  "p": "T2",
+  "t": "Motors (mechanical)",
+  "q": "A **flexible coupling** is used because it…",
+  "o": [
+   "makes the motor faster",
+   "absorbs shock, vibration and small misalignment",
+   "replaces the bearings",
+   "improves power factor"
+  ],
+  "a": 1,
+  "w": "It also allows for shaft expansion."
+ },
+ {
+  "p": "T2",
+  "t": "Supplies",
+  "q": "Why is there a cheaper **Night Saver** rate?",
+  "o": [
+   "Electricity is cleaner at night",
+   "Demand is lowest overnight, so power stations sit idle",
+   "Meters run slower at night",
+   "It is a government grant"
+  ],
+  "a": 1,
+  "w": "Peak is around 17:00–19:00. The valley is overnight. Cheap rates fill the valley and use plant better."
+ },
+ {
+  "p": "T2",
+  "t": "Supplies",
+  "q": "Difference between **SELV** and **PELV**?",
+  "o": [
+   "SELV is separated from earth; PELV can be earthed",
+   "PELV is higher voltage",
+   "SELV is DC only",
+   "No difference"
+  ],
+  "a": 0,
+  "w": "Both are extra-low voltage. SELV is fully separated from earth; PELV is not."
+ },
+ {
+  "p": "T2",
+  "t": "Batteries",
+  "q": "10 cells of 1.5 V, each 0.2 Ω internal, feed a 4 Ω load. Current?",
+  "o": [
+   "3.750 A",
+   "2.500 A",
+   "1.500 A",
+   "15.000 A"
+  ],
+  "a": 1,
+  "w": "E = 15 V. Total R = 10 × 0.2 + 4 = 6 Ω. I = 15 ÷ 6 = 2.5 A."
+ },
+ {
+  "p": "T2",
+  "t": "Batteries",
+  "q": "When testing lead-acid batteries, why is **ventilation** needed?",
+  "o": [
+   "To keep them cool",
+   "Charging gives off hydrogen, which can explode",
+   "To dry the acid",
+   "It is not needed"
+  ],
+  "a": 1,
+  "w": "No naked flames. Wear goggles, rubber gloves and an apron."
+ },
+ {
+  "p": "T2",
+  "t": "Emergency lighting",
+  "q": "In a **maintained** emergency light the lamp…",
+  "o": [
+   "only lights when mains fails",
+   "is on all the time, mains or battery",
+   "flashes",
+   "only lights during tests"
+  ],
+  "a": 1,
+  "w": "Non-maintained: only on during mains failure. Combined (sustained): has two or more lamps, one fed from the emergency supply."
+ },
+ {
+  "p": "T2",
+  "t": "Emergency lighting",
+  "q": "Quarterly test on a **3-hour** self-contained fitting: simulate mains failure for at least…",
+  "o": [
+   "5 minutes",
+   "30 minutes",
+   "1 hour",
+   "3 hours"
+  ],
+  "a": 1,
+  "w": "At least 30 min (10 min for 1-hour units), but not more than a quarter of rated duration. Annual test = full rated duration."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "The unit of **illuminance** is…",
+  "o": [
+   "lumen",
+   "lux (lumens per m²)",
+   "candela",
+   "watt"
+  ],
+  "a": 1,
+  "w": "Luminous flux = lumens. Illuminance = lux = lumens falling on each square metre."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "Low-pressure sodium (SOX) lamps are known for…",
+  "o": [
+   "excellent colour rendering",
+   "very high efficiency but poor colour (yellow light)",
+   "being instant-start",
+   "being used in hospitals"
+  ],
+  "a": 1,
+  "w": "Monochromatic yellow light, so colours look wrong. Used where colour does not matter, like roads."
+ },
+ {
+  "p": "T2",
+  "t": "Heating",
+  "q": "Night storage heaters store heat in…",
+  "o": [
+   "water",
+   "high-density bricks (blocks)",
+   "oil",
+   "air"
+  ],
+  "a": 1,
+  "w": "They charge on off-peak electricity. The damper controls how fast heat is released."
+ },
+ {
+  "p": "T2",
+  "t": "Testing",
+  "q": "**Main protective bonding** connects…",
+  "o": [
+   "sockets to lights",
+   "extraneous-conductive parts (water, gas pipes) to the main earthing terminal",
+   "line to neutral",
+   "the meter to the pole"
+  ],
+  "a": 1,
+  "w": "It keeps all metalwork at the same potential, so dangerous touch voltages cannot build up during a fault."
+ },
+ {
+  "p": "T2",
+  "t": "Busbars",
+  "q": "Why fit **expansion joints** on long busbar runs?",
+  "o": [
+   "To make it longer",
+   "To let the bars expand and contract with heat",
+   "To earth the bars",
+   "To add sockets"
+  ],
+  "a": 1,
+  "w": "Without them the bars can warp, clearances shrink, and joints loosen into high-resistance hot spots."
+ },
+ {
+  "p": "T2",
+  "t": "IP & influences",
+  "q": "In an **IP** rating, the second digit is protection against…",
+  "o": [
+   "dust and solid objects",
+   "water",
+   "impact",
+   "fire"
+  ],
+  "a": 1,
+  "w": "First digit = solids/dust. Second digit = water. E.g. IP55."
+ },
+ {
+  "p": "T2",
+  "t": "IP & influences",
+  "q": "External influence codes starting with **A** describe…",
+  "o": [
+   "environment (temperature, water, dust)",
+   "who uses it",
+   "building construction",
+   "the cable type"
+  ],
+  "a": 0,
+  "w": "A = environment, B = utilisation (people), C = construction of the building. AD = water, AE = solid objects/dust."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "Which MCB type is for **very high** inrush current (transformers, welders)?",
+  "o": [
+   "Type B",
+   "Type C",
+   "Type D",
+   "Type AC"
+  ],
+  "a": 2,
+  "w": "B trips at 3–5 × In, C at 5–10 × In, D at 10–20 × In. Bigger inrush → later letter."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "A Type **C** MCB trips instantly (magnetic) at about…",
+  "o": [
+   "1–2 × In",
+   "3–5 × In",
+   "5–10 × In",
+   "10–20 × In"
+  ],
+  "a": 2,
+  "w": "Type C suits inductive loads like fluorescent lighting and small motors."
+ },
+ {
+  "p": "T2",
+  "t": "Protection",
+  "q": "Faults at A (near the supply), B and C (far end). Fault current is **lowest** at…",
+  "o": [
+   "A",
+   "B",
+   "C",
+   "the same everywhere"
+  ],
+  "a": 2,
+  "w": "The further from the transformer, the more impedance in the loop, so the less fault current."
+ },
+ {
+  "p": "T2",
+  "t": "Data",
+  "q": "Why must T-568A and T-568B **not** be mixed in one installation?",
+  "o": [
+   "They use different cable",
+   "The green and orange pairs swap pins, so data will not pass",
+   "T-568B is only for phones",
+   "They are different voltages"
+  ],
+  "a": 1,
+  "w": "Pick one standard and stick to it. Mixed ends are only for crossover leads."
+ },
+ {
+  "p": "T2",
+  "t": "Underground",
+  "q": "Minimum clearance between underground **communication** cables and **power** cables?",
+  "o": [
+   "50 mm",
+   "100 mm",
+   "250 mm",
+   "450 mm"
+  ],
+  "a": 1,
+  "w": "100 mm, or use a fire-retardant partition, or mechanical protection at crossings (ET101 528.2)."
+ },
+ {
+  "p": "T2",
+  "t": "Underground",
+  "q": "Cable buried between two buildings must be…",
+  "o": [
+   "painted orange",
+   "marked with cable covers or warning tape",
+   "run above ground",
+   "single-core only"
+  ],
+  "a": 1,
+  "w": "Plus protection against damage (or buried deep enough), and buried ducts identified."
+ },
+ {
+  "p": "T2",
+  "t": "Cables",
+  "q": "Recommended minimum bending radius of an **aluminium-sheathed** cable?",
+  "o": [
+   "4 × D",
+   "6 × D",
+   "10 × D",
+   "15 × D"
+  ],
+  "a": 3,
+  "w": "r = 15 × D, where D is the outside diameter of the cable."
+ },
+ {
+  "p": "T2",
+  "t": "Solar PV",
+  "q": "A \"Solar PV on roof\" sign is **not** required at…",
+  "o": [
+   "the origin of the installation",
+   "the meter position (if remote)",
+   "the DB the inverter feeds",
+   "every socket outlet"
+  ],
+  "a": 3,
+  "w": "Signs go at the origin, the meter (if remote), and the board the inverter connects to."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "What does **DCL** stand for when connecting a luminaire?",
+  "o": [
+   "Direct Current Lamp",
+   "Device for Connecting a Luminaire",
+   "Double Contact Lampholder",
+   "Daylight Control Link"
+  ],
+  "a": 1,
+  "w": "Luminaires connect via a box, a DCL outlet, or equipment designed for direct connection."
+ },
+ {
+  "p": "T2",
+  "t": "Bonding",
+  "q": "Supplementary bonding conductor where it is **not** mechanically protected — minimum size?",
+  "o": [
+   "1.5 mm²",
+   "2.5 mm²",
+   "4 mm²",
+   "10 mm²"
+  ],
+  "a": 2,
+  "w": "4 mm² unprotected, 2.5 mm² where mechanically protected (ET101 544.2)."
+ },
+ {
+  "p": "T2",
+  "t": "Boards",
+  "q": "A DB with its bottom **below 1.4 m** must be…",
+  "o": [
+   "painted red",
+   "accessible only to responsible persons",
+   "fitted with an RCD",
+   "in a cupboard"
+  ],
+  "a": 1,
+  "w": "So young children cannot get at it (ET101 530.6)."
+ },
+ {
+  "p": "T2",
+  "t": "Conduit",
+  "q": "Steel conduit is used as the CPC. How many cables do you count per single-phase circuit?",
+  "o": [
+   "1",
+   "2 (L + N)",
+   "3 (L + N + CPC)",
+   "4"
+  ],
+  "a": 1,
+  "w": "The conduit itself is the protective conductor, so only line and neutral are drawn in."
+ },
+ {
+  "p": "T2",
+  "t": "Conduit",
+  "q": "Cable factor for a stranded **2.5 mm²** PVC single-core in conduit (long runs/bends)?",
+  "o": [
+   "16",
+   "22",
+   "30",
+   "43"
+  ],
+  "a": 2,
+  "w": "From the papers' model answers: 1.5 mm² = 22, 2.5 mm² = 30 (Table 52J.3). Check against ET101."
+ },
+ {
+  "p": "T2",
+  "t": "Batteries",
+  "q": "A hydrometer measures the…",
+  "o": [
+   "battery voltage",
+   "specific gravity of the electrolyte",
+   "internal resistance",
+   "charging current"
+  ],
+  "a": 1,
+  "w": "Fully charged lead-acid reads about 1.25–1.28."
+ },
+ {
+  "p": "T2",
+  "t": "Batteries",
+  "q": "VRLA (sealed lead-acid) batteries are charged by…",
+  "o": [
+   "constant current",
+   "constant voltage",
+   "pulse charging only",
+   "they cannot be recharged"
+  ],
+  "a": 1,
+  "w": "Constant voltage for lead-acid. Ni-Cad uses constant current."
+ },
+ {
+  "p": "T2",
+  "t": "Batteries",
+  "q": "Compared with lead-acid, Ni-Cad batteries are…",
+  "o": [
+   "heavier and cheaper",
+   "lighter, dearer, and last much longer",
+   "the same",
+   "only for cars"
+  ],
+  "a": 1,
+  "w": "About 50–60 % lighter, higher initial cost, 25+ years life."
+ },
+ {
+  "p": "T2",
+  "t": "Emergency lighting",
+  "q": "**Annual** test of a 3-hour self-contained emergency light: run on battery for…",
+  "o": [
+   "10 minutes",
+   "30 minutes",
+   "1 hour",
+   "the full 3 hours"
+  ],
+  "a": 3,
+  "w": "Quarterly: 30 min. Annual: full rated duration. Record everything in the logbook."
+ },
+ {
+  "p": "T2",
+  "t": "Emergency lighting",
+  "q": "One advantage of a **self-contained** system over a central battery system:",
+  "o": [
+   "batteries last 25 years",
+   "a failure only affects one fitting",
+   "tested from one place",
+   "no batteries needed"
+  ],
+  "a": 1,
+  "w": "Self-contained: cheap to install, independent. Central: long battery life, central testing, but one failure kills all."
+ },
+ {
+  "p": "T2",
+  "t": "Lamps",
+  "q": "Approximate efficacy of **LED** lamps?",
+  "o": [
+   "10–20 lm/W",
+   "30–70 lm/W",
+   "100–200 lm/W",
+   "500 lm/W"
+  ],
+  "a": 2,
+  "w": "Fluorescent about 30–70 lm/W. LED about 100–200 lm/W. Both full output at switch-on."
+ },
+ {
+  "p": "T2",
+  "t": "Lamps",
+  "q": "Which lamp has the **highest efficacy** but the **worst** colour rendering?",
+  "o": [
+   "MBF",
+   "SOX (low-pressure sodium)",
+   "LED",
+   "Metal halide (MBI)"
+  ],
+  "a": 1,
+  "w": "SOX about 180 lm/W, monochrome yellow light. MBF about 50 lm/W, reasonable colour."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "An instrument that measures lighting level in a room is a…",
+  "o": [
+   "megger",
+   "lux meter",
+   "clamp meter",
+   "oscilloscope"
+  ],
+  "a": 1,
+  "w": "It reads illuminance (E) in lux."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "Room 8 m × 16 m needs 300 lux. Total luminous flux?",
+  "o": [
+   "2,400 lm",
+   "38,400 lm",
+   "128 lm",
+   "3,840 lm"
+  ],
+  "a": 1,
+  "w": "F = E × A = 300 × 128 = 38,400 lumens."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting",
+  "q": "In N = F ÷ (n × lm × UF × MF), what is **MF**?",
+  "o": [
+   "Mounting factor",
+   "Maintenance factor — allows for dirt and lamp ageing",
+   "Main fuse",
+   "Magnetic flux"
+  ],
+  "a": 1,
+  "w": "UF = utilisation factor (how much light reaches the work plane). MF = maintenance factor."
+ },
+ {
+  "p": "T2",
+  "t": "Lighting controls",
+  "q": "Best control for lights next to big office windows?",
+  "o": [
+   "A key switch",
+   "Daylight-linked photo-electric dimming",
+   "A 24 h timer only",
+   "No control"
+  ],
+  "a": 1,
+  "w": "Also PIR presence detection, dimmable fittings, and a central lighting control system."
+ },
+ {
+  "p": "T2",
+  "t": "Storage heaters",
+  "q": "On a fan-assisted storage heater, the **fan** is fed from the…",
+  "o": [
+   "restricted off-peak supply",
+   "unrestricted (24 h) supply",
+   "emergency lighting circuit",
+   "same terminals as the elements"
+  ],
+  "a": 1,
+  "w": "Elements charge on off-peak (restricted). The fan must work during the day, so unrestricted."
+ },
+ {
+  "p": "T2",
+  "t": "Storage heaters",
+  "q": "Why must storage heaters be fixed securely?",
+  "o": [
+   "They vibrate",
+   "The heat-storage blocks make them very heavy",
+   "They are Class II",
+   "For the fan"
+  ],
+  "a": 1,
+  "w": "High-density clay/ceramic blocks: strong wall fixing and a floor that can take the weight."
+ },
+ {
+  "p": "T2",
+  "t": "Storage heaters",
+  "q": "How does the supply authority control off-peak storage heating?",
+  "o": [
+   "By the customer's switch",
+   "With a sealed time switch on a separate circuit and an off-peak meter",
+   "By the MCB",
+   "By the boiler"
+  ],
+  "a": 1,
+  "w": "Separate circuit, sealed time switch, separate meter."
+ },
+ {
+  "p": "T2",
+  "t": "Underfloor heating",
+  "q": "Underfloor heating mat under tiles. Which is **wrong**?",
+  "o": [
+   "Insulate under it",
+   "RCD protection",
+   "Cut the mat shorter to fit",
+   "Floor probe between the cables"
+  ],
+  "a": 2,
+  "w": "Never cut or overlap heating cable — the mat is designed for a set wattage."
+ },
+ {
+  "p": "T2",
+  "t": "Central heating",
+  "q": "An **S-Plan** system uses…",
+  "o": [
+   "one 3-port mid-position valve",
+   "a 2-port zone valve for each zone",
+   "no valves",
+   "a single thermostat only"
+  ],
+  "a": 1,
+  "w": "S-Plan: 2-port valve per zone. Y-Plan: one 3-port mid-position valve."
+ },
+ {
+  "p": "T2",
+  "t": "Central heating",
+  "q": "A **Y-Plan** system uses…",
+  "o": [
+   "a 3-port mid-position valve",
+   "three 2-port valves",
+   "a storage heater",
+   "a hydrometer"
+  ],
+  "a": 0,
+  "w": "The mid-position valve can feed heating, hot water, or both at once."
+ },
+ {
+  "p": "T2",
+  "t": "Testing",
+  "q": "Equipment marked with the **double-square** symbol should…",
+  "o": [
+   "have a 10 mm² earth",
+   "NOT be earthed (Class II)",
+   "be bonded to the gas pipe",
+   "have an RCD only"
+  ],
+  "a": 1,
+  "w": "Double-square = double insulated (Class II). No earth connection."
+ },
+ {
+  "p": "T2",
+  "t": "Testing",
+  "q": "Which of these is **not** one of the standard verification tests?",
+  "o": [
+   "Insulation resistance",
+   "Polarity",
+   "Earth fault loop impedance",
+   "Hydrometer test"
+  ],
+  "a": 3,
+  "w": "Visual inspection, continuity of protective conductors, insulation resistance, polarity, earth fault loop impedance, RCD operation."
+ },
+ {
+  "p": "T2",
+  "t": "Motor couplings",
+  "q": "Two types of flange misalignment are…",
+  "o": [
+   "angular and parallel (offset)",
+   "hot and cold",
+   "radial and vertical only",
+   "left and right"
+  ],
+  "a": 0,
+  "w": "Angular: gap wider one side. Parallel: shaft centres offset. Correct both to the maker's tolerance."
+ },
+ {
+  "p": "T2",
+  "t": "Busbars",
+  "q": "Which is an **advantage** of rising main busbar over cables?",
+  "o": [
+   "Needs more space",
+   "Less termination space and can be reused",
+   "Needs more lugs",
+   "Higher volt drop"
+  ],
+  "a": 1,
+  "w": "Also: fewer fixings, faster install, type-tested fault rating, better fire resistance, lower volt drop."
+ }
+]

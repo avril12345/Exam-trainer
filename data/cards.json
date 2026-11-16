@@ -1,0 +1,1461 @@
+[
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor couplings",
+  "q": "Flexible couplings: state the basic function, and how the motor is aligned to its load.",
+  "a": [
+   "Joins the motor shaft to the load shaft end to end, so both turn together",
+   "Absorbs shock, vibration and small misalignment (and allows for shaft expansion)",
+   "Align with a straight edge first, then check with a feeler gauge at 4 points 90° apart — all four gaps equal = aligned"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor couplings",
+  "q": "State the TWO basic functions of a flexible coupling.",
+  "a": [
+   "Transmits power (torque) from one shaft to the other so both rotate together at the same speed",
+   "Compensates for small misalignment, movement and vibration between the two shafts"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor couplings",
+  "q": "Two flanges directly couple a motor to its machine. Describe (with sketches) two types of misalignment and how to minimise them.",
+  "a": [
+   "Angular misalignment: the gap is wider on one side than the other (X ≠ Y)",
+   "Parallel (offset) misalignment: the shaft centres are offset by a distance P",
+   "Minimise both to within the manufacturer's tolerances (shim the feet, re-check with feeler gauge / dial gauge)"
+  ],
+  "n": 2,
+  "fig": "misalign"
+ },
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor bearings",
+  "q": "Describe how to remove a worn bearing and fit a new one on a motor shaft.",
+  "a": [
+   "Remove with a bearing puller — do not bend or damage the shaft",
+   "Heating the bearing (not the shaft) helps it come off",
+   "Fit the new one with a press and sleeve pushing on the INNER race only",
+   "Make sure it is the right way round"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor protection",
+  "q": "Where are thermistors located in the overcurrent protection of a 3-phase induction motor?",
+  "a": [
+   "Embedded in the motor windings",
+   "Wired to a thermistor control relay that opens the control circuit when the windings get too hot"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 1,
+  "m": 2,
+  "t": "Motor couplings",
+  "q": "Name two methods of coupling a motor to drive a load.",
+  "a": [
+   "Solid (direct) coupling",
+   "Flexible coupling",
+   "Vee-belt drive",
+   "Flat belt drive"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 2,
+  "m": 5,
+  "t": "Cable rules",
+  "q": "(a) How must AC cables entering a ferromagnetic enclosure be arranged? (b) PVC/PVC cable without armour buried in a solid wall: the 3 permitted methods?",
+  "a": [
+   "(a) All conductors of the circuit, including the CPC, in the same enclosure — only collectively surrounded by steel, never one per hole",
+   "(b) Within 150 mm of the room edges, or a straight horizontal/vertical run to the point or accessory",
+   "(b) Protected against harmful substances in plaster/concrete (PVC conduit or suitable sheath)",
+   "(b) Not less than 50 mm from the reverse side of the wall"
+  ],
+  "r": "ET101 521.5 · Table 52.1",
+  "c": 1,
+  "fig": "zones"
+ },
+ {
+  "p": "T2",
+  "s": 2,
+  "m": 5,
+  "t": "Cable rules",
+  "q": "(a) Which types of cable are recognised by CENELEC? (b) Colour code for multicore cables and cords on AC circuits?",
+  "a": [
+   "(a) Harmonised cables — carry the <HAR> mark plus the approval body (e.g. BASEC, VDE)",
+   "(a) Approved national types — marked on the sheath",
+   "(b) Line: brown (L1), black (L2), grey (L3)",
+   "(b) Blue = neutral (or mid-point) only",
+   "(b) Green/yellow = protective conductor only"
+  ],
+  "r": "ET101 514.3",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 2,
+  "m": 2,
+  "t": "Cable rules",
+  "q": "(a) Flexible cables and cords — requirement regarding mechanical damage? (b) Separated circuits — what about their exposed-conductive-parts?",
+  "a": [
+   "(a) Must be visible along any part of their length liable to mechanical damage",
+   "(b) Must NOT be connected to the protective conductor, to exposed parts of other circuits, or to earth"
+  ],
+  "r": "ET101 413.3",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 2,
+  "m": 2,
+  "t": "Lighting wiring",
+  "q": "State two methods of connecting luminaires to the fixed wiring.",
+  "a": [
+   "A box (to I.S. EN 60670)",
+   "A DCL outlet — Device for Connecting a Luminaire (I.S. EN 61995)",
+   "Equipment designed to be connected directly to the wiring system"
+  ],
+  "n": 2,
+  "r": "ET101 559.5",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 3,
+  "m": 3,
+  "t": "Data cabling",
+  "q": "Describe the construction of STP cable used in Cat6 structured cabling.",
+  "a": [
+   "4 pairs of insulated copper conductors",
+   "Each pair twisted, each with a different twist rate",
+   "Foil/metal shield around the pairs (that is the \"S\" in STP)",
+   "Overall outer jacket"
+  ],
+  "n": 3
+ },
+ {
+  "p": "T2",
+  "s": 3,
+  "m": 3,
+  "t": "Data cabling",
+  "q": "Describe the construction of UTP cable used in Cat5e structured cabling.",
+  "a": [
+   "4 pairs of insulated copper conductors",
+   "Each pair twisted, with different twist rates",
+   "NO shield (unshielded)",
+   "Overall outer jacket"
+  ],
+  "n": 3
+ },
+ {
+  "p": "T2",
+  "s": 3,
+  "m": 3,
+  "t": "Segregation",
+  "q": "Describe three ways low-voltage and extra-low-voltage (Band I & II) circuits can share a wiring system.",
+  "a": [
+   "Every cable insulated for the highest voltage present",
+   "Each core of a multicore insulated for the highest voltage in it",
+   "Separate compartment of trunking/ducting",
+   "Cable tray with a partition between them",
+   "Separate conduit or trunking system"
+  ],
+  "n": 3,
+  "r": "ET101 528.1",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 3,
+  "m": 3,
+  "t": "Underground cables",
+  "q": "Underground communication cables cross or run close to power cables: minimum clearance, and the alternatives?",
+  "a": [
+   "Keep at least 100 mm apart",
+   "OR a fire-retardant partition between them (bricks, clay/concrete cable covers, shaped blocks, fire-retardant conduit or troughs)",
+   "OR at crossings, mechanical protection between them (conduit, concrete caps or blocks)"
+  ],
+  "r": "ET101 528.2",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 3,
+  "m": 3,
+  "t": "Solar PV",
+  "q": "Where must \"Solar PV on roof\" warning signs be placed?",
+  "a": [
+   "At the origin of the installation",
+   "At the metering position, if it is away from the origin",
+   "At the consumer unit / distribution board the inverter is connected to"
+  ],
+  "r": "ET101 712.514",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 4,
+  "m": 4,
+  "t": "Aluminium cables",
+  "q": "Compare aluminium to copper: mechanical properties, cost, current-carrying capacity, conductivity.",
+  "a": [
+   "Weight: aluminium is about 3 × lighter — easier to handle, used for big and overhead cables",
+   "Cost: aluminium is cheaper, and its price is more stable",
+   "Conductivity: aluminium is only about 61 % of copper",
+   "So it needs a bigger size for the same current (about one size up, e.g. 25 mm² Al ≈ 16 mm² Cu)"
+  ],
+  "r": "Min Al size for power/lighting: check ET101 Table 52",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 4,
+  "m": 2,
+  "t": "Cable rules",
+  "q": "PVC/PVC cable in a wall cavity likely to touch expanded polystyrene: what must be done?",
+  "a": [
+   "Do not let PVC stay in contact with expanded polystyrene (it draws out the plasticiser — PVC goes brittle)",
+   "Run it in conduit or another enclosure that polystyrene will not attack"
+  ],
+  "r": "ET101 522.5",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 4,
+  "m": 2,
+  "t": "Aluminium cables",
+  "q": "Installing aluminium cable for power circuits: the requirement for the connectors?",
+  "a": [
+   "Connectors used to terminate aluminium conductors must be tested and approved for that specific use"
+  ],
+  "r": "ET101 524.1, Table 52.3 note",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 4,
+  "m": 2,
+  "t": "Aluminium cables",
+  "q": "Recommended minimum bending radius for a cable with an aluminium sheath?",
+  "a": [
+   "r = 15 × D",
+   "D = the overall (outer) diameter of the cable (unless the manufacturer says otherwise)"
+  ],
+  "r": "ET101 Annex 52",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 5,
+  "m": 4,
+  "t": "Cable sizing",
+  "q": "(a) What determines the current-carrying capacity of a cable? (b) List four factors to consider.",
+  "a": [
+   "(a) Must not exceed the value from the Annex 52 tables, after correction factors are applied",
+   "(b) Ambient temperature",
+   "(b) Method of installation",
+   "(b) Grouping with other circuits",
+   "(b) Thermal insulation · load current · volt drop · fault loop impedance"
+  ],
+  "n": 4,
+  "r": "ET101 523",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 5,
+  "m": 2,
+  "t": "Data cabling",
+  "q": "How can data cabling be protected from electromagnetic interference (EMI)? Two methods.",
+  "a": [
+   "Use shielded (STP/screened) cable",
+   "Keep it separated from power cables — e.g. multi-compartment trunking",
+   "Earthed steel trunking around unshielded cable near sources of interference"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 5,
+  "m": 3,
+  "t": "Energy efficiency",
+  "q": "Cable I²R losses: state three ways to reduce them.",
+  "a": [
+   "Reduce the volt drop in the wiring",
+   "Increase the conductor cross-sectional area",
+   "Fit power factor correction",
+   "Reduce harmonic currents"
+  ],
+  "n": 3,
+  "r": "ET101 8A",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 5,
+  "m": 3,
+  "t": "Energy efficiency",
+  "q": "State three factors that affect I²R power losses in a cable.",
+  "a": [
+   "Cable length",
+   "Conductor cross-sectional area",
+   "The load current"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 5,
+  "m": 2,
+  "t": "Volt drop",
+  "q": "10 mm² cable, 40 m run, 38 A, 4.4 mV/A/m. Volt drop? Is it OK?",
+  "a": [
+   "Vd = mV/A/m × I × L ÷ 1000 = 4.4 × 38 × 40 ÷ 1000 = 6.688 V",
+   "Limit is 4 % of 230 V = 9.2 V → it complies",
+   "Practise more of these in the Formula Lab"
+  ],
+  "r": "mV/A/m from ET101 table",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 2,
+  "t": "Aluminium cables",
+  "q": "Describe the electrolytic effect between copper and aluminium, and how to prevent it.",
+  "a": [
+   "Moisture at an Al–Cu joint acts as an electrolyte → the aluminium corrodes quickly",
+   "Use bi-metallic (Al/Cu) lugs or connectors",
+   "Coat the joint with anti-oxidant paste/grease",
+   "Tin-plated Al lugs only in rooms that stay dry"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 2,
+  "t": "Cable rules",
+  "q": "What does ET101 require when connecting dissimilar metals liable to cause electrolytic action?",
+  "a": [
+   "They must not be placed in contact unless special arrangements are made to avoid the effects of the contact",
+   "(Quote the rule — the examiner wants the regulation, not just \"use a bi-metal lug\")"
+  ],
+  "r": "ET101 522.5.2",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 4,
+  "t": "Aluminium cables",
+  "q": "State four precautions when connecting aluminium cables into copper busbars.",
+  "a": [
+   "Isolate — busbar and cable dead",
+   "Connection clean and dry (keep moisture off)",
+   "Use a bi-metallic lug, with contact grease inside",
+   "Tighten to the correct torque"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 4,
+  "t": "Protection",
+  "q": "With a diagram, explain discrimination between protective devices.",
+  "a": [
+   "Devices are chosen so the one nearest the fault (on the supply side) operates first",
+   "Fault on a final circuit: only that circuit's fuse/MCB goes",
+   "Sub-board and main fuse stay in, so the rest of the building keeps power",
+   "Diagram: Supply → main fuse → sub-board fuse → final circuit fuse → fault X"
+  ],
+  "fig": "discrim"
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 3,
+  "t": "Protection",
+  "q": "An RCD is marked 32A / 30mA / AC. Explain each part.",
+  "a": [
+   "32 A — rated current it can carry continuously",
+   "30 mA — residual (earth leakage) current that trips it",
+   "AC — type: for loads with no significant DC component"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 2,
+  "t": "Data cabling",
+  "q": "Why must T-568A and T-568B terminations not be mixed in one installation?",
+  "a": [
+   "The green and orange pairs swap pin positions between the two",
+   "Mixed ends → pairs do not line up at plugs and jacks → data signals will not transfer",
+   "Pick one (usually T-568B in Europe) and stay consistent — mixed ends only for crossover leads"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 6,
+  "m": 2,
+  "t": "Boards",
+  "q": "A wall-mounted DB has its bottom less than 1.4 m from the floor. What is required, and why?",
+  "a": [
+   "It must be accessible only to responsible persons (e.g. lockable)",
+   "Reason: to stop young children getting at it"
+  ],
+  "r": "ET101 530.6",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 7,
+  "m": 6,
+  "t": "Distribution board",
+  "q": "Draw the internal connections of a 3-phase DB: 3-phase heater, 3-phase motor, 4 lighting circuits, 2 socket circuits.",
+  "a": [
+   "Main switch / fuse-switch feeding L1, L2, L3 busbars + neutral bar + earth bar",
+   "3-phase loads: triple-pole (TP) MCB taking L1, L2 and L3",
+   "Single-phase loads spread across L1, L2, L3 to balance the phases",
+   "Sockets on RCBOs (RCD protection)",
+   "Every circuit clearly labelled, neutrals to N bar, CPCs to E bar"
+  ],
+  "n": 4,
+  "fig": "dbsample"
+ },
+ {
+  "p": "T2",
+  "s": 7,
+  "m": 6,
+  "t": "Distribution board",
+  "q": "Complete the DB drawing: heating (3-phase), lighting 1, lighting 2, printing machine — protected by fuses.",
+  "a": [
+   "Heating: a fuse in each of L1, L2, L3 (triple-pole)",
+   "Lighting 1, lighting 2 and the printing machine on different phases (balance)",
+   "Each single-phase fuse fed from its busbar; neutrals to N bar",
+   "Label every load"
+  ],
+  "n": 3,
+  "fig": "dbsample"
+ },
+ {
+  "p": "T2",
+  "s": 8,
+  "m": 1,
+  "t": "Protection",
+  "q": "On an MCB tripping curve, identify the maximum and minimum tripping curve regions.",
+  "a": [
+   "Minimum curve = the left/lower edge of the band (to the left it will not trip)",
+   "Maximum curve = the right/upper edge (to the right it will always trip)",
+   "Upper curved part = thermal (overload), the drop = magnetic (short circuit)"
+  ],
+  "n": 2,
+  "fig": "mcb"
+ },
+ {
+  "p": "T2",
+  "s": 8,
+  "m": 2,
+  "t": "Protection",
+  "q": "Why are MCBs backed up by HBC fuses in industrial installations? What does HBC mean?",
+  "a": [
+   "MCBs have a limited breaking (rupturing) capacity — may not clear very high fault currents",
+   "HBC = High Breaking Capacity"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 8,
+  "m": 4,
+  "t": "Protection",
+  "q": "Explain the purpose of an HBC fuse and draw its construction.",
+  "a": [
+   "Safely breaks very high fault currents; good discrimination; used as back-up",
+   "Ceramic body",
+   "Silver element (with notches/necks)",
+   "Quartz sand filler to quench the arc",
+   "Brass end caps and fixing tags · indicator"
+  ],
+  "n": 4,
+  "fig": "hbc"
+ },
+ {
+  "p": "T2",
+  "s": 8,
+  "m": 2,
+  "t": "Protection",
+  "q": "Which MCB/RCBO type for circuits with very high inrush current? What range of magnetic tripping can it ignore?",
+  "a": [
+   "Type B: trips at 3–5 × In — general/resistive loads",
+   "Type C: 5–10 × In — inductive loads (fluorescent lighting, small motors)",
+   "Type D: 10–20 × In — VERY high inrush (transformers, welders, big motors)"
+  ],
+  "n": 1,
+  "r": "ET101 533.3",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 8,
+  "m": 2,
+  "t": "Protection",
+  "q": "Short-circuit faults at A (near supply), B and C (far end). Where is the fault current lowest, and why?",
+  "a": [
+   "Lowest at C — the point furthest from the supply transformer",
+   "The further out the circuit, the higher the impedance → less fault current"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 9,
+  "m": 4,
+  "t": "Conduit capacity",
+  "q": "Steel conduit, 8 m run, 2 bends: 2 × 2.5 mm² circuits and 3 × 1.5 mm² circuits (stranded single-core). Conduit is the CPC. Cable factors and minimum conduit size?",
+  "a": [
+   "Conduit is the CPC → only L + N per circuit (2 cables each)",
+   "2.5 mm²: 4 cables × 30 = 120",
+   "1.5 mm²: 6 cables × 22 = 132",
+   "Total 252 → 25 mm conduit (factor 292) is enough"
+  ],
+  "r": "ET101 Tables 52J.3 & 52J.4 — your model answers are not consistent on this, check with the tutor",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 9,
+  "m": 8,
+  "t": "Boards",
+  "q": "(a) Bell wires (ELV) inside a DB: precaution? (b) Diagram: mounting heights for switches, sockets and DB.",
+  "a": [
+   "(a) Sleeve ELV cables to the highest voltage in the board, or keep them physically separated",
+   "(b) Switches in dwellings: 400–1200 mm (public buildings 900–1200 mm)",
+   "(b) Sockets: 400–1200 mm above finished floor",
+   "(b) DB: top not more than 2.25 m; bottom not less than 1.4 m"
+  ],
+  "r": "ET101 530.5, 530.6, 554.1",
+  "c": 1,
+  "fig": "heights"
+ },
+ {
+  "p": "T2",
+  "s": 9,
+  "m": 6,
+  "t": "Boards",
+  "q": "Domestic DB: mounting height rules (with diagram) + four places it cannot go.",
+  "a": [
+   "Readily accessible; top ≤ 2.25 m, bottom ≥ 1.4 m",
+   "Not in a storage or airing cupboard",
+   "Not under timber stairs",
+   "Not in a bathroom, washroom or WC",
+   "Not above a cooker/heater, or where clothes could cover it"
+  ],
+  "n": 5,
+  "r": "ET101 530.5",
+  "c": 1,
+  "fig": "heights"
+ },
+ {
+  "p": "T2",
+  "s": 9,
+  "m": 4,
+  "t": "Cable rules",
+  "q": "Four exemptions from mechanical protection for cables in hollow walls (partitions)?",
+  "a": [
+   "Within 150 mm (horizontally) of a room corner",
+   "Within 150 mm (vertically) of the ceiling",
+   "Straight horizontal or vertical run directly to an accessory, appliance or DB",
+   "At least 50 mm from the reverse side of the wall"
+  ],
+  "r": "ET101 522.6",
+  "c": 1,
+  "fig": "zones"
+ },
+ {
+  "p": "T2",
+  "s": 10,
+  "m": 6,
+  "t": "Busbars",
+  "q": "Describe three precautions when installing a rising main busbar system.",
+  "a": [
+   "Seal every floor penetration to the fire resistance of that floor (and fit internal fire barriers in the trunking)",
+   "Correct IP rating — no water or dust ingress; seal floors against water leaking between levels",
+   "Expansion joints in tall runs; adequate supports at the maker's spacing",
+   "Mechanical protection where needed"
+  ],
+  "n": 3,
+  "r": "ET101 527.2, 522",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 10,
+  "m": 6,
+  "t": "Busbars",
+  "q": "Six advantages of a rising main busbar system over cables in a multi-storey building.",
+  "a": [
+   "Strong over long runs with few fixings → faster to install",
+   "Replaces many cable runs and their supports",
+   "Easier to handle than lots of large cables",
+   "Less termination space in switchboards; no lugs except at the feeder",
+   "Takes up less space; bends and offsets fit tight areas",
+   "Type-tested fault ratings · lower volt drop · better fire resistance · can be reused"
+  ],
+  "n": 6
+ },
+ {
+  "p": "T2",
+  "s": 10,
+  "m": 4,
+  "t": "Cable rules",
+  "q": "Where water or high humidity may occur, what three requirements must the installer consider?",
+  "a": [
+   "No damage from condensation or water — IP rating suitable for the location",
+   "Provide a way for collected water/condensation to escape",
+   "Where waves may hit it, protect it against mechanical damage"
+  ],
+  "r": "ET101 522.3",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 2,
+  "t": "Underground cables",
+  "q": "Non-armoured cable in a pipe in the ground (industrial/commercial): type of pipe, and minimum depth?",
+  "a": [
+   "Pipe: high-density polythene, high-impact PVC, or spigotted concrete",
+   "Depth: your model answers differ — 450 mm (2021, 2024 papers) and 250 mm (2023 paper D). Check ET101 522.8 and ask the tutor which he wants"
+  ],
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 2,
+  "t": "Underground cables",
+  "q": "Cable suitable for burying in a domestic garden, and minimum depth?",
+  "a": [
+   "SWA (steel wire armoured)",
+   "At least 450 mm (600 mm where the ground is likely to be dug, from your Q&A notes)"
+  ],
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 3,
+  "t": "Underground cables",
+  "q": "Cable between two buildings, in the soil: precautions required?",
+  "a": [
+   "Protect against mechanical damage OR bury deep enough to minimise the risk",
+   "Mark buried cables with cable covers or marking tape",
+   "Buried conduits and ducts must be identified"
+  ],
+  "r": "ET101 522.8.10",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 2,
+  "t": "Underground cables",
+  "q": "Drawing cables into an underground duct: one advantage, one disadvantage.",
+  "a": [
+   "Advantage: repairs and additions from manholes without digging; cable need not be armoured; well protected",
+   "Disadvantage: higher initial cost; poorer heat dissipation → lower current rating"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 3,
+  "t": "Underground cables",
+  "q": "Pulling large cables into a duct with rollers and jacks: three precautions.",
+  "a": [
+   "Jacks and rollers rated for the drum weight and width",
+   "Jacks on level ground, axle level",
+   "Rollers placed so the cable is not strained or damaged",
+   "Cable comes off the bottom of the drum so it cannot tip; use pulling lubricant on long runs with bends"
+  ],
+  "n": 3
+ },
+ {
+  "p": "T2",
+  "s": 11,
+  "m": 6,
+  "t": "Busbars",
+  "q": "Why are expansion joints fitted on long busbar runs? What fault if they are not?",
+  "a": [
+   "Busbars expand and contract with the heat from load current",
+   "Without joints the bars can warp → clearances to other bars/the case reduce",
+   "Constant movement loosens joints → high-resistance hot joints"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 12,
+  "m": 4,
+  "t": "Busbars",
+  "q": "(a) Overhead busbar trunking vs fixed wiring: one advantage, one disadvantage. (b) Minimum size of supplementary bonding conductor with underfloor busbar trunking?",
+  "a": [
+   "(a) Advantage: machines plugged in/out (tap-off units) without shutting down the rest",
+   "(a) Disadvantage: expensive to install at first",
+   "(b) 2.5 mm² copper where mechanically protected",
+   "(b) 4 mm² copper where NOT mechanically protected"
+  ],
+  "r": "ET101 544.2",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 12,
+  "m": 2,
+  "t": "Busbars",
+  "q": "Underfloor / raised-floor power-track: one advantage, one disadvantage.",
+  "a": [
+   "Advantage: flexible when the floor layout is unknown; 13 A / 32 A tap-offs; modular floor boxes; clean-earth versions",
+   "Disadvantage: usually only up to 63 A; limited tap-offs; runs about 20 m max; proprietary parts can be hard to get"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 12,
+  "m": 2,
+  "t": "Busbars",
+  "q": "ET101 requirements for busbar trunking and powertrack systems?",
+  "a": [
+   "Busbar trunking to I.S. EN 60439-2; powertrack to I.S. EN 61534",
+   "Selected and installed to the manufacturer's instructions, allowing for external influences"
+  ],
+  "r": "ET101 521.4",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 12,
+  "m": 2,
+  "t": "Trunking",
+  "q": "Give two reasons multi-compartment trunking is popular in commercial buildings.",
+  "a": [
+   "Keeps circuits of different voltage bands segregated (power, data, telecoms)",
+   "One neat run instead of several unsightly runs",
+   "Fast and easy to install"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 13,
+  "m": 2,
+  "t": "Batteries",
+  "q": "Ten cells, 1.5 V each, 0.2 Ω internal resistance each, series, 4 Ω load. Current? + two recharging methods.",
+  "a": [
+   "I = (n × E) ÷ (R + n × r) = 15 ÷ (4 + 2) = 2.5 A",
+   "Recharging: constant current",
+   "Constant voltage"
+  ],
+  "r": "Practise in the Formula Lab"
+ },
+ {
+  "p": "T2",
+  "s": 13,
+  "m": 4,
+  "t": "Batteries",
+  "q": "Testing lead-acid batteries for a large diesel generator: equipment, procedure and PPE.",
+  "a": [
+   "PPE: goggles, rubber gloves, heavy apron · ventilated room · no naked flames",
+   "Fully charge, disconnect, inspect; note voltage on a voltmeter",
+   "Load tester across terminals for 15 s — should stay above about 9.5 V (12 V battery)",
+   "Let it recover ~30 s, repeat; still above 9.5 V = good"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 13,
+  "m": 2,
+  "t": "Batteries",
+  "q": "VRLA (valve-regulated lead-acid) batteries: three handling precautions, and the charging method.",
+  "a": [
+   "Sealed, but the gel/paste inside is still corrosive if the case cracks — handle carefully, do not drop",
+   "Wear apron, gloves and goggles",
+   "Charging: constant voltage"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 13,
+  "m": 4,
+  "t": "Batteries",
+  "q": "Compare lead-acid and Ni-Cad batteries: weight, applications, charging method, cost.",
+  "a": [
+   "Weight: lead-acid heavy; Ni-Cad about 50–60 % lighter",
+   "Uses: lead-acid in cars, trucks, forklifts, UPS · Ni-Cad in medical devices, power tools, aircraft",
+   "Charging: lead-acid constant voltage (heat must be managed) · Ni-Cad constant current, tolerates abuse",
+   "Cost: lead-acid cheap, 3–10 yrs · Ni-Cad dearer but lasts 25+ yrs"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 13,
+  "m": 2,
+  "t": "Batteries",
+  "q": "A hydrometer checks a lead-acid battery. What does it test, and the reading when fully charged?",
+  "a": [
+   "The specific gravity (density) of the electrolyte",
+   "Fully charged: about 1.25–1.28"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 14,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Self-contained emergency lighting: describe two of the three quarterly test requirements.",
+  "a": [
+   "Simulate mains failure via the test facility: at least 30 min (3 h units) or 10 min (1 h units), max ¼ of rated duration — check every luminaire lights",
+   "Afterwards, check every charging/status LED shows healthy",
+   "Issue a report to the owner and put a copy in the logbook"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 14,
+  "m": 4,
+  "t": "Emergency lighting",
+  "q": "Central battery vs self-contained emergency lighting: four comparisons.",
+  "a": [
+   "Battery life: central up to ~25 yrs · self-contained batteries replaced periodically",
+   "Install cost: central high · self-contained low (needs local unswitched supply)",
+   "Testing: central from one place · self-contained each fitting tested",
+   "Failure: central battery fault kills the whole system · self-contained fault affects one fitting"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 14,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Self-contained emergency luminaire: four main components.",
+  "a": [
+   "Battery",
+   "Charger",
+   "Control unit",
+   "Lamp(s) / LEDs",
+   "Diffuser / cover · test facility"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 14,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Describe the tests and procedures for emergency lights and exit signs.",
+  "a": [
+   "Quarterly: run each light on battery for 30 minutes",
+   "Annual: run on battery for the full 3 hours",
+   "Examine fittings for condition and function",
+   "Fill in the logbook and issue a test certificate"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 14,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Briefly describe how a central battery emergency lighting system works.",
+  "a": [
+   "One central battery, kept charged by its charger and control gear",
+   "Feeds many luminaires (AC or DC)",
+   "Supplies them when the mains fails, or all the time if maintained"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 15,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Define a \"Combined (Sustained) Emergency Luminaire\".",
+  "a": [
+   "Contains at least two lamps",
+   "One fed from the normal lighting supply, the other from the emergency supply",
+   "Gives light at all material times"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 15,
+  "m": 3,
+  "t": "Emergency lighting",
+  "q": "List three factors escape lighting must provide to comply with the Irish Standard.",
+  "a": [
+   "Clearly show the escape routes",
+   "Light at each change of direction",
+   "Light at each change of level",
+   "Enough light along routes to move safely to and through the exits"
+  ],
+  "n": 3
+ },
+ {
+  "p": "T2",
+  "s": 15,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Describe four areas where emergency lighting units should be installed.",
+  "a": [
+   "At each exit door and outside each final exit",
+   "Near each staircase (each flight lit)",
+   "Near any change of floor level",
+   "Near fire-fighting equipment and fire alarm call points",
+   "Lift cars · toilets (incl. disabled) · plant, switch and control rooms"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 15,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Define an emergency lighting luminaire.",
+  "a": [
+   "A luminaire used for safety or emergency lighting",
+   "It may or may not have its own power source for safety services"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 15,
+  "m": 2,
+  "t": "Emergency lighting",
+  "q": "Maintained, non-maintained and combined luminaires: the difference?",
+  "a": [
+   "Maintained: lamp on all the time (mains or battery)",
+   "Non-maintained: lamp only lights when mains fails",
+   "Combined: two or more lamps, at least one on the emergency supply"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 3,
+  "t": "Lamps",
+  "q": "Compare SOX (low-pressure sodium) and MBF (high-pressure mercury): colour rendering, efficacy, run-up time.",
+  "a": [
+   "Colour rendering: SOX poor · MBF reasonable",
+   "Efficacy: SOX about 180 lm/W · MBF about 50 lm/W",
+   "Run-up: SOX about 10 min · MBF about 4 min"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 3,
+  "t": "Lamps",
+  "q": "Compare CFL and HID lamps: colour rendering, efficacy, run-up time.",
+  "a": [
+   "Colour rendering: CFL reasonable–good · HID good",
+   "Efficacy: CFL about 50–70 lm/W · HID about 40–100 lm/W",
+   "Run-up: CFL full output at switch-on · HID about 15 s to 5 min"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 3,
+  "t": "Lamps",
+  "q": "Compare fluorescent and LED lamps: colour rendering, efficacy, run-up time.",
+  "a": [
+   "Colour rendering: fluorescent reasonable–good · LED reasonable–very good",
+   "Efficacy: fluorescent about 30–70 lm/W · LED about 100–200 lm/W",
+   "Run-up: both give full output when switched on"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 2,
+  "t": "Lamps",
+  "q": "Describe the high-pressure mercury (MBF) lamp from switch-on to full light.",
+  "a": [
+   "Arc strikes first between the starting electrode and a main electrode",
+   "Gas ionises, the tube warms, then the arc strikes between the main electrodes",
+   "Heat vaporises the mercury → light and pressure rise",
+   "Phosphor on the outer bulb turns UV into visible light; takes several minutes"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 3,
+  "t": "Lamps",
+  "q": "Why are MBI (metal halide) lamps suited to high-bay industrial, high-mast and stadium lighting (incl. colour TV)?",
+  "a": [
+   "Good colour rendering (white light)",
+   "Good efficacy",
+   "Available in high wattages"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 2,
+  "t": "Lamps",
+  "q": "Describe four factors that affect lamp life.",
+  "a": [
+   "Operating voltage and voltage spikes",
+   "How often it is switched on/off or dimmed",
+   "Ambient temperature",
+   "Mechanical shock · lamp orientation · manufacturing defects"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 16,
+  "m": 2,
+  "t": "Lamps",
+  "q": "SOX lamps: one place they suit, one place they do not.",
+  "a": [
+   "Suitable: car parks, roads (colour does not matter)",
+   "Not suitable: paint spray booths, shops, loading bays — poor colour rendering"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 17,
+  "m": 5,
+  "t": "Lighting",
+  "q": "(a) Define luminous flux and its SI unit. (b) 5 m × 7 m floor receives 10,500 lumens. Average illuminance?",
+  "a": [
+   "(a) The total light given out by a source — measured in lumens (lm)",
+   "(b) E = F ÷ A = 10,500 ÷ 35 = 300 lux"
+  ],
+  "r": "Practise in the Formula Lab"
+ },
+ {
+  "p": "T2",
+  "s": 17,
+  "m": 2,
+  "t": "Lighting",
+  "q": "(a) Define illuminance and its unit. (b) Room 7 m × 12 m at 400 lux: total luminous flux?",
+  "a": [
+   "(a) Luminous flux falling on a surface per square metre — lux (lm/m²)",
+   "(b) F = E × A = 400 × 84 = 33,600 lumens"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 17,
+  "m": 2,
+  "t": "Lighting",
+  "q": "What meter measures the lighting level in a room, and what is it measuring?",
+  "a": [
+   "A lux meter",
+   "It measures illuminance (E) in lux"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 18,
+  "m": 8,
+  "t": "Lighting controls",
+  "q": "Lighting control strategy for offices with good daylight: describe four types of control.",
+  "a": [
+   "Dimmable (or on/off) luminaires throughout",
+   "Automatic switching: PIR / presence sensors switch off when nobody is there",
+   "Daylight-linked photo-electric sensors dim lights near windows",
+   "Local manual switches close to each work area (within about 6 m)",
+   "Time-controlled switching, or a central lighting/building management system (wired or wireless)"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 18,
+  "m": 8,
+  "t": "Lighting design",
+  "q": "Office 8 m × 14 m needs 400 lux. Lamps 3600 lm, UF 0.7, MF 0.85. (a) Total flux? (b) Number of luminaires? (c) Controls?",
+  "a": [
+   "(a) F = E × A = 400 × 112 = 44,800 lm",
+   "(b) N = F ÷ (n × lamp lm × UF × MF) = 44,800 ÷ (1 × 3600 × 0.7 × 0.85) = 20.916 → 21 luminaires",
+   "(c) Dimmable fittings, PIR sensors, daylight photo-cells, central control system"
+  ],
+  "r": "Practise in the Formula Lab"
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 6,
+  "t": "Storage heaters",
+  "q": "(a) What stores the heat in a night storage heater — and what precaution when mounting? (b) Draw the internal wiring: 3 elements, thermal cut-out, charge controller.",
+  "a": [
+   "(a) High-density clay/ceramic blocks — very heavy",
+   "(a) Fix securely to a wall and floor strong enough for the weight",
+   "(b) L → thermal cut-out → charge controller (input thermostat) → 3 elements in parallel → N"
+  ],
+  "fig": "storage"
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 4,
+  "t": "Storage heaters",
+  "q": "Describe a fan-assisted night storage heater, with its circuit.",
+  "a": [
+   "Elements charge the blocks on the restricted (off-peak) supply",
+   "A fan boosts heat output during the day",
+   "The fan is on the unrestricted (24 h) supply, via spur or socket — NOT the off-peak supply",
+   "Fan controlled by a room thermostat, switch or time clock"
+  ],
+  "fig": "fanheater"
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 2,
+  "t": "Storage heaters",
+  "q": "What device controls the charge (input) of a storage heater, and how does it work?",
+  "a": [
+   "The charge controller (input / auto-charge control)",
+   "A dial sets a bi-metal thermostat that limits how hot the core gets → how much heat is stored overnight"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 2,
+  "t": "Storage heaters",
+  "q": "What does the damper on a storage heater do?",
+  "a": [
+   "A flap that controls air flow through the blocks",
+   "Controls how much heat comes out during the day"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 2,
+  "t": "Storage heaters",
+  "q": "How does the supply authority control and monitor a storage heating system?",
+  "a": [
+   "A separate circuit just for the storage heaters",
+   "Controlled by a sealed time switch — supply only in off-peak hours",
+   "Measured on a separate off-peak meter"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 4,
+  "t": "Underfloor heating",
+  "q": "Underfloor flexible heating mats under tiles: four installation requirements.",
+  "a": [
+   "Subfloor flat, with no screws or nails sticking up",
+   "Insulation under the heated area",
+   "Thermostat/controller outside the room, with a floor probe between the heating cables",
+   "RCD / RCBO protection"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 4,
+  "t": "Underfloor heating",
+  "q": "(a) Construction of an electric radiant flexible sheet/mat. (b) Installation precautions.",
+  "a": [
+   "(a) Heating cable fixed to a fibreglass mesh or foil; rolls ~500 mm wide; 100–200 W/m²; cannot be cut shorter",
+   "(b) Never cut, cross or overlap the heating cable",
+   "(b) Not under fixed furniture (baths, units); keep 100 mm from pipework",
+   "(b) RCD protection; floor sensor between the cables; limit foot traffic until the floor is down"
+  ],
+  "n": 4
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 2,
+  "t": "Underfloor heating",
+  "q": "Name two systems used in off-peak underfloor electric heating.",
+  "a": [
+   "Withdrawable systems — silicone rubber or fibreglass cables in conduit",
+   "Mineral-insulated cables embedded directly in the screed",
+   "PVC-insulated cables embedded directly in the screed"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 2,
+  "t": "Underfloor heating",
+  "q": "Two precautions when installing embedded floor-warming cables.",
+  "a": [
+   "Screed well compacted — voids cause hot spots",
+   "Cables must not cross or touch; keep the spacing",
+   "Do not lay PVC cable below about 4 °C (goes brittle)",
+   "Never cut or coil surplus cable — adjust the last spacings instead"
+  ],
+  "n": 2
+ },
+ {
+  "p": "T2",
+  "s": 19,
+  "m": 4,
+  "t": "Heating controls",
+  "q": "Why do some mechanical thermostats need a neutral? The advantage?",
+  "a": [
+   "To feed a small \"accelerator\" heater inside the thermostat",
+   "It warms the bi-metal slightly while calling for heat, so it switches off a little early",
+   "Advantage: closer, more even room temperature (less overshoot)"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 4,
+  "t": "Central heating",
+  "q": "Compare S-Plan and Y-Plan systems: operation, valves and controls.",
+  "a": [
+   "S-Plan: a separate 2-port spring-return zone valve for each zone (heating + hot water)",
+   "S-Plan: room stat for each heating zone, cylinder stat for hot water, 2-channel programmer",
+   "Y-Plan: one 3-port mid-position valve shares the flow between heating and hot water",
+   "Y-Plan: room stat + cylinder stat + programmer; valve can sit mid-position to feed both"
+  ],
+  "fig": "splan"
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 4,
+  "t": "Central heating",
+  "q": "In an S-Plan Plus system, explain how the 2-port valves control hot water and the heating zones.",
+  "a": [
+   "Used when there are several heating zones plus a hot water zone",
+   "Each zone has its own 2-port spring-return valve and its own room stat",
+   "Cylinder stat controls the hot water temperature",
+   "Zones and hot water controlled separately by a 2-channel programmable time clock"
+  ],
+  "fig": "splan"
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 4,
+  "t": "Central heating",
+  "q": "Identify this system (one 3-port mid-position valve) and describe how it works.",
+  "a": [
+   "Y-Plan",
+   "Boiler and pump controlled by a programmer, room stat and cylinder stat",
+   "The mid-position valve sends flow to heating, hot water, or both",
+   "Fully pumped system"
+  ],
+  "fig": "yplan"
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 4,
+  "t": "Testing",
+  "q": "Purpose of main protective bonding, and minimum size in a domestic installation?",
+  "a": [
+   "Connects extraneous-conductive parts (water, gas, oil pipes, structural steel) to the main earthing terminal",
+   "Keeps metalwork at the same potential during a fault → reduces shock risk",
+   "Minimum 10 mm² in a domestic installation (from your Q&A notes)"
+  ],
+  "r": "ET101 544.1",
+  "c": 1
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 2,
+  "t": "Testing",
+  "q": "Earthing requirement for equipment marked with the double-square symbol?",
+  "a": [
+   "It is Class II (double insulated)",
+   "Do NOT connect an earth to it"
+  ]
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 5,
+  "t": "Testing",
+  "q": "List any five tests to verify an installation complies with the ETCI rules.",
+  "a": [
+   "Visual inspection",
+   "Continuity of protective conductors",
+   "Insulation resistance",
+   "Polarity",
+   "Earth fault loop impedance",
+   "Operation of RCDs"
+  ],
+  "n": 5
+ },
+ {
+  "p": "T2",
+  "s": 20,
+  "m": 2,
+  "t": "Testing",
+  "q": "Which ET101 test, used with insulation resistance, finds faulty connections between circuits before the supply is connected?",
+  "a": [
+   "Detection of erroneous connections between circuits",
+   "Switch off each circuit, disconnect loads, and insulation-test between its line conductors and all other line conductors"
+  ],
+  "r": "ET101 Part 6",
+  "c": 1
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "How does a shaded-pole motor make a rotating field?",
+  "a": [
+   "Part of each pole has a copper shading ring",
+   "Current induced in the ring delays the flux in that part",
+   "Flux sweeps from the unshaded part to the shaded part",
+   "This moving field drags the cage rotor round — fixed direction"
+  ],
+  "r": "",
+  "c": 0,
+  "fig": "shaded"
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Why do motors use laminated cores?",
+  "a": [
+   "Thin insulated steel sheets",
+   "Break up eddy current paths",
+   "Less heat, less iron loss, better efficiency"
+  ],
+  "r": "",
+  "c": 0
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "What is no-volt protection and how is it done?",
+  "a": [
+   "Stops a motor restarting by itself when power returns after a loss",
+   "Done by the contactor: when voltage drops, the coil drops out",
+   "The hold-in (retaining) contact opens — Start must be pressed again"
+  ],
+  "r": "",
+  "c": 0
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Two reasons for rotor-resistance starters on large motors?",
+  "a": [
+   "Lower starting current",
+   "High starting torque (max torque at start when R₂ = X₂)",
+   "Some speed control"
+  ],
+  "r": "",
+  "c": 0
+ },
+ {
+  "p": "T1",
+  "t": "Motors",
+  "q": "Star vs delta: voltage and current rules?",
+  "a": [
+   "Star: V<sub>L</sub> = √3 × V<sub>ph</sub>, I<sub>L</sub> = I<sub>ph</sub>",
+   "Delta: V<sub>L</sub> = V<sub>ph</sub>, I<sub>L</sub> = √3 × I<sub>ph</sub>",
+   "P = √3 V<sub>L</sub> I<sub>L</sub> cos φ for both"
+  ],
+  "r": "",
+  "c": 0,
+  "fig": "stardelta"
+ },
+ {
+  "p": "T1",
+  "t": "AC circuits",
+  "q": "Two conditions for maximum current in a series RLC circuit?",
+  "a": [
+   "X<sub>L</sub> = X<sub>C</sub> (resonance)",
+   "So Z = R (minimum impedance)",
+   "Power factor = 1, current in phase with voltage"
+  ],
+  "r": "",
+  "c": 0,
+  "fig": "reson"
+ },
+ {
+  "p": "T1",
+  "t": "Magnetism",
+  "q": "Sketch hysteresis loops for high-loss and low-loss material.",
+  "a": [
+   "High loss: wide, fat loop (hard steel — permanent magnets)",
+   "Low loss: narrow, thin loop (silicon steel — transformer cores)",
+   "Area of loop = energy lost each cycle"
+  ],
+  "r": "",
+  "c": 0,
+  "fig": "hyst"
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "What is ripple voltage? Single-phase vs 3-phase?",
+  "a": [
+   "The leftover AC \"wobble\" on the DC output of a rectifier",
+   "Single-phase full-wave: big ripple (2 peaks per cycle)",
+   "3-phase full-wave: much less ripple (6 peaks per cycle)"
+  ],
+  "r": "",
+  "c": 0,
+  "fig": "rect"
+ },
+ {
+  "p": "T1",
+  "t": "Electronics",
+  "q": "Linear power supply: one advantage, one disadvantage?",
+  "a": [
+   "Advantage: simple, very clean low-noise output",
+   "Disadvantage: heavy transformer, inefficient — wastes energy as heat"
+  ],
+  "r": "",
+  "c": 0
+ },
+ {
+  "p": "T1",
+  "t": "Instruments",
+  "q": "Oscilloscope: what do the X and Y axes show? What do the Y-plates do?",
+  "a": [
+   "X axis: time (time/div)",
+   "Y axis: voltage (volts/div)",
+   "Y-plates deflect the beam up and down in proportion to the input voltage"
+  ],
+  "r": "",
+  "c": 0
+ }
+]

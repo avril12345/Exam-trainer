@@ -1,34 +1,60 @@
 # Phase 4 Sparky Trainer
 
-A revision tool for the Irish SOLAS Electrical Apprenticeship, Phase 4 theory exams (T1 Science and T2 Installation). It is designed for a learner with dyslexia and ADHD: one question per screen, read-aloud on everything, large text controls, a cream or dark background, short sessions and image-led learning.
+A revision app for the Irish SOLAS Electrical Apprenticeship, Phase 4 theory exams (T1 Science, T2 Installation and Maths). It is built for a learner with dyslexia and ADHD: one question per screen, read-aloud on everything, adjustable text, tinted backgrounds, short sessions and picture-led learning.
 
-Open `index.html` in any browser. There is no build step and nothing to install.
+## Run it
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+### Put it online (free)
+
+1. Push this repo to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io) → **Create app** → pick this repo, branch `main`, file `streamlit_app.py`.
+3. Share the link. It works on a phone.
+
+Progress is saved in the browser (localStorage), so it stays on the device he uses. There's no login.
 
 ## Features
 
-- **T2 paper map**: the T2 paper has the same 20 question slots in the same order every year (2016–2026). Each slot lists every version that has been asked.
-- **Mock T2 paper**: 20 questions in exam order. The learner self-marks against the key points, and the app totals the marks and gives a grade (Pass 50 %, Merit 65 %, Distinction 80 %).
+- **T2 paper map**: the T2 paper has the same 20 question slots every year (2016–2026). Each slot lists every version that has been asked.
+- **Mock T2 paper**: 20 questions in exam order. Self-mark against the key points; the app totals the marks and gives a grade (Pass 50 %, Merit 65 %, Distinction 80 %).
 - **Board Builder**: interactive practice for T2 Q7 (distribution board drawing), with phase-balance and device checks.
 - **Flashcards**: 99 T2 and 10 T1 cards with key-point answers, using Leitner boxes.
-- **Quick Shift**: 10 multiple-choice questions per round (69 T2 and 37 T1 in the bank).
+- **Quick Shift quiz**: 10 multiple-choice questions per round (69 T2 and 37 T1 in the bank). Optional 2-minute clock.
 - **Formula Lab**: 23 randomised calculation types with colour-coded, step-by-step working.
+- **Maths**: worked examples (one step at a time), test questions (multiple choice or type the number) and key terms (flip cards and a match game).
 - **Diagrams**: 19 exam drawings with tap-to-reveal labels.
 - **Symbol Snap**: a 60-second game for naming circuit symbols.
 
-Progress is saved in `localStorage`, so it stays on one device.
+## Dyslexia-friendly design
 
-## Code layout (all in `index.html`)
+- **Display** menu on every page: font (Lexend, Atkinson Hyperlegible, Verdana), text size, line/letter spacing, background tint (cream, soft blue, soft green, peach, grey), read-aloud speed, and a reading ruler that follows the mouse.
+- **Read aloud** on every question, answer and explanation. Each word is highlighted as it is spoken.
+- Short lines (max ~65 characters), left-aligned, no italics, key words in bold colour.
+- Big buttons (52 px+), one question per screen, progress dots, a break reminder every 15 minutes.
+- Light and dark themes (dark: ⋮ menu → Settings).
 
-| Section | What it holds |
+## Code layout
+
+| Path | What it holds |
 |---|---|
-| `<style>` | Design tokens (cream/dark themes, quantity colours), all CSS |
-| `MCQ` array | Multiple-choice questions `{p, t, q, o[], a, w}` |
-| `CARDS` array | Flashcards `{p, s (T2 slot 1–20), m (marks), n (points needed), t, q, a[], r (reference), c (check ET101), fig}` |
-| `GENS` array | Formula Lab generators: `make()` returns `{given, ask, ans, unit, steps}` |
-| `DIAG` object | SVG diagrams. Labels use `L()`, so they can be hidden in "test me" mode |
-| `SYMBOLS` array | IEC-style circuit symbols |
-| T2 extras | `SLOTS`, extra T2 generators, `BOARD_SCEN` and `drawBoard()`, extra diagrams |
-| Views | Hash-routed screens: `#home #t2 #mock #board #cards #quiz #lab #pictures #snap` |
+| `streamlit_app.py` | Entry point: navigation, loading saved progress, Display menu |
+| `sparky/pages.py` | All screens (Home, T2 map, Mock, Board, Flashcards, Quiz, Formula Lab, Diagrams, Snap) |
+| `sparky/maths.py` | The Maths tab |
+| `sparky/ui.py` | Dyslexia CSS and browser components (read-aloud, diagram reveal, Snap game, clock, ruler) |
+| `sparky/store.py` | Progress state and saving to the browser |
+| `sparky/formulas.py` | Formula Lab generators |
+| `sparky/board.py` | Board Builder drawing and checks |
+| `sparky/content.py` | Loads the JSON content |
+| `data/*.json` | Questions, flashcards, diagrams, symbols, paper map, maths content |
+| `legacy/index.html` | The original single-file web app (kept for reference) |
+
+### Adding maths content
+
+Edit `data/maths.json`. The format is described at the top of `sparky/maths.py`. Remove `"sample": true` once the real content is in.
 
 ## Content notes
 
