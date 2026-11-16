@@ -26,6 +26,7 @@ P = {
     "maths": st.Page(pages.maths, title="Maths", icon=":material/function:", url_path="maths"),
     "pictures": st.Page(pages.pictures, title="Diagrams", icon=":material/schema:", url_path="diagrams"),
     "snap": st.Page(pages.snap, title="Symbol Snap", icon=":material/bolt:", url_path="snap"),
+    "drop": st.Page(pages.drop, title="Block Drop", icon=":material/vertical_align_bottom:", url_path="drop"),
 }
 pages.PAGES.update(P)
 pg = st.navigation(list(P.values()), position="top")
@@ -41,6 +42,7 @@ if not store.load():
 
 S = store.S()
 ui.inject_css(S["settings"])
+store.track_day()
 
 # ---- top bar: name, level, display settings
 def _set(field: str, key: str):
@@ -69,16 +71,40 @@ with c2.popover("Aa  Display", width="stretch"):
                      on_change=_set, args=("rate", "set_rate"))
     st.toggle("Reading ruler (follows the mouse)", value=cfg["ruler"], key="set_ruler",
               on_change=_set, args=("ruler", "set_ruler"))
+    st.toggle("Confetti for right answers", value=cfg.get("confetti", True), key="set_confetti",
+              on_change=_set, args=("confetti", "set_confetti"))
     st.caption("Dark mode: open the **⋮** menu (top right) → **Settings** → theme.")
 
 # ---- break reminder every 15 minutes
 now = time.time()
 ss.setdefault("_last_break", now)
 if now - ss._last_break > 15 * 60:
-    st.toast("15 minutes done. Stand up, stretch, grab a drink. Take a 2-minute break.", icon=":material/self_improvement:")
+    st.toast("Good work — 15 minutes done. Stand up, stretch, grab a drink. Your progress is saved.",
+             icon=":material/self_improvement:")
     ss._last_break = now
 
+# Pages with a running game check this, so leaving and coming back starts at the setup screen.
+ss._prev_page, ss._cur_page = ss.get("_cur_page"), pg.url_path
 pg.run()
 
+# ---- quiet celebration when a new level is reached
+lv_now = store.level()[0][1]
+_names = [n for _x, n in store.LEVELS]
+if S.get("levelSeen") in _names and _names.index(lv_now) > _names.index(S["levelSeen"]):
+    st.toast(f"New level: **{lv_now}**. Keep it going.", icon=":material/military_tech:")
+    ui.cheer(f"level-{lv_now}", "big")
+S["levelSeen"] = lv_now
+
+# ---- electric buzz each time the level bar passes another 10 %
+_cur, _nxt = store.level()
+if _nxt:
+    _step = int((S["xp"] - _cur[0]) * 10 // (_nxt[0] - _cur[0]))   # 0-9
+    _seen = S.get("buzzStep")
+    if _seen and _seen[0] == lv_now and _step > _seen[1]:
+        ui.buzz(f"{_step * 10}% of the way to {_nxt[1]}")
+    S["buzzStep"] = [lv_now, _step]
+
 ui.reading_ruler(S["settings"]["ruler"])
+ui.play_cheer()
+ui.play_buzz()
 store.persist()

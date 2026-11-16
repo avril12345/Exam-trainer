@@ -50,6 +50,35 @@ def home():
     acc = round(S["correct"] / S["answered"] * 100) if S["answered"] else 0
     best = "—" if S["mockBest"] is None else f"{S['mockBest']}%"
     to_next = f"{nxt[0] - S['xp']} XP to {nxt[1]}" if nxt else "Top level reached"
+
+    # ---- warm welcome, today's goal and study-day streak
+    import datetime as _dt
+    hr = _dt.datetime.now().hour
+    hello = "Good morning" if hr < 12 else "Good afternoon" if hr < 18 else "Good evening"
+    done, goal, streak = store.done_today(), store.DAILY_GOAL, store.day_streak()
+    gp = min(100, round(done / goal * 100))
+    if done == 0:
+        goal_msg = "A short session is all it takes. Start with one question."
+    elif done < goal:
+        goal_msg = f"{goal - done} more to hit today's goal. You're on your way."
+    else:
+        goal_msg = "Today's goal done. Anything more is a bonus."
+    streak_txt = (f"{ui.plural(streak, 'day')} in a row" if streak > 1 else
+                  "Day 1 — come back tomorrow to start a streak" if streak == 1 else "Start a study streak today")
+    ui.html(f"""<div class="hero"><h2>{hello}</h2><p class="lead">Every question you try makes the exam easier.</p>
+      <div class="goal"><div class="ring" style="--p:{gp}"><span>{min(done, goal)}/{goal}</span></div>
+      <div><b>Today's goal</b><div class="small">{goal_msg}</div>
+      <div class="row" style="margin-top:6px">{ui.chip(streak_txt, 'chk')}</div></div></div></div>""")
+    with st.container(border=True):
+        ui.html('<div class="next" style="padding-left:12px"><b>Next step</b><br><span class="small muted">'
+                + ("Go back over the questions you missed. That's where the marks are." if S["missed"]
+                   else "A 10-question Quick Shift. About 5 minutes.") + '</span></div>')
+        if S["missed"]:
+            if st.button("Review my misses", type="primary", key="home_next", width="stretch"):
+                start_quiz("review"); go("quiz")
+        elif st.button("Start a Quick Shift", type="primary", key="home_next", width="stretch"):
+            start_quiz("T2"); go("quiz")
+
     ui.html(f"""<div class="panel">
       <div class="row" style="justify-content:space-between"><h2 style="margin:0">{cur[1]}</h2>{ui.chip(f"{S['xp']} XP")}</div>
       <div class="bar"><i style="width:{pct}%"></i></div><div class="small muted">{to_next}</div>
@@ -79,6 +108,7 @@ def home():
     c2.page_link(PAGES["maths"], label="Maths", icon=":material/function:", width="stretch")
     c1.page_link(PAGES["pictures"], label="Diagrams", icon=":material/schema:", width="stretch")
     c2.page_link(PAGES["snap"], label="Symbol Snap", icon=":material/bolt:", width="stretch")
+    st.page_link(PAGES["drop"], label="Block Drop", icon=":material/vertical_align_bottom:", width="stretch")
 
     if S["missed"]:
         with st.container(border=True):
@@ -223,6 +253,7 @@ def _mock_next(score: int):
         tot = sum(MK["got"]); mx = sum(CARDS[i]["m"] for i in MK["items"])
         pc = round(tot / mx * 100)
         S["mockLast"] = pc
+        ui.cheer(size="big")
         if len(MK["items"]) == 20 and (S["mockBest"] is None or pc > S["mockBest"]):
             S["mockBest"] = pc
 
@@ -312,10 +343,12 @@ def board():
         issues = check_board(sc, asg)
         if not issues:
             store.add_xp(20)
+            ui.cheer(size="big")
             ss.bb_msg = (sid, ui.feedback("Board passes", "<div>Balanced phases, right devices. Now draw it on paper from memory.</div>"))
         else:
             body = "".join(f"<div>• {bold(x)}</div>" for x in issues)
-            ss.bb_msg = (sid, ui.feedback("Not yet", body, ok=False))
+            ss.bb_msg = (sid, ui.feedback("Not yet", body, ok=False,
+                                          tail="Fix these and check again. Every board you check teaches you the pattern."))
 
     def do_model():
         for i, a in enumerate(model_assign(sc)):
@@ -366,7 +399,8 @@ def cards():
         FC["again"] = []
     if FC["i"] >= len(FC["list"]):
         ui.html('<div class="panel" style="text-align:center"><div class="big">Done</div><h2>Deck finished</h2>'
-                '<p class="muted" style="margin:0 auto">Cards you marked “Again” came back round until you had them.</p></div>')
+                '<p class="muted" style="margin:0 auto">Cards you marked “Again” came back round until you had them. '
+                'That repetition is what makes it stick.</p></div>')
 
         def back():
             slot = FC.get("slot")
@@ -409,13 +443,16 @@ def cards():
 
     def rate(r: int):
         b = store.box(ci)
+        store.count_card()
         if r == 0:
             store.set_box(ci, 1); FC["again"].append(ci)
         elif r == 1:
             store.set_box(ci, max(1, min(2, b)))
         else:
-            store.set_box(ci, min(3, b + 1)); store.add_xp(5)
+            store.set_box(ci, min(3, b + 1)); store.add_xp(5); ui.cheer()
         FC["i"] += 1
+        if FC["i"] >= len(FC["list"]) and not FC["again"]:
+            ui.cheer(size="big")
         FC["flipped"] = False
 
     st.caption("How did you do?")
@@ -496,7 +533,9 @@ def quiz():
         cls = "right" if oi == q["a"] else "wrong" if oi == Q["picked"] else "dim"
         opts += f'<div class="opt {cls}"><span class="let">{"ABCD"[k]}</span><span>{q["o"][oi]}</span></div>'
     ui.html(opts)
-    ui.read_aloud(f"w_{Q['i']}", ui.feedback("Correct" if ok else "Not quite", f'<div>{q["w"]}</div>', ok=ok),
+    ui.read_aloud(f"w_{Q['i']}", ui.feedback(Q.setdefault("head", {}).setdefault(Q["i"], ui.praise() if ok else ui.not_yet()),
+                                                       f'<div>{q["w"]}</div>', ok=ok,
+                                                       tail="" if ok else "It's now on your review list, so you'll see it again."),
                   label="Read the explanation")
     last = Q["i"] == len(Q["items"]) - 1
     st.button("See results" if last else "Next question", type="primary", width="stretch", key=f"next_{Q['i']}",
@@ -520,6 +559,7 @@ def _answer(oi: int):
         Q["streak"] += 1
         store.add_xp(10 + (5 if Q["streak"] >= 3 else 0))
         S["missed"] = [x for x in S["missed"] if x != qi]
+        ui.cheer()
     else:
         Q["streak"] = 0
         if qi not in S["missed"]:
@@ -531,8 +571,12 @@ def _quiz_end(Q):
     score = sum(Q["res"]); total = len(Q["items"])
     if Q["mode"] != "review" and total == 10 and score > S["bestShift"]:
         S["bestShift"] = score
+    if not Q.get("cheered"):
+        Q["cheered"] = True
+        ui.cheer(size="big")
     msg = ("Distinction territory. Nice work." if score >= 8 else "Solid shift. Merit level." if score >= 6.5
-           else "A pass. Have a go at the review list." if score >= 5 else "Tough shift. Do the review list, then try again.")
+           else "A pass. Have a go at the review list." if score >= 5
+           else "Every miss is now on your review list. Go over those and you'll see the score climb.")
     out = '<div class="chip chk">Time ran out</div>' if Q["timeout"] else ""
     ui.html(f'<div class="panel" style="text-align:center"><div class="big">{score}/{total}</div><h2>{msg}</h2>'
             f'<div class="small muted">Exam grades: Pass 50 % · Merit 65 % · Distinction 80 %</div>{out}</div>')
@@ -638,9 +682,9 @@ def _check_lab(raw: str):
         L["count"] += 1
         S["answered"] += 1
         if ok:
-            L["right"] += 1; S["correct"] += 1; store.add_xp(15)
+            L["right"] += 1; S["correct"] += 1; store.add_xp(15); ui.cheer()
         tail = "" if ok else " — check the working below."
-        cur["fb"] = ui.feedback("Spot on" if ok else "Answer", f"<div>{n3(p['ans'])} {p['unit']}{tail}</div>", ok=ok)
+        cur["fb"] = ui.feedback(ui.praise() if ok else "Here's the answer", f"<div>{n3(p['ans'])} {p['unit']}{tail}</div>", ok=ok)
     else:
         cur["fb"] = ui.feedback("Not yet.", "<div>Have one more go, or show a step.</div>", ok=False)
 
@@ -686,6 +730,8 @@ def snap():
                   stopped=bool(val.get("stopped")), used=int(val.get("used", 60)),
                   recorded=SN["round"], phase="done")
         store.add_xp(2 * SN["score"])
+        if SN["score"] > 0:
+            ui.cheer(size="big")
         if SN["score"] > S["snapBest"]:
             S["snapBest"] = SN["score"]
         return True
@@ -738,6 +784,134 @@ def snap():
     st.caption(f"Best score: **{S['snapBest']}**")
     st.button("Start", type="primary", width="stretch", on_click=start)
     st.button("Learn the symbols first", width="stretch", on_click=lambda: SN.update(phase="learn"))
+
+
+# =============================================================================== BLOCK DROP
+DROP_DECKS = {"T2": "T2 Installation", "T1": "T1 Science", "mix": "Mixed", "sym": "Symbols only"}
+DROP_MAX_CHARS = 90  # longer questions are too much to read on a moving block
+
+
+def _drop_blocks(deck: str) -> list[dict]:
+    """The blocks for one game, in random order, each used once."""
+    out = []
+    if deck in ("T2", "T1", "mix"):
+        for i, q in enumerate(MCQ):
+            plain = strip_tags(q["q"])
+            if (deck != "mix" and q["p"] != deck) or len(plain) > DROP_MAX_CHARS:
+                continue
+            order = random.sample(range(len(q["o"])), len(q["o"]))  # same shuffle as start_quiz
+            out.append({"k": "q", "i": i, "label": f'{q["p"]} · {escape(q["t"])}',
+                        "html": f'<div class="qtext">{bold(q["q"])}</div>',
+                        "opts": [q["o"][o] for o in order], "a": order.index(q["a"]), "words": len(plain.split()),
+                        "say": plain + " " + ". ".join(f"{'ABCD'[k]}. {strip_tags(q['o'][o])}" for k, o in enumerate(order))})
+    if deck in ("sym", "mix"):
+        for i, s in enumerate(SYMBOLS):
+            others = [k for k, o in enumerate(SYMBOLS) if k != i and o["n"] != s["n"]]
+            opts = random.sample([i] + random.sample(others, 3), 4)
+            names = [SYMBOLS[k]["n"] for k in opts]
+            out.append({"k": "s", "i": i, "label": "Symbol · Name it", "html": f'<div class="bd-sym">{s["s"]}</div>',
+                        "opts": names, "a": opts.index(i), "words": 0,
+                        "say": "Name this symbol. " + ". ".join(f"{'ABCD'[k]}. {n}" for k, n in enumerate(names))})
+    random.shuffle(out)
+    return out
+
+
+def drop():
+    S = store.S()
+    P = S["prefs"]
+    D = ss.setdefault("drop", {"phase": "intro", "game": 0})
+    if D["phase"] == "play" and ss.get("_prev_page") != "drop":
+        D["phase"] = "intro"  # he left mid-game; the browser side has already stopped
+
+    def start():
+        D.update(phase="play", game=D["game"] + 1, blocks=_drop_blocks(P["dropDeck"]))
+
+    def record(val) -> bool:
+        """Store a finished game once."""
+        if not val or val.get("game") != D["game"] or D.get("recorded") == D["game"]:
+            return False
+        xp = streak = right = 0
+        missed = []
+        for r in val.get("results") or []:
+            k, i, ok = r.get("k"), int(r.get("i", -1)), bool(r.get("ok"))
+            if k not in ("q", "s") or not (0 <= i < (len(MCQ) if k == "q" else len(SYMBOLS))):
+                continue
+            if ok:  # same rate as Quick Shift: 10 XP, +5 while on a streak of 3 or more
+                right += 1; streak += 1
+                xp += 10 + (5 if streak >= 3 else 0)
+            else:
+                streak = 0
+                missed.append((k, i))
+            if k == "q":
+                S["answered"] += 1
+                if ok:
+                    S["correct"] += 1
+                    S["missed"] = [x for x in S["missed"] if x != i]
+                elif i not in S["missed"]:
+                    S["missed"].append(i)
+        score = max(0, int(val.get("score", 0)))
+        D.update(phase="done", recorded=D["game"], score=score, right=right, missed=missed, xp=xp,
+                 best_before=S["dropBest"], stopped=bool(val.get("stopped")), cleared=bool(val.get("cleared")))
+        store.add_xp(xp)
+        S["dropBest"] = max(S["dropBest"], score)
+        return True
+
+    if D["phase"] == "play":
+        def done():
+            res = ss.get(f"drop_{D['game']}")
+            record(res.get("done") if hasattr(res, "get") else None)
+
+        res = ui.drop_game(D["game"], D["blocks"], P["dropSteady"], P["dropRead"], done)
+        if record(res.get("done")):  # in case the callback could not read the value
+            st.rerun()
+        return
+
+    if D["phase"] == "done":
+        score, missed = D["score"], D["missed"]
+        head = ("New best score" if score > D["best_before"] and score > 0 else "Game ended" if D["stopped"]
+                else "Deck cleared" if D["cleared"] else "Game over")
+        ui.html(f'''<div class="panel" style="text-align:center">
+          <div class="small muted">Your score</div><div class="big">{score}</div><h2>{head}</h2>
+          <div class="stats"><div class="stat"><b>{D["right"]}</b><span>right</span></div>
+          <div class="stat"><b>{len(missed)}</b><span>missed</span></div><div class="stat"><b>{S["dropBest"]}</b><span>best score</span></div></div>
+          <p class="small muted" style="margin:10px auto 0">+{D["xp"]} XP</p></div>''')
+        ui.read_aloud(f"drop_res_{D['game']}", speak=f"{head}. You scored {score}. {D['right']} right and {len(missed)} missed. "
+                                                     f"Your best score is {S['dropBest']}.", label="Read my score")
+        c1, c2 = st.columns(2)
+        c1.button("Play again", type="primary", width="stretch", on_click=start)
+        c2.button("Change deck", width="stretch", on_click=lambda: D.update(phase="intro"))
+        if missed:
+            st.subheader("Blocks you missed")
+            rows = ""
+            for k, i in missed:
+                if k == "q":
+                    q = MCQ[i]
+                    rows += (f'<div class="panel" style="margin-bottom:8px"><div class="qtext" style="font-size:1rem">{bold(q["q"])}</div>'
+                             f'<div class="small">Answer: <b class="key">{q["o"][q["a"]]}</b></div></div>')
+                else:
+                    s = SYMBOLS[i]
+                    rows += (f'<div class="panel row" style="margin-bottom:8px;flex-wrap:nowrap">'
+                             f'<div class="symbox" style="flex:0 0 120px;min-height:70px;padding:6px">{s["s"]}</div>'
+                             f'<div class="small">Answer: <b class="key">{s["n"]}</b></div></div>')
+            ui.drawing(f"drop_missed_{D['game']}", rows)  # symbol SVGs need the drawing component
+            if any(k == "q" for k, _ in missed):
+                st.caption("Missed questions are in your review list.")
+                if st.button(f"Review misses ({len(S['missed'])})", width="stretch", key="drop_review"):
+                    start_quiz("review")
+                    go("quiz")
+        return
+
+    st.header("Block Drop")
+    ui.read_aloud("drop_intro", "<p>A block drops from the top. <b>Tap the right answer</b> before it lands.</p>"
+                                "<p>Right: 10 points, plus up to 10 more for a fast answer. Wrong or too slow: you lose one of 3 lives.</p>")
+    deck = st.segmented_control("Deck", list(DROP_DECKS), default=P["dropDeck"], key="drop_deck",
+                                format_func=DROP_DECKS.get) or "T2"
+    P["dropDeck"] = deck
+    P["dropSteady"] = st.toggle("Steady pace (no speeding up)", value=P["dropSteady"], key="drop_steady")
+    P["dropRead"] = st.toggle("Read blocks aloud (the block waits until it is read)", value=P["dropRead"], key="drop_read")
+    n = len(_drop_blocks(deck))
+    st.caption(f"{n} blocks in this deck · keys 1–4 or A–D also answer · Best score: **{S['dropBest']}**")
+    st.button("Start", type="primary", width="stretch", on_click=start)
 
 
 # =============================================================================== MATHS

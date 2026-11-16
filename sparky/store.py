@@ -26,8 +26,9 @@ DEFAULT_STATE = {
     "xp": 0, "answered": 0, "correct": 0, "bestShift": 0,
     "boxes": {},          # card index (str) -> Leitner box 0-3
     "missed": [],         # MCQ indexes answered wrong
-    "mockBest": None, "mockLast": None, "snapBest": 0,
-    "prefs": {"qmode": "T2", "qtimed": False, "labp": "T2", "fdeck": "T2", "bbsc": "b"},
+    "mockBest": None, "mockLast": None, "snapBest": 0, "dropBest": 0,
+    "prefs": {"qmode": "T2", "qtimed": False, "labp": "T2", "fdeck": "T2", "bbsc": "b",
+              "dropDeck": "T2", "dropSteady": False, "dropRead": False},
     "settings": dict(DEFAULT_SETTINGS),
 }
 
@@ -112,6 +113,57 @@ def level() -> tuple[tuple, tuple | None]:
         if xp >= lv[0]:
             cur, nxt = lv, (LEVELS[i + 1] if i + 1 < len(LEVELS) else None)
     return cur, nxt
+
+
+# --------------------------------------------------------------------------- daily goal & streak
+DAILY_GOAL = 20  # questions or cards a day: small enough to reach, big enough to count
+
+
+def today() -> str:
+    """Today's date in the learner's own time zone (falls back to the server's)."""
+    import datetime as dt
+    try:
+        from zoneinfo import ZoneInfo
+        tz = st.context.timezone
+        return dt.datetime.now(ZoneInfo(tz)).date().isoformat() if tz else dt.date.today().isoformat()
+    except Exception:
+        return dt.date.today().isoformat()
+
+
+def track_day() -> None:
+    """Call once per run. Starts a new day's count and records study days (for the streak)."""
+    s = S()
+    d = today()
+    if s.get("today") != d:
+        s["today"], s["todayStart"] = d, s["answered"] + s.get("cardsSeen", 0)
+    if done_today() > 0:
+        days = s.setdefault("studyDays", [])
+        if d not in days:
+            days.append(d)
+            del days[:-90]
+
+
+def count_card() -> None:
+    """Flashcards count toward the daily goal too."""
+    S()["cardsSeen"] = S().get("cardsSeen", 0) + 1
+
+
+def done_today() -> int:
+    s = S()
+    return max(0, s["answered"] + s.get("cardsSeen", 0) - s.get("todayStart", 0))
+
+
+def day_streak() -> int:
+    import datetime as dt
+    days = set(S().get("studyDays", []))
+    d = dt.date.fromisoformat(today())
+    if d.isoformat() not in days:          # today not started yet: streak still counts up to yesterday
+        d -= dt.timedelta(days=1)
+    n = 0
+    while d.isoformat() in days:
+        n += 1
+        d -= dt.timedelta(days=1)
+    return n
 
 
 def box(i: int) -> int:

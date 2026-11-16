@@ -161,7 +161,13 @@ def _test():
     if T["i"] >= len(T["items"]):
         score = sum(T["res"]); total = len(T["items"])
         pc = round(score / total * 100) if total else 0
-        ui.html(f'<div class="panel" style="text-align:center"><div class="big">{score}/{total}</div><h2>{pc}%</h2></div>')
+        if not T.get("cheered"):
+            T["cheered"] = True
+            ui.cheer(size="big")
+        msg = ("Excellent work." if pc >= 80 else "Good, solid set." if pc >= 60
+               else "Good practice. Your misses are saved, so go over those next.")
+        ui.html(f'<div class="panel" style="text-align:center"><div class="big">{score}/{total}</div><h2>{pc}% · Set finished</h2>'
+                f'<p class="muted" style="margin:0 auto">{msg}</p></div>')
         st.button("Try another set", type="primary", width="stretch", on_click=lambda: ss.update(mt=None))
         return
 
@@ -178,7 +184,7 @@ def _test():
         T["res"].append(ok); T["picked"] = True
         S["answered"] += 1
         if ok:
-            S["correct"] += 1; store.add_xp(10)
+            S["correct"] += 1; store.add_xp(10); ui.cheer()
             ms["missed"] = [x for x in ms["missed"] if x != qi]
         elif qi not in ms["missed"]:
             ms["missed"].append(qi)
@@ -196,7 +202,9 @@ def _test():
                 html += f'<div class="opt {cls}"><span class="let">{"ABCD"[k]}</span><span>{q["o"][oi]}</span></div>'
             ui.html(html)
             ok = T["res"][-1]
-            T["fb"] = ui.feedback("Correct" if ok else "Not quite", f"<div>{bold(q.get('w', ''))}</div>", ok=ok)
+            head = T.setdefault("head", {}).setdefault(str(T["i"]), ui.praise() if ok else ui.not_yet())
+            T["fb"] = ui.feedback(head, f"<div>{bold(q.get('w', ''))}</div>", ok=ok,
+                                  tail="" if ok else "Read the working below. It's saved to your review list.")
     else:
         if not answered:
             with st.form(key=f"mtf_{T['i']}", border=False):
@@ -208,7 +216,8 @@ def _test():
                         T["fb"] = ui.feedback("Type a number first.", ok=False)
                     elif ok or T["tries"] >= 1:
                         record(ok)
-                        T["fb"] = ui.feedback("Spot on" if ok else "Answer", f"<div>{q['a']} {q.get('unit', '')}</div>", ok=ok)
+                        T["fb"] = ui.feedback(ui.praise() if ok else "Here's the answer", f"<div>{q['a']} {q.get('unit', '')}</div>", ok=ok,
+                                                  tail="" if ok else "Follow the working below, step by step.")
                     else:
                         T["tries"] += 1
                         T["fb"] = ui.feedback("Not yet.", "<div>Have one more go.</div>", ok=False)
